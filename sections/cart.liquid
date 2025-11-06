@@ -1,0 +1,150 @@
+{%- comment -%}
+  Cart page UI — static scaffold matching design. Interactive behavior (AJAX qty, promo code, etc.) will be added later.
+{%- endcomment -%}
+
+<section class="cart-page">
+  <div class="cart-page__container">
+    <h1 class="cart-page__title">{{ 'sections.cart.title' | t | default: 'Cart' | upcase }}</h1>
+
+    <div class="cart-page__grid">
+      <div class="cart-page__left">
+        {%- if cart.item_count > 0 -%}
+          {%- for item in cart.items -%}
+            <article class="cart-item">
+              <div class="cart-item__media">
+                {%- if item.image -%}
+                  {%- render 'image', image: item.image, class: 'cart-item__image', width: 220, height: 220 -%}
+                {%- endif -%}
+              </div>
+              <div class="cart-item__content">
+                <h2 class="cart-item__title">{{ item.product.title }}</h2>
+                <div class="cart-item__unit">{{ item.final_price | money }} {{ 'each' | t }}</div>
+                <div class="cart-item__total">{{ item.final_line_price | money }}</div>
+              </div>
+              <div class="cart-item__qty">
+                <div class="qty-stepper" role="group" aria-label="Quantity for {{ item.product.title }}">
+                  <button class="qty-stepper__btn" type="button" data-action="decrement" aria-label="Decrease quantity">−</button>
+                  <input class="qty-stepper__input" type="number" inputmode="numeric" min="0" value="{{ item.quantity }}" aria-label="Quantity">
+                  <button class="qty-stepper__btn" type="button" data-action="increment" aria-label="Increase quantity">+</button>
+                </div>
+                <button class="cart-item__remove" type="button" data-action="remove" data-key="{{ item.key }}">{{ 'sections.cart.remove' | t | default: 'Remove' }}</button>
+              </div>
+            </article>
+          {%- endfor -%}
+
+          <section class="cart-promo" aria-labelledby="cart-promo-heading">
+            <h2 id="cart-promo-heading" class="cart-promo__title">{{ 'sections.cart.promo' | t | default: 'Promo code' }}</h2>
+            <div class="cart-promo__card">
+              <label class="visually-hidden" for="cart-promo-code">{{ 'sections.cart.promo_label' | t | default: 'Enter discount code' }}</label>
+              <input id="cart-promo-code" class="cart-promo__input" type="text" placeholder="{{ 'sections.cart.promo_placeholder' | t | default: 'Enter code' }}">
+              <button class="cart-promo__apply" type="button">{{ 'sections.cart.apply' | t | default: 'Apply' }}</button>
+              <p class="cart-promo__hint">{{ 'sections.cart.promo_hint' | t | default: 'Codes apply immediately and persist to checkout.' }}</p>
+            </div>
+          </section>
+        {%- else -%}
+          <p class="cart-page__empty">{{ 'sections.cart.empty' | t | default: 'Your cart is empty.' }}</p>
+        {%- endif -%}
+      </div>
+
+      <aside class="cart-page__summary" aria-labelledby="cart-summary-heading">
+        <h2 id="cart-summary-heading" class="visually-hidden">{{ 'sections.cart.summary' | t | default: 'Order summary' }}</h2>
+        <div class="summary-card">
+          <div class="summary-card__row">
+            <span class="summary-card__label">{{ 'sections.cart.subtotal' | t | default: 'Subtotal' }}</span>
+            <span class="summary-card__value">{{ cart.total_price | money }}</span>
+          </div>
+          <p class="summary-card__note">{{ 'sections.cart.shipping_note' | t | default: 'Shipping and taxes calculated at checkout.' }}</p>
+          <a class="summary-card__checkout" href="{{ routes.checkout_url }}">{{ 'sections.cart.checkout' | t | default: 'Checkout' | upcase }}</a>
+          <a class="summary-card__continue" href="{{ routes.all_products_collection_url }}">{{ 'sections.cart.continue' | t | default: 'Continue shopping' }}</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .cart-page { width: 100%; }
+  .cart-page__container { padding: var(--page-margin); }
+  .cart-page__title {
+    font-family: var(--font-primary--family);
+    font-weight: 800;
+    font-size: 48px;
+    line-height: 1;
+    margin: 0 0 24px;
+    text-transform: uppercase;
+  }
+  .cart-page__grid {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 32px;
+    align-items: start;
+  }
+  .cart-page__left { display: grid; gap: 24px; }
+
+  /* Item card */
+  .cart-item {
+    display: grid;
+    grid-template-columns: 220px 1fr auto;
+    gap: 24px;
+    padding: 24px;
+    border: 1px solid rgba(0,0,0,.12);
+    border-radius: 16px;
+    background: #fff;
+    align-items: center;
+  }
+  .cart-item__media { width: 220px; height: 220px; border-radius: 12px; overflow: hidden; background: #f7f7f7; display: grid; place-items: center; }
+  .cart-item__image { width: 100%; height: 100%; object-fit: contain; }
+  .cart-item__content { display: grid; gap: 8px; }
+  .cart-item__title { font-family: var(--font-primary--family); font-weight: 800; font-size: 36px; margin: 0; }
+  .cart-item__unit { color: #666; font-weight: 600; }
+  .cart-item__total { font-size: 32px; font-weight: 800; font-family: var(--font-primary--family); }
+  .cart-item__qty { display: grid; gap: 10px; justify-items: end; }
+
+  .qty-stepper { display: inline-grid; grid-template-columns: 44px 64px 44px; align-items: center; border: 1px solid rgba(0,0,0,.15); border-radius: 999px; overflow: hidden; height: 48px; }
+  .qty-stepper__btn { width: 44px; height: 48px; background: #fff; border: 0; font-size: 22px; font-weight: 700; cursor: pointer; }
+  .qty-stepper__input { width: 64px; height: 48px; border: 0; text-align: center; font-weight: 700; font-size: 18px; }
+  .cart-item__remove { background: none; border: 0; color: #000; text-decoration: underline; cursor: pointer; font-weight: 600; }
+
+  /* Promo block */
+  .cart-promo__title { font-size: 28px; font-weight: 800; margin: 0 0 12px; font-family: var(--font-primary--family); }
+  .cart-promo__card { border: 1px solid rgba(0,0,0,.12); border-radius: 16px; padding: 24px; background: #fff; display: grid; gap: 12px; }
+  .cart-promo__input { width: 100%; height: 56px; border-radius: 12px; border: 1px solid rgba(0,0,0,.15); padding: 0 16px; font-size: 16px; }
+  .cart-promo__apply { width: 120px; height: 56px; border-radius: 12px; border: 1px solid #000; background: #000; color: #fff; font-weight: 800; cursor: pointer; }
+  .cart-promo__hint { margin: 4px 0 0; color: #666; font-size: 14px; }
+
+  /* Summary card */
+  .cart-page__summary { position: sticky; top: calc(5rem + 16px); }
+  .summary-card { border: 1px solid rgba(0,0,0,.12); border-radius: 16px; padding: 24px; background: #fff; display: grid; gap: 16px; }
+  .summary-card__row { display: flex; align-items: baseline; justify-content: space-between; font-family: var(--font-primary--family); }
+  .summary-card__label { font-weight: 800; font-size: 22px; }
+  .summary-card__value { font-weight: 800; font-size: 28px; }
+  .summary-card__note { color: #666; margin: 0; }
+  .summary-card__checkout { display: grid; place-items: center; height: 64px; border-radius: 10px; background: #000; color: #fff; text-decoration: none; font-weight: 800; text-transform: uppercase; }
+  .summary-card__continue { display: block; text-align: center; text-decoration: none; font-weight: 700; color: inherit; }
+
+  .cart-page__empty { padding: 32px; border: 1px dashed rgba(0,0,0,.25); border-radius: 12px; text-align: center; }
+
+  .visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 1px, 1px); white-space: nowrap; border: 0; }
+
+  @media (max-width: 1023px) {
+    .cart-page__grid { grid-template-columns: 1fr; gap: 20px; }
+    .cart-page__summary { position: static; }
+    .cart-item { grid-template-columns: 120px 1fr; }
+    .cart-item__media { width: 120px; height: 120px; }
+    .cart-item__title { font-size: 24px; }
+    .cart-item__total { font-size: 24px; }
+    .cart-item__qty { justify-items: start; grid-column: 1 / -1; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.cart",
+  "settings": [],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}
+
+

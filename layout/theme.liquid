@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    {% # Inlined CSS Variables %}
+    {% render 'css-variables' %}
+
+    {% # Load and preload the critical CSS %}
+    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
+
+    {% # Social, title, etc. %}
+    {% render 'meta-tags' %}
+
+    {%- comment -%} Google Fonts: Exo 2 {%- endcomment -%}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {%- comment -%} Override primary font to use Exo 2 across the site {%- endcomment -%}
+    <style>
+      :root { --font-primary--family: 'Exo 2', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    </style>
+
+    {{ content_for_header }}
+  </head>
+
+  <body{% unless template.name == 'index' or template == 'index' %} class="has-sticky-header"{% endunless %}>
+    {% if template.name == 'index' or template == 'index' %}
+      {% sections 'header-group' %}
+    {% else %}
+      {% sections 'header-solid-group' %}
+    {% endif %}
+
+    <main class="page-content">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+  </body>
+</html>

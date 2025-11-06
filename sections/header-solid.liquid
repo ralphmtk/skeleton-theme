@@ -1,0 +1,625 @@
+<header class="full-width is-solid">
+  <nav class="header__container">
+    {%- comment -%} Mobile: Logo on left, hamburger on right {%- endcomment -%}
+    <h1 class="header__logo header__logo--mobile">
+      <a href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
+        <img
+          src="{{ 'zengaz-logo.png' | asset_url }}"
+          data-logo-light="{{ 'zengaz-logo-white.png' | asset_url }}"
+          data-logo-dark="{{ 'zengaz-logo.png' | asset_url }}"
+          alt="{{ shop.name }}"
+          width="120"
+          height="34"
+          loading="eager">
+      </a>
+    </h1>
+
+    <button class="header__menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    {%- comment -%} Desktop: Original centered layout {%- endcomment -%}
+    <div class="header__center">
+      <div class="header__nav-left">
+      {% if section.settings.menu.links.size > 0 %}
+        {% for link in section.settings.menu.links %}
+          {% if forloop.index <= 2 %}
+            {{ link.title | link_to: link.url }}
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        <a href="/pages/shop">Shop</a>
+        <a href="/pages/range">Range</a>
+      {% endif %}
+      </div>
+
+      <h1 class="header__logo header__logo--desktop">
+        <a href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
+          <img
+            src="{{ 'zengaz-logo.png' | asset_url }}"
+            data-logo-light="{{ 'zengaz-logo-white.png' | asset_url }}"
+            data-logo-dark="{{ 'zengaz-logo.png' | asset_url }}"
+            alt="{{ shop.name }}"
+            width="120"
+            height="34"
+            loading="eager">
+        </a>
+      </h1>
+
+      <div class="header__nav-right">
+      {% if section.settings.menu.links.size > 0 %}
+        {% for link in section.settings.menu.links %}
+          {% if forloop.index > 2 %}
+            {{ link.title | link_to: link.url }}
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        <a href="/pages/wholesale">Wholesale</a>
+        <a href="/pages/contact">Contact</a>
+      {% endif %}
+      </div>
+    </div>
+
+    {%- comment -%} Mobile menu drawer {%- endcomment -%}
+    <div class="header__mobile-menu">
+      <div class="header__mobile-menu-content">
+        <nav class="header__mobile-nav">
+          {% if section.settings.menu.links.size > 0 %}
+            {% for link in section.settings.menu.links %}
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            {% endfor %}
+          {% else %}
+            <a href="/pages/shop">Shop</a>
+            <a href="/pages/range">Range</a>
+            <a href="/pages/wholesale">Wholesale</a>
+            <a href="/pages/contact">Contact</a>
+          {% endif %}
+          <div class="header__mobile-locale-item">
+            {% form 'localization', class: 'header__locale header__locale--mobile', id: 'header-locale-form-mobile' %}
+              <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
+              <input type="hidden" name="locale_code" value="{{ localization.language.iso_code }}">
+              <div class="locale-dropdown locale-dropdown--language" data-target-input="locale_code">
+                <details>
+                  <summary title="{{ localization.language.endonym_name | default: localization.language.name }}" class="header__mobile-locale-link">
+                    <span class="locale-current">
+                      <span class="abbr">{{ localization.language.iso_code }}</span>
+                    </span>
+                    <span class="caret" aria-hidden="true"></span>
+                  </summary>
+                  <div class="menu" role="listbox" aria-label="Select language">
+                    {% for language in localization.available_languages %}
+                      <button type="button" role="option" data-value="{{ language.iso_code }}" class="menu-item{% if language.iso_code == localization.language.iso_code %} is-active{% endif %}">
+                        <span class="abbr">{{ language.iso_code | upcase }}</span>
+                        <span class="name">{{ language.endonym_name | default: language.name }}</span>
+                      </button>
+                    {% endfor %}
+                  </div>
+                </details>
+              </div>
+            {% endform %}
+          </div>
+        </nav>
+        <div class="header__mobile-social">
+          <a href="#" class="social social--tiktok" aria-label="TikTok" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.5c-2.2-.4-4.1-1.7-5.1-3.6V17c0 3.9-3.2 7-7.1 7S1.7 20.9 1.7 17c0-3.8 3-6.9 6.7-7v3.8c-1.6.1-2.9 1.4-2.9 3.1 0 1.7 1.4 3.1 3.2 3.1s3.2-1.4 3.2-3.1V0h3.8c.4 2.5 2.3 4.5 4.6 5v3.5z"/></svg>
+          </a>
+          <a href="#" class="social social--instagram" aria-label="Instagram" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A5.5 5.5 0 1 1 6.5 13 5.5 5.5 0 0 1 12 7.5zm0 2A3.5 3.5 0 1 0 15.5 13 3.5 3.5 0 0 0 12 9.5zm6.25-3.25a1.25 1.25 0 1 1-1.25 1.25 1.25 1.25 0 0 1 1.25-1.25z"/></svg>
+          </a>
+          <a href="#" class="social social--facebook" aria-label="Facebook" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 22V12h3.5l.5-4H13V6.5C13 5.7 13.2 5 14.5 5H17V1h-3c-3 0-5 2-5 5v2H6v4h3v10h4z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header__right-cluster">
+      {% form 'localization', class: 'header__locale', id: 'header-locale-form' %}
+        <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
+        <input type="hidden" name="locale_code" value="{{ localization.language.iso_code }}">
+
+        <div class="locale-dropdown locale-dropdown--country" data-target-input="country_code">
+          <details>
+            <summary title="{{ localization.country.name }}">
+              <span class="locale-current">
+                <span class="abbr">{{ localization.country.iso_code }}</span>
+              </span>
+              <span class="caret" aria-hidden="true"></span>
+            </summary>
+            <div class="menu" role="listbox" aria-label="Select country">
+              {% for country in localization.available_countries %}
+                <button type="button" role="option" data-value="{{ country.iso_code }}" class="menu-item{% if country.iso_code == localization.country.iso_code %} is-active{% endif %}">
+                  <span class="abbr">{{ country.iso_code }}</span>
+                  <span class="name">{{ country.name }}</span>
+                </button>
+              {% endfor %}
+            </div>
+          </details>
+        </div>
+
+        <div class="locale-dropdown locale-dropdown--language" data-target-input="locale_code">
+          <details>
+            <summary title="{{ localization.language.endonym_name | default: localization.language.name }}">
+              <span class="locale-current">
+                <span class="abbr">{{ localization.language.iso_code }}</span>
+              </span>
+              <span class="caret" aria-hidden="true"></span>
+            </summary>
+            <div class="menu" role="listbox" aria-label="Select language">
+              {% for language in localization.available_languages %}
+                <button type="button" role="option" data-value="{{ language.iso_code }}" class="menu-item{% if language.iso_code == localization.language.iso_code %} is-active{% endif %}">
+                  <span class="abbr">{{ language.iso_code | upcase }}</span>
+                  <span class="name">{{ language.endonym_name | default: language.name }}</span>
+                </button>
+              {% endfor %}
+            </div>
+          </details>
+        </div>
+
+        <noscript>
+          <div class="locale-noscript">
+            <label for="ns-country" class="visually-hidden">Country</label>
+            <select id="ns-country" name="country_code">
+              {% for country in localization.available_countries %}
+                <option value="{{ country.iso_code }}"{% if country.iso_code == localization.country.iso_code %} selected{% endif %}>{{ country.iso_code }} - {{ country.name }}</option>
+              {% endfor %}
+            </select>
+            <label for="ns-language" class="visually-hidden">Language</label>
+            <select id="ns-language" name="locale_code">
+              {% for language in localization.available_languages %}
+                <option value="{{ language.iso_code }}"{% if language.iso_code == localization.language.iso_code %} selected{% endif %}>{{ language.iso_code | upcase }} - {{ language.endonym_name | default: language.name }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit">Update</button>
+          </div>
+        </noscript>
+      {% endform %}
+
+      <div class="header__social">
+        <a href="#" class="social social--tiktok" aria-label="TikTok" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.5c-2.2-.4-4.1-1.7-5.1-3.6V17c0 3.9-3.2 7-7.1 7S1.7 20.9 1.7 17c0-3.8 3-6.9 6.7-7v3.8c-1.6.1-2.9 1.4-2.9 3.1 0 1.7 1.4 3.1 3.2 3.1s3.2-1.4 3.2-3.1V0h3.8c.4 2.5 2.3 4.5 4.6 5v3.5z"/></svg>
+        </a>
+        <a href="#" class="social social--instagram" aria-label="Instagram" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A5.5 5.5 0 1 1 6.5 13 5.5 5.5 0 0 1 12 7.5zm0 2A3.5 3.5 0 1 0 15.5 13 3.5 3.5 0 0 0 12 9.5zm6.25-3.25a1.25 1.25 0 1 1-1.25 1.25 1.25 1.25 0 0 1 1.25-1.25z"/></svg>
+        </a>
+        <a href="#" class="social social--facebook" aria-label="Facebook" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 22V12h3.5l.5-4H13V6.5C13 5.7 13.2 5 14.5 5H17V1h-3c-3 0-5 2-5 5v2H6v4h3v10h4z"/></svg>
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+{% stylesheet %}
+  header {
+    height: 5rem;
+    display: grid;
+    place-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    background: #ffffff;
+    color: #000000;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    transition: background-color .25s ease, color .25s ease, box-shadow .25s ease, top .25s ease;
+  }
+  .header__container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    padding: 0 var(--page-margin);
+    box-sizing: border-box;
+  }
+
+  /* Mobile: Logo on left, hamburger on right */
+  .header__logo--mobile {
+    display: none;
+    margin: 0;
+  }
+  .header__menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: transparent;
+    border: 0;
+    padding: 8px;
+    cursor: pointer;
+    z-index: 101;
+    color: #000;
+  }
+  .header__menu-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: currentColor;
+    transition: transform .3s, opacity .3s;
+  }
+  header.is-open .header__menu-toggle span:nth-child(1) {
+    transform: rotate(45deg) translate(7px, 7px);
+  }
+  header.is-open .header__menu-toggle span:nth-child(2) {
+    opacity: 0;
+  }
+  header.is-open .header__menu-toggle span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+  }
+
+  /* Desktop: Original centered layout */
+  .header__center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .header__nav-left,
+  .header__nav-right {
+    display: flex;
+    gap: 1.25rem;
+    justify-content: center;
+  }
+  .header__logo--desktop {
+    margin-left: 1.25rem;
+    margin-right: 1rem;
+  }
+
+  .header__logo img {
+    display: block;
+    height: 34px;
+    width: auto;
+    max-width: 120px;
+    max-height: 34px;
+  }
+  @media (max-width: 1023px) {
+    .header__logo img {
+      height: 28px;
+      max-height: 28px;
+      max-width: 100px;
+    }
+  }
+
+  /* Mobile menu drawer */
+  .header__mobile-menu {
+    display: none;
+    position: fixed;
+    top: 5rem;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #ffffff;
+    z-index: 100;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform .3s ease;
+  }
+  header.is-open .header__mobile-menu {
+    transform: translateX(0);
+  }
+  .header__mobile-menu-content {
+    padding: 2rem var(--page-margin);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-height: 100%;
+    justify-content: space-between;
+  }
+  .header__mobile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .header__mobile-nav a {
+    font-size: 1.2rem;
+    color: #000;
+    text-decoration: none;
+    font-family: 'Poppins', var(--font-primary--family);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .header__mobile-locale-item {
+    width: 100%;
+    text-align: left;
+  }
+  .header__mobile-locale-item .locale-dropdown {
+    width: 100%;
+    text-align: left;
+    display: flex;
+  }
+  .header__mobile-locale-item .locale-dropdown summary {
+    text-align: left;
+  }
+  .header__mobile-locale-link {
+    font-size: 1.2rem;
+    color: #000;
+    text-decoration: none;
+    font-family: 'Poppins', var(--font-primary--family);
+    font-weight: 600;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    list-style: none;
+    text-align: left;
+  }
+  .header__mobile-locale-link::-webkit-details-marker {
+    display: none;
+  }
+  .header__mobile-locale-link .locale-current {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .header__mobile-social {
+    display: flex;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: 2rem;
+  }
+  .header__mobile-social svg {
+    width: 24px;
+    height: 24px;
+    fill: #000;
+  }
+  .header__locale--mobile .locale-dropdown summary,
+  .header__locale--mobile .locale-dropdown summary.header__mobile-locale-link {
+    background: transparent !important;
+    color: #000 !important;
+    border: 0 !important;
+    padding: 0 !important;
+    font-family: 'Poppins', var(--font-primary--family) !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    font-size: 1.2rem !important;
+    border-radius: 0 !important;
+    backdrop-filter: none !important;
+  }
+  .header__locale--mobile .locale-dropdown summary .caret {
+    margin-left: auto;
+  }
+  .header__locale--mobile .locale-dropdown .menu {
+    background: #fff;
+    color: #000;
+    border-color: rgba(0,0,0,.15);
+    margin-top: 0.5rem;
+  }
+  .header__locale--mobile .locale-dropdown .menu-item:hover {
+    background: rgba(0,0,0,.06);
+  }
+
+  @media (max-width: 1023px) {
+    .header__logo--mobile { display: block; }
+    .header__logo--desktop { display: none; }
+    .header__menu-toggle { display: flex; }
+    .header__center { display: none !important; }
+    .header__locale:not(.header__locale--mobile) { display: none !important; }
+    .header__social { display: none !important; }
+    .header__mobile-menu { display: block; }
+  }
+  .header__right-cluster {
+    position: absolute;
+    right: calc(var(--page-margin) + 16px);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .header__social {
+    display: flex;
+    gap: .5rem;
+  }
+  .header__locale {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .visually-hidden {
+    position: absolute !important;
+    height: 1px; width: 1px;
+    overflow: hidden; clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap; border: 0; padding: 0; margin: -1px;
+  }
+  .locale-dropdown details { position: relative; }
+  .locale-dropdown summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-family: 'Poppins', var(--font-primary--family);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: .78em;
+    line-height: 1;
+    padding: .5rem .85rem .5rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,.15);
+    background: #fff;
+    color: #000;
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
+  }
+  .locale-dropdown summary .caret {
+    width: 0; height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid currentColor;
+    opacity: .9;
+    transform: translateY(1px);
+  }
+  .locale-dropdown[open] summary .caret { transform: rotate(180deg); }
+  .locale-dropdown .menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 220px;
+    max-height: 60vh;
+    overflow: auto;
+    padding: .35rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,.15);
+    background: #fff;
+    color: #000;
+    box-shadow: 0 10px 30px rgba(0,0,0,.12);
+    z-index: 1000;
+  }
+  .locale-dropdown .menu-item {
+    display: flex;
+    width: 100%;
+    align-items: baseline;
+    gap: .5rem;
+    padding: .5rem .6rem;
+    border-radius: 8px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Poppins', var(--font-primary--family);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: .82em;
+  }
+  .locale-dropdown .menu-item:hover { background: rgba(0,0,0,.06); }
+  header a {
+    position: relative;
+    text-decoration: none;
+    color: #000000;
+    font-family: 'Poppins', var(--font-primary--family);
+    font-weight: 600;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    font-size: 0.88em;
+  }
+  .header__nav-left a,
+  .header__nav-right a { padding: .25rem .5rem; line-height: 1; }
+  .header__nav-left a:hover,
+  .header__nav-left a:focus,
+  .header__nav-left a:active,
+  .header__nav-right a:hover,
+  .header__nav-right a:focus,
+  .header__nav-right a:active { color: rgb(64, 128, 255); }
+  .header__nav-left a[aria-current="page"],
+  .header__nav-right a[aria-current="page"] { color: rgb(64, 128, 255); }
+  .header__social svg { width: 22px; height: 22px; fill: currentColor; opacity: .9; transition: opacity .2s ease, transform .2s ease; }
+  .header__social a:hover svg { opacity: 1; transform: translateY(-1px); }
+{% endstylesheet %}
+
+<script>
+  (function() {
+    var headerEl = document.querySelector('header');
+    if (!headerEl) return;
+    headerEl.classList.add('is-solid');
+    
+    // Mobile menu toggle
+    var menuToggle = headerEl.querySelector('.header__menu-toggle');
+    if (menuToggle) {
+      menuToggle.addEventListener('click', function(){
+        var isOpen = headerEl.classList.toggle('is-open');
+        menuToggle.setAttribute('aria-expanded', isOpen);
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+        // Close menu on link click
+        if (isOpen) {
+          var links = headerEl.querySelectorAll('.header__mobile-nav a');
+          links.forEach(function(link){
+            link.addEventListener('click', function(){
+              headerEl.classList.remove('is-open');
+              menuToggle.setAttribute('aria-expanded', 'false');
+              document.body.style.overflow = '';
+            }, { once: true });
+          });
+        }
+      });
+    }
+    
+    var logoImgs = headerEl.querySelectorAll('.header__logo img');
+    logoImgs.forEach(function(logoImg) {
+      var dark = logoImg.getAttribute('data-logo-dark');
+      if (dark) logoImg.src = dark;
+    });
+
+    // Locale dropdown logic (same as default header)
+    var form = document.getElementById('header-locale-form');
+    var mobileForm = document.getElementById('header-locale-form-mobile');
+    var forms = [form, mobileForm].filter(function(f) { return f; });
+    
+    forms.forEach(function(form) {
+      if (!form) return;
+      var allDetails = form.querySelectorAll('.locale-dropdown details');
+      allDetails.forEach(function(d){
+        d.addEventListener('toggle', function(){
+          if (d.open) {
+            allDetails.forEach(function(other){ if (other !== d) other.removeAttribute('open'); });
+          }
+        });
+      });
+      var setAndSubmit = function(inputName, value) {
+        var input = form.querySelector('input[name="' + inputName + '"]');
+        if (input) input.value = value;
+        try { form.submit(); } catch(e) {}
+      };
+      var dropdowns = form.querySelectorAll('.locale-dropdown');
+      dropdowns.forEach(function(dd) {
+        var target = dd.getAttribute('data-target-input');
+        dd.addEventListener('click', function(e) {
+          var btn = e.target.closest('.menu-item');
+          if (!btn) return;
+          e.preventDefault();
+          var value = btn.getAttribute('data-value');
+          dd.querySelectorAll('.menu-item').forEach(function(mi){ mi.classList.remove('is-active'); });
+          btn.classList.add('is-active');
+          var abbr = btn.querySelector('.abbr')?.textContent || value;
+          var name = btn.querySelector('.name')?.textContent || '';
+          var current = dd.querySelector('.locale-current');
+          if (current) {
+            var abEl = current.querySelector('.abbr'); if (abEl) abEl.textContent = abbr;
+            var nmEl = current.querySelector('.name'); if (nmEl) nmEl.textContent = name;
+          }
+          var details = dd.querySelector('details'); if (details) details.removeAttribute('open');
+          setAndSubmit(target, value);
+        });
+      });
+      var closeHandler = function(e) {
+        var inForm = form.contains(e.target);
+        if (!inForm) {
+          allDetails.forEach(function(d){ d.removeAttribute('open'); });
+        }
+      };
+      document.addEventListener('click', closeHandler);
+      var escapeHandler = function(e) {
+        if (e.key === 'Escape') {
+          allDetails.forEach(function(d){ d.removeAttribute('open'); });
+        }
+      };
+      document.addEventListener('keydown', escapeHandler);
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "t:general.header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "t:labels.menu"
+    }
+  ]
+}
+{% endschema %}
+
+

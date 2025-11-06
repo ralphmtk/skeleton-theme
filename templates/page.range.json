@@ -1,0 +1,78 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "range": {
+      "type": "range",
+      "blocks": {
+        "category_H9Lnjn": {
+          "type": "category",
+          "settings": {
+            "collection": "jet-lighters"
+          }
+        },
+        "category_wD8xDF": {
+          "type": "category",
+          "settings": {
+            "collection": "jet-torches"
+          }
+        },
+        "category_dFEgf9": {
+          "type": "category",
+          "settings": {
+            "collection": "gas-refills"
+          }
+        },
+        "category_zpNmXX": {
+          "type": "category",
+          "settings": {
+            "collection": "displays"
+          }
+        },
+        "tag_Aa3dVA": {
+          "type": "tag",
+          "settings": {
+            "tag": "Adventure"
+          }
+        },
+        "tag_mCrare": {
+          "type": "tag",
+          "settings": {
+            "tag": "Cigars"
+          }
+        },
+        "tag_DQT3id": {
+          "type": "tag",
+          "settings": {
+            "tag": "Casual"
+          }
+        }
+      },
+      "block_order": [
+        "category_H9Lnjn",
+        "category_wD8xDF",
+        "category_dFEgf9",
+        "category_zpNmXX",
+        "tag_Aa3dVA",
+        "tag_mCrare",
+        "tag_DQT3id"
+      ],
+      "settings": {
+        "c1": "jet-lighters",
+        "c2": "jet-torches",
+        "c3": "gas-refills",
+        "c4": "displays"
+      }
+    }
+  },
+  "order": [
+    "range"
+  ]
+}

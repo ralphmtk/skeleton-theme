@@ -1,0 +1,683 @@
+{%- comment -%}
+  This section is used in the product template to render product page with media, content, and add-to-cart form.
+{%- endcomment -%}
+
+{%- assign selected_variant = product.selected_or_first_available_variant -%}
+
+<section class="product-page">
+  <div class="product-page__container">
+    <div class="product-gallery__wrapper">
+      <div class="product-page__gallery" role="region" aria-roledescription="carousel" aria-label="Product media">
+        {%- for media in product.media -%}
+          <div class="product-page__gallery-item">
+            {%- render 'image', image: media, class: 'product-page__gallery-image' -%}
+          </div>
+        {%- endfor -%}
+      </div>
+      <button class="product-gallery__nav product-gallery__nav--prev" aria-label="Previous image" type="button">&#10094;</button>
+      <button class="product-gallery__nav product-gallery__nav--next" aria-label="Next image" type="button">&#10095;</button>
+    </div>
+
+    <div class="product-gallery__dots" role="tablist" aria-label="Image navigation">
+      {%- for media in product.media -%}
+        <button class="product-gallery__dot{% if forloop.first %} is-active{% endif %}" role="tab" aria-label="Go to image {{ forloop.index }}" data-slide="{{ forloop.index0 }}" type="button"></button>
+      {%- endfor -%}
+    </div>
+
+    <div class="product-page__info">
+      <div class="product-page__info-inner">
+        {%- if product.featured_image -%}
+          <div class="product-page__thumbnail">
+            {%- render 'image', image: product.featured_image, class: 'product-page__thumbnail-image', width: 300, height: 300 -%}
+          </div>
+        {%- endif -%}
+        <h1 class="product-page__title">{{ product.title }}</h1>
+
+        {%- if product.description != blank -%}
+          <div class="product-page__description rte">
+            {{ product.description }}
+          </div>
+        {%- endif -%}
+
+        <div class="product-page__features">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'feature' -%}
+              <div class="product-page__feature-item">
+                {%- if block.settings.icon != blank -%}
+                  {%- render 'image', image: block.settings.icon, class: 'product-page__feature-icon', width: 48, height: 48 -%}
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <div class="product-page__feature-text">{{ block.settings.text }}</div>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        <div class="product-page__price">
+          {{ selected_variant.price | money }}
+        </div>
+
+        {%- form 'product', product, class: 'product-page__form' -%}
+          <input type="hidden" name="id" value="{{ selected_variant.id }}">
+          <button type="submit" class="product-page__buy-button">Buy Now</button>
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{%- if section.settings.show_related_products -%}
+  <section class="product-page__related">
+    <h2 class="product-page__related-title">{{ section.settings.related_products_title | default: 'Related Products' }}</h2>
+    <div class="product-page__related-carousel">
+      {%- assign related_collection = collections[section.settings.related_collection] | default: product.collections.first -%}
+      {%- if related_collection -%}
+        {%- assign products_limit = section.settings.related_products_limit | default: 4 -%}
+        {%- assign products_count = 0 -%}
+        {%- for related_product in related_collection.products -%}
+          {%- unless related_product.id == product.id -%}
+            {%- if products_count < products_limit -%}
+              <div class="product-page__related-item">
+                <a href="{{ related_product.url }}" class="product-page__related-link">
+                  {%- if related_product.featured_image -%}
+                    <div class="product-page__related-image">
+                      {%- render 'image', image: related_product.featured_image, class: 'product-page__related-image-img', width: 400, height: 400 -%}
+                    </div>
+                  {%- endif -%}
+                  <div class="product-page__related-info">
+                    <h3 class="product-page__related-name">{{ related_product.title }}</h3>
+                    <div class="product-page__related-price">
+                      {{ related_product.price | money }}
+                    </div>
+                  </div>
+                </a>
+              </div>
+              {%- assign products_count = products_count | plus: 1 -%}
+            {%- endif -%}
+          {%- endunless -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </section>
+{%- endif -%}
+
+<!-- debug script removed -->
+
+<script>
+  (function() {
+    // Fallback pinning: toggles fixed positioning for the right column within gallery bounds
+    var section = document.querySelector('.product-page');
+    var gallery = document.querySelector('.product-page__gallery');
+    var panel = document.querySelector('.product-page__info');
+    if (!section || !gallery || !panel) return;
+
+    // Disable desktop sticky/locking behavior on mobile
+    if (window.matchMedia('(max-width: 1023px)').matches) return;
+
+    var headerOffset = 96; // 5rem + 16px
+
+    function enableFixed() {
+      var rect = panel.getBoundingClientRect();
+      var left = rect.left + window.scrollX;
+      panel.style.setProperty('--fixed-left', left + 'px');
+      panel.style.setProperty('--fixed-width', rect.width + 'px');
+      panel.classList.add('is-fixed');
+      panel.classList.remove('is-locked');
+    }
+
+    function disableFixed() {
+      panel.classList.remove('is-fixed');
+      panel.style.removeProperty('--fixed-left');
+      panel.style.removeProperty('--fixed-width');
+      panel.style.removeProperty('transform');
+    }
+
+    function onScroll() {
+      var sectionRect = section.getBoundingClientRect();
+      var galleryRect = gallery.getBoundingClientRect();
+      var panelRect = panel.getBoundingClientRect();
+      var containerRect = panel.parentElement.getBoundingClientRect();
+
+      var sectionTop = sectionRect.top + window.scrollY;
+      var galleryTop = galleryRect.top + window.scrollY;
+      var galleryBottom = galleryRect.bottom + window.scrollY;
+      var containerTop = containerRect.top + window.scrollY;
+      var scrollY = window.scrollY;
+      var scrollPosition = scrollY + headerOffset;
+
+      // Panel height for calculations
+      var panelHeight = panelRect.height;
+      
+      // Calculate the scroll position where panel bottom would align with gallery bottom
+      // When scroll reaches this point, panel bottom = gallery bottom
+      var lockThreshold = galleryBottom - panelHeight;
+      
+      // Check if we're within the gallery scrolling range AND haven't reached lock threshold
+      var withinGallery = scrollPosition >= galleryTop && scrollPosition < lockThreshold;
+      
+      // Check if we've reached the point where panel bottom should lock to gallery bottom
+      var shouldLock = scrollPosition >= lockThreshold && scrollPosition >= galleryTop;
+
+      if (withinGallery) {
+        // Still scrolling through gallery - keep it fixed at top
+        enableFixed();
+        panel.style.transform = '';
+        panel.classList.remove('is-locked');
+        panel.style.removeProperty('--lock-top');
+        panel.style.removeProperty('--lock-left');
+        panel.style.removeProperty('--lock-width');
+      } else if (shouldLock) {
+        // Panel bottom should be locked to gallery bottom - use absolute positioning
+        if (!panel.classList.contains('is-locked')) {
+          // Get current position before switching
+          var currentRect = panel.getBoundingClientRect();
+          
+          // Calculate absolute positions relative to container
+          var galleryBottomRelative = galleryBottom - containerTop;
+          var absoluteTop = galleryBottomRelative - panelHeight;
+          
+          // Calculate left position relative to container
+          var containerLeft = containerRect.left + window.scrollX;
+          var panelLeft = currentRect.left + window.scrollX;
+          var relativeLeft = panelLeft - containerLeft;
+          var relativeWidth = currentRect.width;
+          
+          // Switch to locked (absolute positioning) - this happens only once
+          panel.classList.remove('is-fixed');
+          panel.style.removeProperty('--fixed-left');
+          panel.style.removeProperty('--fixed-width');
+          panel.classList.add('is-locked');
+          panel.style.setProperty('--lock-top', absoluteTop + 'px');
+          panel.style.setProperty('--lock-left', relativeLeft + 'px');
+          panel.style.setProperty('--lock-width', relativeWidth + 'px');
+          panel.style.transform = '';
+        }
+        // Once locked, it stays locked - no further updates needed
+      } else {
+        // Above gallery: natural flow
+        disableFixed();
+        panel.classList.remove('is-locked');
+        panel.style.removeProperty('--lock-top');
+        panel.style.removeProperty('--lock-left');
+        panel.style.removeProperty('--lock-width');
+      }
+    }
+
+    var ro = new ResizeObserver(function() { onScroll(); });
+    ro.observe(panel);
+    ro.observe(gallery);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    requestAnimationFrame(onScroll);
+  })();
+</script>
+
+<script>
+  (function() {
+    // Mobile gallery carousel controls (only on mobile)
+    if (!window.matchMedia('(max-width: 1023px)').matches) return;
+    var wrapper = document.querySelector('.product-gallery__wrapper');
+    var gallery = document.querySelector('.product-page__gallery');
+    if (!wrapper || !gallery) return;
+    var slides = Array.prototype.slice.call(gallery.querySelectorAll('.product-page__gallery-item'));
+    var prev = wrapper.querySelector('.product-gallery__nav--prev');
+    var next = wrapper.querySelector('.product-gallery__nav--next');
+    var dots = Array.prototype.slice.call(document.querySelectorAll('.product-gallery__dot'));
+    var index = 0;
+
+    function slideWidth() { return gallery.clientWidth; }
+
+    function setScroll(left, behavior) {
+      try {
+        gallery.scrollTo({ left: left, behavior: behavior || 'smooth' });
+      } catch (e) {
+        gallery.scrollLeft = left; // fallback for older browsers
+      }
+    }
+
+    function goTo(i, behavior) {
+      if (!slides.length) return;
+      index = (i + slides.length) % slides.length;
+      var left = index * slideWidth();
+      setScroll(left, behavior);
+      dots.forEach(function(d, di){ d.classList.toggle('is-active', di === index); });
+    }
+
+    function syncFromScroll() {
+      if (!slides.length) return;
+      var w = slideWidth() || 1;
+      var approx = Math.round(gallery.scrollLeft / w);
+      if (approx !== index) {
+        index = Math.max(0, Math.min(slides.length - 1, approx));
+        dots.forEach(function(d, di){ d.classList.toggle('is-active', di === index); });
+      }
+    }
+
+    if (prev) prev.addEventListener('click', function(){ goTo(index - 1); });
+    if (next) next.addEventListener('click', function(){ goTo(index + 1); });
+    dots.forEach(function(d){ d.addEventListener('click', function(){ var i = parseInt(d.getAttribute('data-slide'), 10); goTo(i); }); });
+    gallery.addEventListener('scroll', syncFromScroll, { passive: true });
+    window.addEventListener('resize', function(){ goTo(index, 'auto'); });
+
+    // Ensure info panel is fully static on mobile (no residual classes)
+    var panel = document.querySelector('.product-page__info');
+    if (panel) {
+      panel.classList.remove('is-fixed', 'is-locked');
+      panel.style.removeProperty('--fixed-left');
+      panel.style.removeProperty('--fixed-width');
+      panel.style.removeProperty('--lock-top');
+      panel.style.removeProperty('--lock-left');
+      panel.style.removeProperty('--lock-width');
+      panel.style.removeProperty('transform');
+    }
+
+    goTo(0, 'auto');
+  })();
+</script>
+{% stylesheet %}
+  /* Ensure parent section doesn't interfere with sticky */
+  .shopify-section:has(.product-page) {
+    overflow: visible;
+  }
+  
+  .product-page {
+    width: 100%;
+    position: relative;
+    overflow: visible;
+  }
+  .product-page__container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+    position: relative;
+    gap: 0;
+  }
+  .product-gallery__wrapper {
+    position: relative;
+  }
+  .product-page__gallery {
+    border-right: 1px solid rgba(0,0,0,.15);
+    position: relative;
+    z-index: 1;
+  }
+  /* Hide carousel controls on desktop */
+  .product-gallery__nav,
+  .product-gallery__dots {
+    display: none;
+  }
+  .product-page__gallery-item {
+    padding: var(--page-margin);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    background: #fff;
+  }
+  .product-page__gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .product-page__info {
+    position: relative;
+    z-index: 2;
+    background: white;
+    box-sizing: border-box;
+    width: 100%;
+    align-self: start;
+    overflow: visible;
+  }
+  .product-page__info-inner {
+    position: -webkit-sticky;
+    position: sticky;
+    top: calc(5rem + 16px);
+    padding: var(--page-margin);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-family: var(--font-primary--family);
+    background: white;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .product-page__thumbnail {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 24px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f8f8f8;
+  }
+  .product-page__thumbnail .image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .product-page__thumbnail .image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .product-page__title {
+    font-size: 32px;
+    margin: 0 0 24px;
+    text-transform: uppercase;
+    font-family: var(--font-primary--family);
+    font-weight: 700;
+  }
+  .product-page__description {
+    max-width: 400px;
+    margin: 0 auto 24px;
+    color: #666;
+  }
+  .product-page__features {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    max-width: 500px;
+    margin: 0 auto 24px;
+  }
+  .product-page__feature-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .product-page__feature-icon {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+  }
+  .product-page__feature-text {
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .product-page__price {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 16px;
+    font-family: var(--font-primary--family);
+    color: #000;
+  }
+  .product-page__form {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .product-page__buy-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 32px;
+    border: 1px solid #000;
+    background: transparent;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    width: 100%;
+    font-family: var(--font-primary--family);
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+  }
+  .product-page__buy-button:hover,
+  .product-page__buy-button:focus {
+    background: #000;
+    color: #fff;
+    outline: none;
+  }
+
+  .product-page__related {
+    width: 100%;
+    padding: var(--page-margin);
+    margin-top: 80px;
+    border-top: 1px solid rgba(0,0,0,.15);
+  }
+  .product-page__related-title {
+    font-size: 32px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0 0 32px;
+    text-align: center;
+    font-family: var(--font-primary--family);
+  }
+  .product-page__related-carousel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 32px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .product-page__related-item {
+    scroll-snap-align: start;
+    min-width: 250px;
+  }
+  .product-page__related-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease;
+  }
+  .product-page__related-link:hover {
+    transform: translateY(-4px);
+  }
+  .product-page__related-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #f8f8f8;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .product-page__related-image .image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .product-page__related-image-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .product-page__related-info {
+    text-align: center;
+  }
+  .product-page__related-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    font-family: var(--font-primary--family);
+  }
+  .product-page__related-price {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: var(--font-primary--family);
+    color: #000;
+  }
+
+  /* JS fallback: fixed state for right panel when CSS sticky is unreliable */
+  .product-page__info.is-fixed {
+    position: fixed !important;
+    top: calc(5rem + 16px);
+    left: var(--fixed-left, auto);
+    width: var(--fixed-width, auto);
+    z-index: 3;
+  }
+  .product-page__info.is-fixed .product-page__info-inner {
+    position: static;
+  }
+  .product-page__info.is-locked {
+    position: absolute !important;
+    top: var(--lock-top, 0px);
+    left: var(--lock-left, 50%);
+    width: var(--lock-width, 50%);
+    z-index: 2;
+  }
+  .product-page__info.is-locked .product-page__info-inner {
+    position: static;
+  }
+
+  @media (max-width: 1023px) {
+    .product-page__container {
+      grid-template-columns: 1fr;
+    }
+    .product-gallery__wrapper {
+      position: relative;
+    }
+    .product-page__gallery {
+      border-right: none;
+      /* Mobile carousel */
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 100%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .product-page__gallery-item { scroll-snap-align: start; }
+    /* Show carousel controls on mobile */
+    .product-gallery__nav {
+      display: grid;
+    }
+    .product-gallery__dots {
+      display: flex;
+    }
+    /* Carousel controls - positioned relative to wrapper */
+    .product-gallery__nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px; height: 40px;
+      border: none;
+      background: transparent;
+      color: #000;
+      display: grid; place-items: center;
+      cursor: pointer;
+      z-index: 2;
+      transition: opacity .2s ease;
+    }
+    .product-gallery__nav:hover { opacity: .7; }
+    .product-gallery__nav--prev { left: 12px; }
+    .product-gallery__nav--next { right: 12px; }
+    .product-gallery__dots {
+      display: flex;
+      justify-content: center;
+      gap: .5rem;
+      padding: 12px 0 20px;
+    }
+    .product-gallery__dot {
+      width: 10px; height: 10px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.3);
+      cursor: pointer;
+      opacity: 0.2;
+      transition: transform .2s ease, background-color .2s ease;
+    }
+    .product-gallery__dot.is-active { background: #000; transform: scale(1.1); opacity: 0.2; }
+    .product-page__info {
+      position: static;
+      height: auto;
+      overflow-y: visible;
+      border-top: 1px solid rgba(0,0,0,.15);
+    }
+    /* Forcefully neutralize any fixed/locked leftover state on mobile */
+    .product-page__info.is-fixed,
+    .product-page__info.is-locked {
+      position: static !important;
+      top: auto !important;
+      left: auto !important;
+      width: auto !important;
+      transform: none !important;
+      z-index: auto !important;
+    }
+    .product-page__info-inner {
+      position: static;
+    }
+    /* Hide thumbnail on mobile */
+    .product-page__thumbnail {
+      display: none;
+    }
+    /* Fix buy button text color on mobile */
+    .product-page__buy-button {
+      color: #000;
+    }
+    .product-page__buy-button:hover,
+    .product-page__buy-button:focus {
+      background: #000;
+      color: #fff;
+      outline: none;
+    }
+    .product-page__related-carousel {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .product-page__related-item {
+      min-width: 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.product",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_related_products",
+      "label": "Show related products",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "related_products_title",
+      "label": "Related products title",
+      "default": "Related Products"
+    },
+    {
+      "type": "collection",
+      "id": "related_collection",
+      "label": "Related products collection",
+      "info": "If not selected, products from the current product's collection will be shown"
+    },
+    {
+      "type": "range",
+      "id": "related_products_limit",
+      "label": "Number of related products",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

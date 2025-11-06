@@ -1,0 +1,522 @@
+{% comment %}
+  Range page with sidebar filters for collections.
+  Shows product names in the main area based on selected collection.
+{% endcomment %}
+
+{% assign selected = request.params.range_collection | default: 'all' %}
+{% assign selected_tag = request.params.range_tag | default: 'all' %}
+
+<section class="range">
+  <h1 class="range__title">RANGE</h1>
+  
+  {%- comment -%} Mobile horizontal scrollable filters {%- endcomment -%}
+  <div class="range__mobile-filters">
+    <div class="range__mobile-filter-group">
+      <label class="range__mobile-filter-label">PRODUCTS</label>
+      <div class="range__mobile-filters-scroll">
+        <label class="range__mobile-filter-chip">
+          <input type="radio" name="range_collection" value="all" {% if selected == 'all' %}checked{% endif %}>
+          <span>All</span>
+        </label>
+        {% assign has_cats = false %}
+        {% for block in section.blocks %}
+          {% if block.type == 'category' and block.settings.collection != blank %}
+            {% assign has_cats = true %}
+            <label class="range__mobile-filter-chip">
+              <input type="radio" name="range_collection" value="{{ block.settings.collection.handle }}" {% if selected == block.settings.collection.handle %}checked{% endif %}>
+              <span>{{ block.settings.collection.title }}</span>
+            </label>
+          {% endif %}
+        {% endfor %}
+        {% unless has_cats %}
+          {% assign collections_list = "c1,c2,c3,c4" | split: ',' %}
+          {% for key in collections_list %}
+            {% assign col = section.settings[key] %}
+            {% if col %}
+              <label class="range__mobile-filter-chip">
+                <input type="radio" name="range_collection" value="{{ col.handle }}" {% if selected == col.handle %}checked{% endif %}>
+                <span>{{ col.title }}</span>
+              </label>
+            {% endif %}
+          {% endfor %}
+        {% endunless %}
+      </div>
+    </div>
+    <div class="range__mobile-filter-group">
+      <label class="range__mobile-filter-label">CATEGORY</label>
+      <div class="range__mobile-filters-scroll">
+        <label class="range__mobile-filter-chip">
+          <input type="radio" name="range_tag" value="all" {% if selected_tag == 'all' %}checked{% endif %}>
+          <span>All</span>
+        </label>
+        {% for block in section.blocks %}
+          {% if block.type == 'tag' and block.settings.tag != '' %}
+            <label class="range__mobile-filter-chip">
+              <input type="radio" name="range_tag" value="{{ block.settings.tag | escape }}" {% if selected_tag == block.settings.tag %}checked{% endif %}>
+              <span>{{ block.settings.tag }}</span>
+            </label>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="range__grid">
+    <aside class="range__sidebar">
+      <h3 class="range__heading">PRODUCTS</h3>
+      <form id="range-filter-form" class="range__filters" method="get">
+        <label class="range__filter">
+          <input type="radio" name="range_collection" value="all" {% if selected == 'all' %}checked{% endif %}>
+          <span>All</span>
+        </label>
+        {% assign has_cats = false %}
+        {% for block in section.blocks %}
+          {% if block.type == 'category' and block.settings.collection != blank %}
+            {% assign has_cats = true %}
+            <label class="range__filter">
+              <input type="radio" name="range_collection" value="{{ block.settings.collection.handle }}" {% if selected == block.settings.collection.handle %}checked{% endif %}>
+              <span>{{ block.settings.collection.title }}</span>
+            </label>
+          {% endif %}
+        {% endfor %}
+        {% unless has_cats %}
+          {% assign collections_list = "c1,c2,c3,c4" | split: ',' %}
+          {% for key in collections_list %}
+            {% assign col = section.settings[key] %}
+            {% if col %}
+              <label class="range__filter">
+                <input type="radio" name="range_collection" value="{{ col.handle }}" {% if selected == col.handle %}checked{% endif %}>
+                <span>{{ col.title }}</span>
+              </label>
+            {% endif %}
+          {% endfor %}
+        {% endunless %}
+      </form>
+      <h3 class="range__heading">CATEGORY</h3>
+      <form id="range-tag-form" class="range__filters" method="get">
+        <label class="range__filter">
+          <input type="radio" name="range_tag" value="all" {% if selected_tag == 'all' %}checked{% endif %}>
+          <span>All</span>
+        </label>
+        {% for block in section.blocks %}
+          {% if block.type == 'tag' and block.settings.tag != '' %}
+            <label class="range__filter">
+              <input type="radio" name="range_tag" value="{{ block.settings.tag | escape }}" {% if selected_tag == block.settings.tag %}checked{% endif %}>
+              <span>{{ block.settings.tag }}</span>
+            </label>
+          {% endif %}
+        {% endfor %}
+      </form>
+    </aside>
+
+    <div class="range__content" id="range-results">
+      {% if selected == 'all' %}
+        {% assign has_cats = false %}
+        {% for block in section.blocks %}
+          {% if block.type == 'category' and block.settings.collection != blank %}
+            {% assign has_cats = true %}
+            {% assign col = block.settings.collection %}
+            <h2 class="range__cat-title">{{ col.title }}</h2>
+            <div class="prod-grid">
+              {% for product in col.products %}
+                <a class="prod-card" href="{{ product.url }}">
+                  {% if product.featured_image %}
+                    {% render 'image', class: 'prod-card__image', image: product.featured_image, width: 600, height: 600, crop: 'center' %}
+                  {% endif %}
+                  <div class="prod-card__name">{{ product.title }}</div>
+                </a>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endfor %}
+        {% unless has_cats %}
+          {% assign collections_list = "c1,c2,c3,c4" | split: ',' %}
+          {% for key in collections_list %}
+            {% assign col = section.settings[key] %}
+            {% if col %}
+              <h2 class="range__cat-title">{{ col.title }}</h2>
+              <div class="prod-grid">
+                {% for product in col.products %}
+                  <a class="prod-card" href="{{ product.url }}">
+                    {% if product.featured_image %}
+                      {% render 'image', class: 'prod-card__image', image: product.featured_image, width: 600, height: 600, crop: 'center' %}
+                    {% endif %}
+                    <div class="prod-card__name">{{ product.title }}</div>
+                  </a>
+                {% endfor %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endunless %}
+      {% else %}
+        {% assign active_collection = collections[selected] %}
+        {% if active_collection %}
+          <h2 class="range__cat-title">{{ active_collection.title }}</h2>
+          <div class="prod-grid">
+            {% for product in active_collection.products %}
+              <a class="prod-card" href="{{ product.url }}">
+                {% if product.featured_image %}
+                  {% render 'image', class: 'prod-card__image', image: product.featured_image, width: 600, height: 600, crop: 'center' %}
+                {% endif %}
+                <div class="prod-card__name">{{ product.title }}</div>
+              </a>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p>No products found.</p>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+ </section>
+
+{%- comment -%} Embed lightweight data for instant client-side filtering {%- endcomment -%}
+<script type="application/json" id="range-data">
+{
+  {% assign sep = '' %}
+  {% assign has_cats = false %}
+  {% for block in section.blocks %}
+    {% if block.type == 'category' and block.settings.collection != blank %}
+      {% assign has_cats = true %}
+      {% assign col = block.settings.collection %}
+      {{ sep }}"{{ col.handle }}": {
+        "title": {{ col.title | json }},
+        "products": [
+          {% assign psep = '' %}
+          {% for product in col.products %}
+            {{ psep }}{"id": {{ product.id }}, "title": {{ product.title | json }}, "url": {{ product.url | json }}, "image": {% if product.featured_image %}{{ product.featured_image | image_url: width: 600, height: 600, crop: 'center' | json }}{% else %}null{% endif %}, "tags": {{ product.tags | json }}}
+            {% assign psep = ',' %}
+          {% endfor %}
+        ]
+      }
+      {% assign sep = ',' %}
+    {% endif %}
+  {% endfor %}
+  {% unless has_cats %}
+    {% assign collections_list = "c1,c2,c3,c4" | split: ',' %}
+    {% for key in collections_list %}
+      {% assign col = section.settings[key] %}
+      {% if col %}
+        {{ sep }}"{{ col.handle }}": {
+          "title": {{ col.title | json }},
+          "products": [
+            {% assign psep = '' %}
+            {% for product in col.products %}
+              {{ psep }}{"id": {{ product.id }}, "title": {{ product.title | json }}, "url": {{ product.url | json }}, "image": {% if product.featured_image %}{{ product.featured_image | image_url: width: 600, height: 600, crop: 'center' | json }}{% else %}null{% endif %}, "tags": {{ product.tags | json }}}
+              {% assign psep = ',' %}
+            {% endfor %}
+          ]
+        }
+        {% assign sep = ',' %}
+      {% endif %}
+    {% endfor %}
+  {% endunless %}
+}
+</script>
+
+{% stylesheet %}
+  .range { 
+    width: 100%; 
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+  
+  /* Mobile horizontal scrollable filters */
+  .range__mobile-filters {
+    display: none;
+    padding: 0 var(--page-margin) 16px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid rgba(0,0,0,.15);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  .range__mobile-filter-group {
+    margin-bottom: 16px;
+  }
+  .range__mobile-filter-group:last-child {
+    margin-bottom: 0;
+  }
+  .range__mobile-filter-label {
+    font-family: 'Poppins', var(--font-primary--family);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: .04em;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .range__mobile-filters-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+    width: 100%;
+    max-width: 100%;
+  }
+  .range__mobile-filters-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  .range__mobile-filter-chip {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    padding: 8px 16px;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 999px;
+    background: #fff;
+    cursor: pointer;
+    font-family: 'Poppins', var(--font-primary--family);
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    transition: background-color .2s, border-color .2s, color .2s;
+  }
+  .range__mobile-filter-chip input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .range__mobile-filter-chip:has(input:checked),
+  .range__mobile-filter-chip.is-checked {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+  }
+  
+  .range__grid {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 32px;
+    align-items: stretch;
+    padding: 0 var(--page-margin);
+  }
+  .range__sidebar {
+    position: sticky;
+    top: calc(5rem + 16px); /* stay fully below fixed header */
+    align-self: start;
+    min-height: calc(100vh - (5rem + 32px)); /* full-height border with same top/bottom padding */
+    border-right: 1px solid rgba(0,0,0,.15);
+    padding: 16px 24px 16px 0;
+  }
+  
+  @media (max-width: 1023px) {
+    .range__mobile-filters { display: block; }
+    .range__sidebar { display: none; }
+    .range__grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding: 0 var(--page-margin);
+    }
+  }
+  .range__heading {
+    font-family: 'Poppins', var(--font-primary--family);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: .04em;
+    margin-bottom: 12px;
+    margin-top: 50px;
+  }
+  
+  .range__heading:first-child {
+    margin-top: 0;
+  }
+  .range__filters { display: grid; gap: 10px; }
+  .range__filter { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .range__filter input[type="radio"] { accent-color: #000; }
+  .range__title { margin: 0 0 24px; padding: 0 var(--page-margin); }
+  .range__cat-title { margin: 70px 0 20px; font-size: 30px; }
+  .range__cat-title:first-child { margin-top: 0; }
+  .prod-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+  @media (min-width: 640px) { .prod-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .prod-grid { grid-template-columns: repeat(3, 1fr); } }
+  
+  @media (max-width: 1023px) {
+    .range__cat-title { margin: 40px 0 16px; font-size: 24px; }
+  }
+  .prod-card { display: flex; flex-direction: column; text-decoration: none; color: inherit; border: 1px solid rgba(0,0,0,.15); padding: 12px; border-radius: 8px; background: #fff; }
+  .prod-card__image { width: 100%; }
+  .prod-card__name { margin-top: 10px; font-weight: 700; font-family: 'Poppins', var(--font-primary--family); }
+{% endstylesheet %}
+
+<script>
+  (function(){
+    var form = document.getElementById('range-filter-form');
+    var tagForm = document.getElementById('range-tag-form');
+    var results = document.getElementById('range-results');
+    var dataEl = document.getElementById('range-data');
+    if (!results || !dataEl) return;
+    var data = {};
+    try { data = JSON.parse(dataEl.textContent || '{}'); } catch(e) {}
+
+    var getActiveFilters = function(){
+      return window.matchMedia('(max-width: 1023px)').matches
+        ? document.querySelector('.range__mobile-filters')
+        : document.querySelector('.range__sidebar');
+    };
+
+    var card = function(p){
+      var img = p.image ? '<img class="prod-card__image" src="' + p.image + '" alt="' + (p.title || '') + '">' : '';
+      var open = p.url ? '<a class="prod-card" href="' + p.url + '">' : '<div class="prod-card">';
+      var close = p.url ? '</a>' : '</div>';
+      return open + img + '<div class="prod-card__name">' + (p.title || '') + '</div>' + close;
+    };
+    var render = function(key){
+      var params = new URLSearchParams(location.search);
+      var tag = params.get('range_tag') || 'all';
+      var html = '';
+      if (key === 'all') {
+        Object.keys(data).forEach(function(h){
+          var bucket = data[h];
+          if (!bucket) return;
+          html += '<h2 class="range__cat-title">' + (bucket.title || '') + '</h2>';
+          html += '<div class="prod-grid">';
+          var count = 0;
+          (bucket.products || []).forEach(function(p){
+            if (tag !== 'all' && !(p.tags || []).includes(tag)) return;
+            count++; html += card(p);
+          });
+          html += '</div>';
+          if (tag !== 'all' && count === 0) {
+            html += '<p>No ' + tag + ' products exist for ' + (bucket.title || 'this category') + '.</p>';
+          }
+        });
+      } else {
+        var bucket = data[key];
+        if (bucket) {
+          html += '<h2 class="range__cat-title">' + (bucket.title || '') + '</h2>';
+          html += '<div class="prod-grid">';
+          var count = 0;
+          (bucket.products || []).forEach(function(p){
+            if (tag !== 'all' && !(p.tags || []).includes(tag)) return;
+            count++; html += card(p);
+          });
+          html += '</div>';
+          if (tag !== 'all' && count === 0) {
+            html += '<p>No ' + tag + ' products exist for ' + (bucket.title || 'this category') + '.</p>';
+          }
+        }
+      }
+      if (!html) html = '<p>No products found.</p>';
+      results.innerHTML = html;
+    };
+
+    var setFromURL = function(){
+      var params = new URLSearchParams(location.search);
+      var key = params.get('range_collection') || 'all';
+      var tag = params.get('range_tag') || 'all';
+      
+      // Update both desktop and mobile filters to stay in sync
+      document.querySelectorAll('input[name="range_collection"]').forEach(function(input){
+        input.checked = input.value === key;
+      });
+      document.querySelectorAll('input[name="range_tag"]').forEach(function(input){
+        input.checked = input.value === tag;
+      });
+      
+      render(key);
+    };
+
+    var onChange = function(e){
+      var activeFilters = getActiveFilters();
+      if (!activeFilters || !e.target.closest('.range__mobile-filters, .range__sidebar')) {
+        // If the change event is from an inactive filter set, ignore it.
+        // This is a safeguard for when visibility changes.
+        var eventFilters = e.target.closest('.range__mobile-filters, .range__sidebar');
+        if (eventFilters !== activeFilters) return;
+      }
+      
+      e.preventDefault();
+      var params = new URLSearchParams(location.search);
+      
+      var keyEl = activeFilters.querySelector('input[name="range_collection"]:checked');
+      var key = keyEl ? keyEl.value : 'all';
+      if (key === 'all') params.delete('range_collection'); else params.set('range_collection', key);
+      
+      var tagEl = activeFilters.querySelector('input[name="range_tag"]:checked');
+      var tag = tagEl ? tagEl.value : 'all';
+      if (tag === 'all') params.delete('range_tag'); else params.set('range_tag', tag);
+      
+      var newUrl = location.pathname + (params.toString() ? '?' + params.toString() : '');
+      if (location.search !== (params.toString() ? '?' + params.toString() : '')) {
+        history.replaceState(null, '', newUrl);
+      }
+      
+      render(key);
+      
+      // Smooth-scroll to top of results below the fixed header
+      try {
+        var section = document.querySelector('.range');
+        var headerOffset = 96; // 5rem header + 16px gap
+        var top = (section ? section.getBoundingClientRect().top + window.pageYOffset : 0) - headerOffset;
+        window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
+      } catch (err) {}
+    };
+
+    // Use a single delegated event listener for all filter changes
+    document.addEventListener('change', function(e){
+      if (e.target.matches('input[name="range_collection"], input[name="range_tag"]')) {
+        onChange(e);
+      }
+    });
+
+    setFromURL();
+    
+    // Update mobile chip checked state styling (fallback for browsers without :has support)
+    var updateChipStates = function(){
+      document.querySelectorAll('.range__mobile-filter-chip input[type="radio"]').forEach(function(input){
+        var chip = input.closest('.range__mobile-filter-chip');
+        if (chip) {
+          if (input.checked) {
+            chip.classList.add('is-checked');
+          } else {
+            chip.classList.remove('is-checked');
+          }
+        }
+      });
+    };
+    updateChipStates();
+    document.addEventListener('change', function(e){
+      if (e.target.matches('.range__mobile-filter-chip input[type="radio"]')) {
+        updateChipStates();
+      }
+    });
+  })();
+  </script>
+
+{% schema %}
+{
+  "name": "Range",
+  "settings": [
+    { "type": "collection", "id": "c1", "label": "Jet Lighters" },
+    { "type": "collection", "id": "c2", "label": "Jet Torches" },
+    { "type": "collection", "id": "c3", "label": "Gas Refills" },
+    { "type": "collection", "id": "c4", "label": "Displays" }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Collection" }
+      ]
+    },
+    {
+      "type": "tag",
+      "name": "Tag",
+      "settings": [
+        { "type": "text", "id": "tag", "label": "Tag (exact)" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Range" }
+  ]
+}
+{% endschema %}

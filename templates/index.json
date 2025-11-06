@@ -1,0 +1,35 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero-video": {
+      "type": "hero-video",
+      "settings": {}
+    },
+    "home-slider": {
+      "type": "home-slider",
+      "settings": {}
+    },
+    "home-brand": {
+      "type": "home-brand",
+      "settings": {}
+    },
+    "main": {
+      "type": "hello-world",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero-video",
+    "home-slider",
+    "home-brand",
+    "main"
+  ]
+}

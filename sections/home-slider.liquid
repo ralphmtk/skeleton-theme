@@ -1,0 +1,193 @@
+<section class="home-slider" aria-label="Showcase slider">
+  <div class="home-slider__card">
+    <div class="home-slider__header">
+      <h2>Latest News</h2>
+    </div>
+    <div class="home-slider__viewport" role="region" aria-roledescription="carousel" aria-label="Featured slides">
+      <div class="home-slider__track" data-index="0">
+        {% assign slides = (1..5) %}
+        {% for i in slides %}
+          <div class="home-slider__slide" aria-roledescription="slide" aria-label="Slide {{ forloop.index }} of {{ slides.size }}">
+            <div class="home-slider__content">
+              <h3>Slide {{ forloop.index }}</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dapibus, nunc at facilisis feugiat, velit nulla aliquet.</p>
+              <a href="#" class="button">Explore</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <button class="home-slider__nav home-slider__nav--prev" aria-label="Previous slide" type="button">&#10094;</button>
+      <button class="home-slider__nav home-slider__nav--next" aria-label="Next slide" type="button">&#10095;</button>
+    </div>
+
+    <div class="home-slider__dots" role="tablist" aria-label="Slide navigation">
+      {% for i in slides %}
+        <button class="home-slider__dot{% if forloop.first %} is-active{% endif %}" role="tab" aria-label="Go to slide {{ forloop.index }}" data-slide="{{ forloop.index0 }}" type="button"></button>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% stylesheet %}
+    .home-slider {
+      padding: 3rem 0 4rem;
+    }
+    .home-slider__card {
+      margin-inline: auto;
+      width: min(100%, 1080px);
+      border-radius: 16px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+      overflow: hidden;
+      backdrop-filter: blur(4px);
+    }
+    .home-slider__header { padding: 1rem 1.25rem 0; }
+    .home-slider__header h2 {
+      font-size: clamp(1rem, 1.8vw, 1.2rem);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      opacity: .95;
+    }
+    header.is-solid ~ .shopify-section .home-slider__card {
+      background: #fff;
+      border-color: rgba(0,0,0,.08);
+      box-shadow: 0 10px 30px rgba(0,0,0,.12);
+    }
+    .home-slider__viewport {
+      position: relative;
+      overflow: hidden;
+      padding: 1rem 1.25rem 1.25rem; /* whitespace between slides and card */
+    }
+    .home-slider__track {
+      display: flex;
+      gap: 1.25rem;
+      will-change: transform;
+      transform: translateX(0);
+      transition: transform .5s cubic-bezier(.22,.61,.36,1);
+    }
+    .home-slider__slide {
+      width: 100%;
+      flex: 0 0 100%;
+      height: 400px; /* requested slide height */
+      border: 1px solid rgba(0,0,0,.12);
+      border-radius: 12px;
+      background: #ffffff;
+      display: grid;
+      place-items: center;
+    }
+    .home-slider__content {
+      text-align: center;
+      display: grid;
+      gap: .75rem;
+      max-width: 720px;
+      padding: 2rem clamp(1rem, 3vw, 2rem);
+    }
+    .home-slider__content h3 { font-size: clamp(1.1rem, 2.2vw, 1.6rem); }
+    .home-slider__content p { opacity: .85; }
+    .home-slider__content .button {
+      display: inline-block;
+      margin-top: .25rem;
+      padding: .6rem 1rem;
+      border-radius: 999px;
+      background: rgb(64,128,255);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .home-slider__nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px; height: 40px;
+      border: none;
+      background: transparent;
+      color: #000;
+      display: grid; place-items: center;
+      cursor: pointer;
+      z-index: 2;
+      transition: opacity .2s ease;
+    }
+    .home-slider__nav:hover { opacity: .7; }
+    .home-slider__nav--prev { left: 28px; }
+    .home-slider__nav--next { right: 28px; }
+    .home-slider__dots {
+      display: flex;
+      justify-content: center;
+      gap: .5rem;
+      padding: 1rem;
+    }
+    .home-slider__dot {
+      width: 10px; height: 10px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.3);
+      cursor: pointer;
+      opacity: 0.2;
+      transition: transform .2s ease, background-color .2s ease;
+    }
+    .home-slider__dot.is-active { 
+        background: #000; 
+        transform: scale(1.1); 
+        opacity: 0.2;
+    }
+  {% endstylesheet %}
+
+  <script>
+    (function() {
+      var section = document.currentScript && document.currentScript.closest('section.home-slider');
+      if (!section) section = document.querySelector('section.home-slider');
+      if (!section) return;
+      var track = section.querySelector('.home-slider__track');
+      var slides = Array.prototype.slice.call(section.querySelectorAll('.home-slider__slide'));
+      var prev = section.querySelector('.home-slider__nav--prev');
+      var next = section.querySelector('.home-slider__nav--next');
+      var dots = Array.prototype.slice.call(section.querySelectorAll('.home-slider__dot'));
+      var index = 0;
+      var slideCount = slides.length;
+      var intervalMs = 3000;
+      var timer;
+
+      function goTo(i) {
+        index = (i + slideCount) % slideCount;
+        if (slides.length > 0) {
+          var slideWidth = slides[0].offsetWidth;
+          var trackStyle = window.getComputedStyle(track);
+          var gap = parseFloat(trackStyle.gap) || 0;
+          var offset = -index * (slideWidth + gap);
+          track.style.transform = 'translateX(' + offset + 'px)';
+        }
+        dots.forEach(function(d, di){ d.classList.toggle('is-active', di === index); });
+      }
+
+      function play() {
+        stop();
+        timer = setInterval(function(){ goTo(index + 1); }, intervalMs);
+      }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+      if (prev) prev.addEventListener('click', function(){ goTo(index - 1); play(); });
+      if (next) next.addEventListener('click', function(){ goTo(index + 1); play(); });
+      dots.forEach(function(d){ d.addEventListener('click', function(){ var i = parseInt(d.getAttribute('data-slide'), 10); goTo(i); play(); }); });
+
+      // Pause on hover for desktop
+      section.addEventListener('mouseenter', stop);
+      section.addEventListener('mouseleave', play);
+
+      // Start
+      goTo(0);
+      play();
+    })();
+  </script>
+
+  {% schema %}
+  {
+    "name": "Home slider",
+    "settings": [],
+    "presets": [
+      { "name": "Home slider" }
+    ]
+  }
+  {% endschema %}
+</section>
+
