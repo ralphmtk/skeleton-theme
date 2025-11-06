@@ -10,7 +10,7 @@
       <div class="cart-page__left">
         {%- if cart.item_count > 0 -%}
           {%- for item in cart.items -%}
-            <article class="cart-item">
+            <article class="cart-item" data-key="{{ item.key }}">
               <div class="cart-item__media">
                 {%- if item.image -%}
                   {%- render 'image', image: item.image, class: 'cart-item__image', width: 220, height: 220 -%}
@@ -136,6 +136,136 @@
     .cart-item__qty { justify-items: start; grid-column: 1 / -1; }
   }
 {% endstylesheet %}
+
+<script>
+  (function() {
+    var section = document.querySelector('.cart-page');
+    if (!section) return;
+
+    var currency = '{{ cart.currency.iso_code | default: shop.currency }}';
+    var formatter;
+    try { formatter = new Intl.NumberFormat(document.documentElement.lang || 'en', { style: 'currency', currency: currency }); } catch(e) { formatter = null; }
+
+    function formatMoney(cents) {
+      if (formatter) return formatter.format((cents || 0) / 100);
+      return (cents / 100).toFixed(2);
+    }
+
+    function setDisabled(el, disabled) {
+      if (!el) return;
+      el.querySelectorAll('button, input').forEach(function(ctrl){ ctrl.disabled = !!disabled; });
+    }
+
+    function changeQuantity(key, quantity) {
+      return fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ id: key, quantity: quantity })
+      }).then(function(r){
+        if (!r.ok) {
+          throw new Error('Cart update failed: ' + r.status);
+        }
+        return r.json();
+      });
+    }
+
+    function updateUIFromCart(cart, changedKey) {
+      // Update subtotal
+      var subtotalEl = document.querySelector('.summary-card__value');
+      if (subtotalEl) subtotalEl.textContent = formatMoney(cart.total_price);
+
+      if (!changedKey) return;
+      var line = (cart.items || []).find(function(i){ return i.key === changedKey; });
+      var itemEl = document.querySelector('.cart-item[data-key="' + changedKey + '"]');
+      if (line && itemEl) {
+        var totalEl = itemEl.querySelector('.cart-item__total');
+        if (totalEl) totalEl.textContent = formatMoney(line.final_line_price);
+        var inputEl = itemEl.querySelector('.qty-stepper__input');
+        if (inputEl) inputEl.value = line.quantity;
+      } else if (!line && itemEl) {
+        // Item was removed
+        itemEl.parentElement.removeChild(itemEl);
+        if ((cart.items || []).length === 0) {
+          // If cart is empty, reload to show empty state
+          window.location.reload();
+        }
+      }
+    }
+
+    // Quantity stepper handlers
+    section.addEventListener('click', function(e) {
+      var btn = e.target.closest('.qty-stepper__btn');
+      if (!btn) return;
+      var itemEl = e.target.closest('.cart-item');
+      if (!itemEl) return;
+      var input = itemEl.querySelector('.qty-stepper__input');
+      if (!input) return;
+      var key = itemEl.getAttribute('data-key');
+      var current = parseInt(input.value, 10) || 0;
+      var delta = btn.getAttribute('data-action') === 'increment' ? 1 : -1;
+      var next = Math.max(0, current + delta);
+      if (next === current) return;
+      setDisabled(itemEl, true);
+      changeQuantity(key, next).then(function(cart){
+        updateUIFromCart(cart, key);
+      }).catch(function(){
+        // fallback: reload on error
+        window.location.reload();
+      }).finally(function(){ setDisabled(itemEl, false); });
+    });
+
+    // Manual input (on blur and Enter)
+    section.addEventListener('change', function(e) {
+      var input = e.target.closest('.qty-stepper__input');
+      if (!input) return;
+      var itemEl = e.target.closest('.cart-item');
+      if (!itemEl) return;
+      var key = itemEl.getAttribute('data-key');
+      var val = Math.max(0, parseInt(input.value, 10) || 0);
+      input.value = val;
+      setDisabled(itemEl, true);
+      changeQuantity(key, val).then(function(cart){
+        updateUIFromCart(cart, key);
+      }).catch(function(){ window.location.reload(); })
+      .finally(function(){ setDisabled(itemEl, false); });
+    });
+
+    section.addEventListener('keydown', function(e) {
+      if (e.key !== 'Enter') return;
+      var input = e.target.closest('.qty-stepper__input');
+      if (!input) return;
+      input.blur();
+    });
+
+    // Remove buttons
+    section.addEventListener('click', function(e) {
+      var removeBtn = e.target.closest('[data-action="remove"][data-key]');
+      if (!removeBtn) return;
+      var key = removeBtn.getAttribute('data-key');
+      var itemEl = removeBtn.closest('.cart-item');
+      setDisabled(itemEl, true);
+      changeQuantity(key, 0).then(function(cart){
+        updateUIFromCart(cart, key);
+      }).catch(function(){ window.location.reload(); })
+      .finally(function(){ setDisabled(itemEl, false); });
+    });
+
+    // Promo code apply — use /discount/{code}?return_to=/cart
+    (function(){
+      var applyBtn = document.querySelector('.cart-promo__apply');
+      var input = document.getElementById('cart-promo-code');
+      if (!applyBtn || !input) return;
+      function apply() {
+        var code = (input.value || '').trim();
+        if (!code) return;
+        var href = '/discount/' + encodeURIComponent(code) + '?return_to=' + encodeURIComponent('/cart');
+        window.location.href = href;
+      }
+      applyBtn.addEventListener('click', apply);
+      input.addEventListener('keydown', function(e){ if (e.key === 'Enter') { e.preventDefault(); apply(); } });
+    })();
+  })();
+</script>
 
 {% schema %}
 {
