@@ -4,6 +4,12 @@
 
 {%- assign selected_variant = product.selected_or_first_available_variant -%}
 
+<div class="product-page__subheader">
+  <button class="product-page__back-button" onclick="window.history.back()" aria-label="Go back">
+    ← Back
+  </button>
+</div>
+
 <section class="product-page">
   <div class="product-page__container">
     <div class="product-gallery__wrapper">
@@ -53,19 +59,21 @@
             {%- endif -%}
           {%- endfor -%}
         </div>
-
-        <div class="product-page__price">
-          {{ selected_variant.price | money }}
-        </div>
-
-        {%- form 'product', product, class: 'product-page__form' -%}
-          <input type="hidden" name="id" value="{{ selected_variant.id }}">
-          <button type="submit" class="product-page__buy-button">Buy Now</button>
-        {%- endform -%}
       </div>
     </div>
   </div>
 </section>
+
+<div class="product-page__sticky-footer">
+  <div class="product-page__sticky-footer-container">
+    <h2 class="product-page__sticky-title">{{ product.title }}</h2>
+    <div class="product-page__sticky-price">{{ selected_variant.price | money }}</div>
+    {%- form 'product', product, class: 'product-page__sticky-form' -%}
+      <input type="hidden" name="id" value="{{ selected_variant.id }}">
+      <button type="submit" class="product-page__sticky-buy-button">Buy Now</button>
+    {%- endform -%}
+  </div>
+</div>
 
 {%- if section.settings.show_related_products -%}
   <section class="product-page__related">
@@ -101,8 +109,6 @@
     </div>
   </section>
 {%- endif -%}
-
-<!-- debug script removed -->
 
 <script>
   (function() {
@@ -215,6 +221,143 @@
 
 <script>
   (function() {
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      var form = e.target;
+      var button = form.querySelector('button[type="submit"]');
+      var originalText = button.textContent;
+      button.disabled = true;
+      button.textContent = 'Adding...';
+
+      var formData = new FormData(form);
+      
+      fetch('/cart/add.js', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (response.status === 422) {
+          return response.json().then(data => {
+            throw new Error(data.description || 'Could not add to cart.');
+          });
+        }
+        if (!response.ok) {
+          throw new Error('Request failed with status: ' + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Dispatch cart update event for header badge
+        fetch('/cart.js')
+          .then(r => r.ok ? r.json() : null)
+          .then(cart => {
+            if (cart) {
+              document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cart } }));
+            }
+          })
+          .catch(() => {});
+        // Success, redirect to cart
+        window.location.href = '/cart';
+      })
+      .catch(error => {
+        console.error('Error adding to cart:', error);
+        button.textContent = error.message || 'Error';
+        setTimeout(() => {
+          button.disabled = false;
+          button.textContent = originalText;
+        }, 3000);
+      });
+    }
+
+    // Handle both forms if they exist
+    var stickyForm = document.querySelector('.product-page__sticky-form');
+    if (stickyForm) {
+      stickyForm.addEventListener('submit', handleFormSubmit);
+    }
+  })();
+</script>
+
+<script>
+  (function() {
+    // Sticky footer that stops at the end of related products section
+    var stickyFooter = document.querySelector('.product-page__sticky-footer');
+    if (!stickyFooter) return;
+
+    // Find the related products section or the product page section as the stopping point
+    var relatedSection = document.querySelector('.product-page__related');
+    var productPage = document.querySelector('.product-page');
+    var stopPoint = relatedSection || productPage;
+    
+    if (!stopPoint) return;
+
+    function updateStickyFooter() {
+      var stopPointRect = stopPoint.getBoundingClientRect();
+      var windowHeight = window.innerHeight;
+      var scrollY = window.scrollY || window.pageYOffset;
+      
+      // Calculate the bottom of the stop point (end of related products or product page)
+      var stopPointBottom = stopPointRect.bottom + scrollY;
+      
+      // Calculate where sticky footer would be if fixed (bottom of viewport)
+      var viewportBottom = scrollY + windowHeight;
+      
+      // Add spacing between stop point and sticky footer (40px)
+      var spacing = 40;
+      
+      // If we've scrolled past the stop point, make it static (no longer sticky)
+      if (viewportBottom >= stopPointBottom) {
+        // Get the parent section for positioning context
+        var parentSection = stickyFooter.closest('.shopify-section');
+        if (parentSection) {
+          var sectionRect = parentSection.getBoundingClientRect();
+          var sectionTop = sectionRect.top + scrollY;
+          
+          // Position relative to the section with spacing
+          // Ensure it breaks out of any grid constraints
+          stickyFooter.style.position = 'absolute';
+          stickyFooter.style.bottom = 'auto';
+          stickyFooter.style.top = (stopPointBottom - sectionTop + spacing) + 'px';
+          stickyFooter.style.left = '0';
+          stickyFooter.style.right = '0';
+          stickyFooter.style.width = '100vw';
+          stickyFooter.style.maxWidth = '100%';
+          stickyFooter.style.transform = 'none';
+          stickyFooter.style.marginLeft = '0';
+          stickyFooter.style.marginRight = '0';
+        }
+      } else {
+        // Still within the content, keep it fixed at bottom
+        stickyFooter.style.position = 'fixed';
+        stickyFooter.style.bottom = '0';
+        stickyFooter.style.top = 'auto';
+        stickyFooter.style.left = '0';
+        stickyFooter.style.right = '0';
+        stickyFooter.style.width = '100%';
+        stickyFooter.style.transform = 'none';
+      }
+    }
+
+    // Initialize as fixed
+    stickyFooter.style.position = 'fixed';
+    stickyFooter.style.bottom = '0';
+    stickyFooter.style.left = '0';
+    stickyFooter.style.right = '0';
+    
+    window.addEventListener('scroll', updateStickyFooter, { passive: true });
+    window.addEventListener('resize', updateStickyFooter);
+    
+    // Use ResizeObserver to watch for changes
+    var ro = new ResizeObserver(updateStickyFooter);
+    if (relatedSection) ro.observe(relatedSection);
+    ro.observe(productPage);
+    ro.observe(stickyFooter);
+    
+    updateStickyFooter();
+  })();
+</script>
+
+<script>
+  (function() {
     // Mobile gallery carousel controls (only on mobile)
     if (!window.matchMedia('(max-width: 1023px)').matches) return;
     var wrapper = document.querySelector('.product-gallery__wrapper');
@@ -254,6 +397,13 @@
       }
     }
 
+    var dotsWrapper = document.querySelector('.product-gallery__dots');
+    // Hide controls when there's only one image
+    if (slides.length <= 1) {
+      if (prev) prev.style.display = 'none';
+      if (next) next.style.display = 'none';
+      if (dotsWrapper) dotsWrapper.style.display = 'none';
+    }
     if (prev) prev.addEventListener('click', function(){ goTo(index - 1); });
     if (next) next.addEventListener('click', function(){ goTo(index + 1); });
     dots.forEach(function(d){ d.addEventListener('click', function(){ var i = parseInt(d.getAttribute('data-slide'), 10); goTo(i); }); });
@@ -281,17 +431,53 @@
     overflow: visible;
   }
   
+  /* Remove page-content padding for product pages */
+  body.has-sticky-header .page-content:has(.product-page) {
+    padding-top: 0;
+  }
+  
+  /* Subheader with back button */
+  .product-page__subheader {
+    grid-column: 1 / -1;
+    width: 100%;
+    padding: 12px var(--page-margin);
+    background: #fff;
+    border-bottom: 1px solid rgba(0,0,0,.15);
+    position: relative;
+    z-index: 1;
+  }
+  .product-page__back-button {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+    cursor: pointer;
+    font-family: var(--font-primary--family);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: opacity 0.2s ease;
+  }
+  .product-page__back-button:hover {
+    opacity: 0.7;
+  }
+  
+  /* Break out of the section grid to be full-width */
   .product-page {
+    grid-column: 1 / -1;
     width: 100%;
     position: relative;
     overflow: visible;
+    padding-bottom: 100px; /* Space for sticky footer */
   }
   .product-page__container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 50vw 1fr;
     align-items: stretch;
     position: relative;
     gap: 0;
+    width: 100%;
   }
   .product-gallery__wrapper {
     position: relative;
@@ -307,7 +493,7 @@
     display: none;
   }
   .product-page__gallery-item {
-    padding: var(--page-margin);
+    padding: 8px var(--page-margin);
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -315,9 +501,28 @@
     aspect-ratio: 1 / 1;
     background: #fff;
   }
+  .product-page__gallery-item .image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+    max-width: 70%;
+    max-height: 70%;
+  }
   .product-page__gallery-image {
-    width: 100%;
-    height: 100%;
+    max-width: 70%;
+    max-height: 70%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin-top: -96px;
+  }
+  .product-page__gallery-item .image img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
     object-fit: contain;
   }
   .product-page__info {
@@ -328,11 +533,13 @@
     width: 100%;
     align-self: start;
     overflow: visible;
+    display: flex;
+    justify-content: center;
   }
   .product-page__info-inner {
     position: -webkit-sticky;
     position: sticky;
-    top: calc(5rem + 16px);
+    top: calc(5rem + 60px);
     padding: var(--page-margin);
     display: flex;
     flex-direction: column;
@@ -341,6 +548,7 @@
     font-family: var(--font-primary--family);
     background: white;
     width: 100%;
+    max-width: var(--page-width, 1280px);
     box-sizing: border-box;
   }
   .product-page__thumbnail {
@@ -397,13 +605,6 @@
     font-size: 12px;
     font-weight: 600;
   }
-  .product-page__price {
-    font-size: 28px;
-    font-weight: 700;
-    margin: 0 0 16px;
-    font-family: var(--font-primary--family);
-    color: #000;
-  }
   .product-page__form {
     width: 100%;
     max-width: 400px;
@@ -436,6 +637,7 @@
     width: 100%;
     padding: var(--page-margin);
     margin-top: 80px;
+    margin-bottom: 40px;
     border-top: 1px solid rgba(0,0,0,.15);
   }
   .product-page__related-title {
@@ -503,6 +705,88 @@
     color: #000;
   }
 
+  /* Sticky footer */
+  .product-page__sticky-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: #fff;
+    border-top: 1px solid rgba(0,0,0,.15);
+    z-index: 50;
+    box-shadow: 0 -2px 8px rgba(0,0,0,.06);
+    transition: transform 0.2s ease;
+    will-change: transform;
+  }
+  .product-page__sticky-footer[style*="position: absolute"] {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    grid-column: 1 / -1 !important;
+  }
+  .product-page__sticky-footer-container {
+    max-width: 100%;
+    width: 100%;
+    margin: 0 auto;
+    padding: 16px var(--page-margin);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    box-sizing: border-box;
+  }
+  .product-page__sticky-title {
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0;
+    font-family: var(--font-primary--family);
+    color: #000;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .product-page__sticky-price {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: var(--font-primary--family);
+    color: #000;
+    flex-shrink: 0;
+  }
+  .product-page__sticky-form {
+    flex-shrink: 0;
+  }
+  .product-page__sticky-buy-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 32px;
+    border: 1px solid #000;
+    background: #000;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: var(--font-primary--family);
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  .product-page__sticky-buy-button:hover,
+  .product-page__sticky-buy-button:focus {
+    background: transparent;
+    color: #000;
+    outline: none;
+  }
+
   /* JS fallback: fixed state for right panel when CSS sticky is unreliable */
   .product-page__info.is-fixed {
     position: fixed !important;
@@ -528,12 +812,15 @@
   @media (max-width: 1023px) {
     .product-page__container {
       grid-template-columns: 1fr;
+      width: 100%;
     }
     .product-gallery__wrapper {
       position: relative;
+      width: 100%;
     }
     .product-page__gallery {
       border-right: none;
+      width: 100%;
       /* Mobile carousel */
       display: grid;
       grid-auto-flow: column;
@@ -542,7 +829,24 @@
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
     }
-    .product-page__gallery-item { scroll-snap-align: start; }
+    .product-page__gallery-item {
+      scroll-snap-align: start;
+      /* Constrain mobile slide height so large images don't make the slideshow too tall */
+      aspect-ratio: auto;
+      height: clamp(260px, 85vw, 520px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: calc(var(--page-margin) + 100px); /* Account for sticky footer */
+    }
+    .product-page__gallery-image {
+      /* Keep image within the constrained slide height while preserving aspect ratio */
+      height: 100%;
+      width: auto;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
     /* Show carousel controls on mobile */
     .product-gallery__nav {
       display: grid;
@@ -588,6 +892,11 @@
       height: auto;
       overflow-y: visible;
       border-top: 1px solid rgba(0,0,0,.15);
+      width: 100%;
+      display: block;
+    }
+    .product-page__info-inner {
+      max-width: 100%;
     }
     /* Forcefully neutralize any fixed/locked leftover state on mobile */
     .product-page__info.is-fixed,
@@ -622,6 +931,27 @@
     }
     .product-page__related-item {
       min-width: 0;
+    }
+    /* Subheader mobile */
+    .product-page__subheader {
+      top: 5rem;
+    }
+    /* Sticky footer mobile */
+    .product-page__sticky-footer-container {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+    .product-page__sticky-title {
+      font-size: 16px;
+      text-align: center;
+    }
+    .product-page__sticky-price {
+      font-size: 18px;
+      text-align: center;
+    }
+    .product-page__sticky-buy-button {
+      width: 100%;
     }
   }
 {% endstylesheet %}

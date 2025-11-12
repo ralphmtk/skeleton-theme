@@ -25,9 +25,9 @@ body.has-sticky-header {
   padding-top: calc(5rem + 16px);
 }
 
-/* Constrain all non-home sections (including footer) to 1200px and center */
+/* Constrain all non-home sections (including footer) to 1280px and center */
 body.has-sticky-header .shopify-section {
-  --page-width: 1200px;
+  --page-width: 1280px;
 }
 
 /* Ensure comfortable side margins on non-home pages */

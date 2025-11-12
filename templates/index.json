@@ -8,28 +8,19 @@
  * ------------------------------------------------------------
  */
 {
-  "sections": {
-    "hero-video": {
-      "type": "hero-video",
-      "settings": {}
+    "sections": {
+        "hero-video": {
+            "type": "hero-video",
+            "settings": {}
+        },
+        "home-slider": {
+            "type": "home-slider",
+            "settings": {}
+        },
+        "main": {
+            "type": "hello-world",
+            "settings": {}
+        }
     },
-    "home-slider": {
-      "type": "home-slider",
-      "settings": {}
-    },
-    "home-brand": {
-      "type": "home-brand",
-      "settings": {}
-    },
-    "main": {
-      "type": "hello-world",
-      "settings": {}
-    }
-  },
-  "order": [
-    "hero-video",
-    "home-slider",
-    "home-brand",
-    "main"
-  ]
+    "order": ["hero-video", "home-slider", "main"]
 }

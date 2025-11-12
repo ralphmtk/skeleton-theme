@@ -18,11 +18,13 @@
   .page-wrapper {
     width: 100%; 
     max-width: 100%;
-    overflow-x: hidden;
     box-sizing: border-box;
   }
   .page-container {
+    max-width: var(--page-width, 1280px);
+    margin: 0 auto;
     padding: 0 var(--page-margin);
+    box-sizing: border-box;
   }
   .page-title {
     margin: 0; 

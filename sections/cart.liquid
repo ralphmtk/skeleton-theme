@@ -4,74 +4,82 @@
 
 <section class="cart-page">
   <div class="cart-page__container">
-    <h1 class="cart-page__title">{{ 'sections.cart.title' | t | default: 'Cart' | upcase }}</h1>
+    <form action="/cart" method="post" class="cart-page__grid">
+      <h1 class="cart-page__title">{{ 'sections.cart.title' | t | default: 'CART' | upcase }}</h1>
 
-    <div class="cart-page__grid">
+      {%- if cart.item_count > 0 -%}
       <div class="cart-page__left">
-        {%- if cart.item_count > 0 -%}
-          {%- for item in cart.items -%}
-            <article class="cart-item" data-key="{{ item.key }}">
-              <div class="cart-item__media">
-                {%- if item.image -%}
-                  {%- render 'image', image: item.image, class: 'cart-item__image', width: 220, height: 220 -%}
-                {%- endif -%}
-              </div>
-              <div class="cart-item__content">
-                <h2 class="cart-item__title">{{ item.product.title }}</h2>
-                <div class="cart-item__unit">{{ item.final_price | money }} {{ 'each' | t }}</div>
-                <div class="cart-item__total">{{ item.final_line_price | money }}</div>
-              </div>
-              <div class="cart-item__qty">
-                <div class="qty-stepper" role="group" aria-label="Quantity for {{ item.product.title }}">
-                  <button class="qty-stepper__btn" type="button" data-action="decrement" aria-label="Decrease quantity">−</button>
-                  <input class="qty-stepper__input" type="number" inputmode="numeric" min="0" value="{{ item.quantity }}" aria-label="Quantity">
-                  <button class="qty-stepper__btn" type="button" data-action="increment" aria-label="Increase quantity">+</button>
-                </div>
-                <button class="cart-item__remove" type="button" data-action="remove" data-key="{{ item.key }}">{{ 'sections.cart.remove' | t | default: 'Remove' }}</button>
-              </div>
-            </article>
-          {%- endfor -%}
-
-          <section class="cart-promo" aria-labelledby="cart-promo-heading">
-            <h2 id="cart-promo-heading" class="cart-promo__title">{{ 'sections.cart.promo' | t | default: 'Promo code' }}</h2>
-            <div class="cart-promo__card">
-              <label class="visually-hidden" for="cart-promo-code">{{ 'sections.cart.promo_label' | t | default: 'Enter discount code' }}</label>
-              <input id="cart-promo-code" class="cart-promo__input" type="text" placeholder="{{ 'sections.cart.promo_placeholder' | t | default: 'Enter code' }}">
-              <button class="cart-promo__apply" type="button">{{ 'sections.cart.apply' | t | default: 'Apply' }}</button>
-              <p class="cart-promo__hint">{{ 'sections.cart.promo_hint' | t | default: 'Codes apply immediately and persist to checkout.' }}</p>
-            </div>
-          </section>
-        {%- else -%}
-          <p class="cart-page__empty">{{ 'sections.cart.empty' | t | default: 'Your cart is empty.' }}</p>
-        {%- endif -%}
+        {%- for item in cart.items -%}
+          {%- render 'cart-item', item: item, line_index: forloop.index -%}
+        {%- endfor -%}
       </div>
 
       <aside class="cart-page__summary" aria-labelledby="cart-summary-heading">
         <h2 id="cart-summary-heading" class="visually-hidden">{{ 'sections.cart.summary' | t | default: 'Order summary' }}</h2>
         <div class="summary-card">
-          <div class="summary-card__row">
-            <span class="summary-card__label">{{ 'sections.cart.subtotal' | t | default: 'Subtotal' }}</span>
-            <span class="summary-card__value">{{ cart.total_price | money }}</span>
+          {%- assign original_total = cart.total_price -%}
+          {%- if cart.total_discount > 0 -%}
+            {%- assign original_total = cart.total_price | plus: cart.total_discount -%}
+          {%- endif -%}
+          
+          <div class="summary-card__totals" data-cart-totals>
+            {%- if cart.total_discount > 0 -%}
+              <div class="summary-card__row">
+                <span class="summary-card__label">{{ 'sections.cart.subtotal' | t | default: 'Subtotal' }}</span>
+                <span class="summary-card__value" data-subtotal>{{ original_total | money }}</span>
+              </div>
+              
+              {%- assign discount_code = cart.discounts.first.code | default: '' -%}
+              <div class="summary-card__row summary-card__discount" data-discount-row>
+                <span class="summary-card__label" style="font-size: 16px;">
+                  {%- if discount_code != '' -%}
+                    {{ 'sections.cart.discount' | t | default: 'Discount' }} ({{ discount_code }})
+                  {%- else -%}
+                    {{ 'sections.cart.discount' | t | default: 'Discount' }}
+                  {%- endif -%}
+                </span>
+                <span class="summary-card__value summary-card__discount-value" data-discount-amount>-{{ cart.total_discount | money }}</span>
+              </div>
+              
+              <div class="summary-card__row summary-card__total-row" data-total-row>
+                <span class="summary-card__label">{{ 'sections.cart.total' | t | default: 'Total' }}</span>
+                <span class="summary-card__value summary-card__total-value" data-total>{{ cart.total_price | money }}</span>
+              </div>
+            {%- else -%}
+              <div class="summary-card__row">
+                <span class="summary-card__label">{{ 'sections.cart.subtotal' | t | default: 'Subtotal' }}</span>
+                <span class="summary-card__value" data-subtotal>{{ cart.total_price | money }}</span>
+              </div>
+            {%- endif -%}
           </div>
+          
           <p class="summary-card__note">{{ 'sections.cart.shipping_note' | t | default: 'Shipping and taxes calculated at checkout.' }}</p>
-          <a class="summary-card__checkout" href="{{ routes.checkout_url }}">{{ 'sections.cart.checkout' | t | default: 'Checkout' | upcase }}</a>
-          <a class="summary-card__continue" href="{{ routes.all_products_collection_url }}">{{ 'sections.cart.continue' | t | default: 'Continue shopping' }}</a>
+          
+          {%- render 'cart-coupon' -%}
+          
+          <button type="submit" name="checkout" class="summary-card__checkout">{{ 'sections.cart.checkout' | t | default: 'Checkout' | upcase }}</button>
+          <a class="summary-card__continue" href="/pages/shop">{{ 'sections.cart.continue' | t | default: 'Continue shopping' }}</a>
         </div>
       </aside>
-    </div>
+      {%- else -%}
+      <div class="cart-page__empty">
+        <p class="cart-page__empty-message">{{ 'sections.cart.empty' | t | default: 'Your cart is empty.' }}</p>
+        <a class="cart-page__empty-button" href="/pages/shop/">{{ 'sections.cart.shop_now' | t | default: 'Shop now' | upcase }}</a>
+      </div>
+      {%- endif -%}
+    </form>
   </div>
 </section>
 
 {% stylesheet %}
-  .cart-page { width: 100%; }
-  .cart-page__container { padding: var(--page-margin); }
+  .cart-page { width: 100%; margin: 0; padding: 0; }
+  .cart-page__container { padding: var(--page-margin); padding-top: 0 !important; }
   .cart-page__title {
-    font-family: var(--font-primary--family);
-    font-weight: 800;
-    font-size: 48px;
-    line-height: 1;
-    margin: 0 0 24px;
-    text-transform: uppercase;
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 24px;
+    padding-top: 0; /* Override any theme defaults that might be adding space */
   }
   .cart-page__grid {
     display: grid;
@@ -81,59 +89,122 @@
   }
   .cart-page__left { display: grid; gap: 24px; }
 
-  /* Item card */
-  .cart-item {
-    display: grid;
-    grid-template-columns: 220px 1fr auto;
-    gap: 24px;
-    padding: 24px;
-    border: 1px solid rgba(0,0,0,.12);
-    border-radius: 16px;
-    background: #fff;
-    align-items: center;
-  }
-  .cart-item__media { width: 220px; height: 220px; border-radius: 12px; overflow: hidden; background: #f7f7f7; display: grid; place-items: center; }
-  .cart-item__image { width: 100%; height: 100%; object-fit: contain; }
-  .cart-item__content { display: grid; gap: 8px; }
-  .cart-item__title { font-family: var(--font-primary--family); font-weight: 800; font-size: 36px; margin: 0; }
-  .cart-item__unit { color: #666; font-weight: 600; }
-  .cart-item__total { font-size: 32px; font-weight: 800; font-family: var(--font-primary--family); }
-  .cart-item__qty { display: grid; gap: 10px; justify-items: end; }
-
-  .qty-stepper { display: inline-grid; grid-template-columns: 44px 64px 44px; align-items: center; border: 1px solid rgba(0,0,0,.15); border-radius: 999px; overflow: hidden; height: 48px; }
-  .qty-stepper__btn { width: 44px; height: 48px; background: #fff; border: 0; font-size: 22px; font-weight: 700; cursor: pointer; }
-  .qty-stepper__input { width: 64px; height: 48px; border: 0; text-align: center; font-weight: 700; font-size: 18px; }
-  .cart-item__remove { background: none; border: 0; color: #000; text-decoration: underline; cursor: pointer; font-weight: 600; }
-
-  /* Promo block */
-  .cart-promo__title { font-size: 28px; font-weight: 800; margin: 0 0 12px; font-family: var(--font-primary--family); }
-  .cart-promo__card { border: 1px solid rgba(0,0,0,.12); border-radius: 16px; padding: 24px; background: #fff; display: grid; gap: 12px; }
-  .cart-promo__input { width: 100%; height: 56px; border-radius: 12px; border: 1px solid rgba(0,0,0,.15); padding: 0 16px; font-size: 16px; }
-  .cart-promo__apply { width: 120px; height: 56px; border-radius: 12px; border: 1px solid #000; background: #000; color: #fff; font-weight: 800; cursor: pointer; }
-  .cart-promo__hint { margin: 4px 0 0; color: #666; font-size: 14px; }
-
   /* Summary card */
   .cart-page__summary { position: sticky; top: calc(5rem + 16px); }
   .summary-card { border: 1px solid rgba(0,0,0,.12); border-radius: 16px; padding: 24px; background: #fff; display: grid; gap: 16px; }
   .summary-card__row { display: flex; align-items: baseline; justify-content: space-between; font-family: var(--font-primary--family); }
   .summary-card__label { font-weight: 800; font-size: 22px; }
   .summary-card__value { font-weight: 800; font-size: 28px; }
+  .summary-card__discount[hidden] { display: none !important;}
+  .summary-card__discount:not([hidden]) { display: flex;  margin: 15px 0 15px 0; }
+  .summary-card__discount-label { font-weight: 600; font-size: 10px !important; }
+  .summary-card__discount-value { font-weight: 800; font-size: 16px; color: #0a0; }
+  .summary-card__total-row { border-top: 1px solid rgba(0,0,0,.1); padding-top: 12px; margin-top: 4px; }
+  .summary-card__total-label { font-weight: 800; font-size: 22px; }
+  .summary-card__total-value { font-weight: 800; font-size: 28px; }
   .summary-card__note { color: #666; margin: 0; }
-  .summary-card__checkout { display: grid; place-items: center; height: 64px; border-radius: 10px; background: #000; color: #fff; text-decoration: none; font-weight: 800; text-transform: uppercase; }
+  
+  .summary-card__checkout {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 32px;
+    border: 1px solid #000;
+    background: #000;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    width: 100%;
+    font-family: var(--font-primary--family);
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: #fff;
+    border-radius: 0;
+  }
+  .summary-card__checkout:hover,
+  .summary-card__checkout:focus {
+    background: #000;
+    color: #fff;
+    outline: none;
+  }
   .summary-card__continue { display: block; text-align: center; text-decoration: none; font-weight: 700; color: inherit; }
 
-  .cart-page__empty { padding: 32px; border: 1px dashed rgba(0,0,0,.25); border-radius: 12px; text-align: center; }
+  /* Empty cart state */
+  .cart-page__empty {
+    grid-column: 1 / -1;
+    width: 100%;
+    padding: 48px 32px;
+    border: 1px dashed rgba(0,0,0,.25);
+    border-radius: 12px;
+    text-align: center;
+    display: grid;
+    gap: 24px;
+    justify-items: center;
+  }
+  .cart-page__empty-message {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .cart-page__empty-button {
+    display: grid;
+    place-items: center;
+    height: 56px;
+    padding: 0 32px;
+    border-radius: 10px;
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 16px;
+  }
 
   .visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 1px, 1px); white-space: nowrap; border: 0; }
+
+  /* Toast for cart errors */
+  .cart-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(20px);
+    background: #111;
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.2);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform .2s ease, opacity .2s ease;
+    z-index: 1000;
+    font-family: var(--font-primary--family);
+    font-weight: 700;
+  }
+  .cart-toast.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   @media (max-width: 1023px) {
     .cart-page__grid { grid-template-columns: 1fr; gap: 20px; }
     .cart-page__summary { position: static; }
-    .cart-item { grid-template-columns: 120px 1fr; }
-    .cart-item__media { width: 120px; height: 120px; }
-    .cart-item__title { font-size: 24px; }
-    .cart-item__total { font-size: 24px; }
-    .cart-item__qty { justify-items: start; grid-column: 1 / -1; }
+    .cart-page__empty { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 767px) {
+    .cart-page__title {
+      padding-top: 24px;
+    }
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
   }
 {% endstylesheet %}
 
@@ -151,17 +222,20 @@
     // Prevent multiple initializations
     if (section.dataset.initialized === 'true') return;
     section.dataset.initialized = 'true';
-    
-    // Prevent any form submissions from cart buttons
-    var forms = section.querySelectorAll('form');
-    forms.forEach(function(form) {
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-      });
-    });
 
+    // Handle clicks on the dynamic checkout link to prevent form submission
+    var summaryAside = section.querySelector('.cart-page__summary');
+    if (summaryAside) {
+      summaryAside.addEventListener('click', function(e) {
+        var checkoutLink = e.target.closest('a.summary-card__checkout');
+        if (checkoutLink) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.location.href = checkoutLink.href;
+        }
+      });
+    }
+    
     var currency = '{{ cart.currency.iso_code | default: shop.currency }}';
     var formatter;
     try { formatter = new Intl.NumberFormat(document.documentElement.lang || 'en', { style: 'currency', currency: currency }); } catch(e) { formatter = null; }
@@ -175,8 +249,47 @@
       if (!el) return;
       el.querySelectorAll('button, input').forEach(function(ctrl){ ctrl.disabled = !!disabled; });
     }
+    
+    function showCartError(message) {
+      try {
+        var toast = document.querySelector('.cart-toast');
+        if (!toast) {
+          toast = document.createElement('div');
+          toast.className = 'cart-toast';
+          toast.setAttribute('role', 'status');
+          document.body.appendChild(toast);
+        }
+        toast.textContent = message || 'Something went wrong updating your cart.';
+        toast.classList.add('is-visible');
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(function(){ toast.classList.remove('is-visible'); }, 3000);
+      } catch(e) {}
+    }
 
-    function changeQuantity(key, quantity) {
+    function changeQuantity(key, quantity, itemEl) {
+      // Try to get variant ID from the item element, fallback to using key
+      var variantId = null;
+      var lineNumber = null;
+      
+      if (itemEl) {
+        variantId = itemEl.getAttribute('data-variant-id');
+        lineNumber = itemEl.getAttribute('data-line');
+      }
+      
+      // Use line number if available (most reliable), otherwise use variant ID, fallback to key
+      var requestBody = {};
+      if (lineNumber) {
+        requestBody.line = parseInt(lineNumber, 10);
+        requestBody.quantity = quantity;
+      } else if (variantId) {
+        requestBody.id = parseInt(variantId, 10);
+        requestBody.quantity = quantity;
+      } else {
+        // Fallback to key (might work for simple products)
+        requestBody.id = key;
+        requestBody.quantity = quantity;
+      }
+      
       return fetch('/cart/change.js', {
         method: 'POST',
         headers: { 
@@ -185,7 +298,7 @@
           'X-Requested-With': 'XMLHttpRequest'
         },
         credentials: 'same-origin',
-        body: JSON.stringify({ id: key, quantity: quantity })
+        body: JSON.stringify(requestBody)
       }).then(function(r){
         if (!r.ok) {
           return r.text().then(function(text) {
@@ -196,27 +309,214 @@
       });
     }
 
+    // Retry wrapper for rate limits
+    function changeQuantityWithRetry(key, quantity, itemEl, attempt) {
+      attempt = attempt || 0;
+      return changeQuantity(key, quantity, itemEl).catch(function(err){
+        var isRateLimited = /429|too_many_requests/i.test(String(err && err.message));
+        if (isRateLimited && attempt < 2) {
+          var backoff = 300 * (attempt + 1); // 300ms, then 600ms
+          return new Promise(function(res){ setTimeout(res, backoff); })
+            .then(function(){ return changeQuantityWithRetry(key, quantity, itemEl, attempt + 1); });
+        }
+        throw err;
+      });
+    }
+
     function updateUIFromCart(cart, changedKey) {
-      // Update subtotal
-      var subtotalEl = document.querySelector('.summary-card__value');
-      if (subtotalEl) subtotalEl.textContent = formatMoney(cart.total_price);
+      // START: New logic to update checkout button/link
+      var checkoutEl = document.querySelector('.summary-card__checkout');
+      if (checkoutEl) {
+        var discountCode = (cart.discount_codes && cart.discount_codes.length > 0) ? cart.discount_codes[0].code : null;
+
+        if (discountCode && checkoutEl.tagName !== 'A') {
+          var newLink = document.createElement('a');
+          newLink.href = '/checkout?discount=' + encodeURIComponent(discountCode);
+          newLink.className = 'summary-card__checkout';
+          newLink.textContent = checkoutEl.textContent;
+          checkoutEl.parentNode.replaceChild(newLink, checkoutEl);
+        } else if (discountCode && checkoutEl.tagName === 'A') {
+          // Update href in case discount code changes
+          checkoutEl.href = '/checkout?discount=' + encodeURIComponent(discountCode);
+        } else if (!discountCode && checkoutEl.tagName !== 'BUTTON') {
+          var newButton = document.createElement('button');
+          newButton.type = 'submit';
+          newButton.name = 'checkout';
+          newButton.className = 'summary-card__checkout';
+          newButton.textContent = checkoutEl.textContent;
+          checkoutEl.parentNode.replaceChild(newButton, checkoutEl);
+        }
+      }
+      // END: New logic
+
+      var totalsEl = document.querySelector('[data-cart-totals]');
+      if (totalsEl) {
+        var originalTotal = cart.total_price;
+        if (cart.total_discount && cart.total_discount > 0) {
+          originalTotal += cart.total_discount;
+        }
+
+        var totalsHtml = '';
+        if (cart.total_discount && cart.total_discount > 0) {
+          var discountCode = (cart.discount_codes && cart.discount_codes.length > 0) ? cart.discount_codes[0].code : '';
+          var discountLabel = `{{ 'sections.cart.discount' | t | default: 'Discount' }}`;
+          if (discountCode) {
+            discountLabel += ` (${discountCode})`;
+          }
+
+          totalsHtml = `
+            <div class="summary-card__row">
+              <span class="summary-card__label">{{ 'sections.cart.subtotal' | t | default: 'Subtotal' }}</span>
+              <span class="summary-card__value" data-subtotal>${formatMoney(originalTotal)}</span>
+            </div>
+            <div class="summary-card__row summary-card__discount" data-discount-row>
+              <span class="summary-card__label" style="font-size: 16px;">${discountLabel}</span>
+              <span class="summary-card__value summary-card__discount-value" data-discount-amount>-${formatMoney(cart.total_discount)}</span>
+            </div>
+            <div class="summary-card__row summary-card__total-row" data-total-row>
+              <span class="summary-card__label">{{ 'sections.cart.total' | t | default: 'Total' }}</span>
+              <span class="summary-card__value summary-card__total-value" data-total>${formatMoney(cart.total_price)}</span>
+            </div>
+          `;
+        } else {
+          totalsHtml = `
+            <div class="summary-card__row">
+              <span class="summary-card__label">{{ 'sections.cart.subtotal' | t | default: 'Subtotal' }}</span>
+              <span class="summary-card__value" data-subtotal>${formatMoney(cart.total_price)}</span>
+            </div>
+          `;
+        }
+        totalsEl.innerHTML = totalsHtml;
+      }
 
       if (!changedKey) return;
       var line = (cart.items || []).find(function(i){ return i.key === changedKey; });
       var itemEl = document.querySelector('.cart-item[data-key="' + changedKey + '"]');
-      if (line && itemEl) {
+      
+      if (!itemEl) return; // Item element not found, nothing to update
+      
+      if (line) {
+        // Item exists in cart, update it
         var totalEl = itemEl.querySelector('.cart-item__total');
         if (totalEl) totalEl.textContent = formatMoney(line.final_line_price);
         var inputEl = itemEl.querySelector('.qty-stepper__input');
         if (inputEl) inputEl.value = line.quantity;
-      } else if (!line && itemEl) {
-        // Item was removed
-        itemEl.parentElement.removeChild(itemEl);
-        if ((cart.items || []).length === 0) {
-          // If cart is empty, reload to show empty state
-          window.location.reload();
+        
+        // Update data attributes to keep them in sync
+        var lineIndex = (cart.items || []).findIndex(function(i){ return i.key === changedKey; });
+        if (lineIndex !== -1) {
+          itemEl.setAttribute('data-line', lineIndex + 1);
+          if (line.variant_id) {
+            itemEl.setAttribute('data-variant-id', line.variant_id);
+          }
+        }
+        
+        // If quantity is 0, item should be removed
+        if (line.quantity === 0) {
+          itemEl.parentElement.removeChild(itemEl);
+          if ((cart.items || []).length === 0) {
+            // If cart is empty, reload to show empty state
+            window.location.reload();
+          }
+        }
+      } else {
+        // Line not found in cart response
+        // Only remove if we explicitly set quantity to 0
+        var desiredQty = desiredByKey[changedKey];
+        if (desiredQty === 0) {
+          // Item was intentionally removed (quantity set to 0)
+          itemEl.parentElement.removeChild(itemEl);
+          if ((cart.items || []).length === 0) {
+            window.location.reload();
+          }
+        } else {
+          // Line not found but quantity > 0 - this shouldn't happen
+          // Don't remove the item, just update the input to match what we sent
+          var inputEl = itemEl.querySelector('.qty-stepper__input');
+          if (inputEl && desiredQty !== undefined) {
+            inputEl.value = desiredQty;
+          }
         }
       }
+    }
+
+    // Debounced per-line scheduling to avoid 429s
+    var desiredByKey = Object.create(null);
+    var inflightByKey = Object.create(null);
+    var timersByKey = Object.create(null);
+
+    function performScheduled(key, itemEl) {
+      if (inflightByKey[key]) return; // will run after current finishes if re-scheduled
+      inflightByKey[key] = true;
+      var qty = desiredByKey[key];
+      
+      // Re-fetch itemEl if it's not available (might have been updated)
+      if (!itemEl) {
+        itemEl = document.querySelector('.cart-item[data-key="' + key + '"]');
+      }
+      
+      changeQuantityWithRetry(key, qty, itemEl).then(function(cart){
+        updateUIFromCart(cart, key);
+        // Dispatch cart update event for header badge
+        document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cart } }));
+        
+        // Update data-line attribute if item element still exists
+        if (itemEl) {
+          var updatedLine = (cart.items || []).find(function(i){ return i.key === key; });
+          if (updatedLine) {
+            // Find the line number in the updated cart
+            var lineIndex = (cart.items || []).findIndex(function(i){ return i.key === key; });
+            if (lineIndex !== -1) {
+              itemEl.setAttribute('data-line', lineIndex + 1);
+              itemEl.setAttribute('data-variant-id', updatedLine.variant_id);
+            }
+          }
+        }
+      }).catch(function(err){
+        console.error('Cart update error:', err);
+        showCartError('Could not update quantity. Please try again.');
+        // Revert input value on error by fetching current cart state
+        fetch('/cart.js').then(function(r) {
+          if (r.ok) {
+            return r.json();
+          }
+        }).then(function(cart) {
+          if (cart && itemEl) {
+            var inputEl = itemEl.querySelector('.qty-stepper__input');
+            if (inputEl) {
+              var line = (cart.items || []).find(function(i){ return i.key === key; });
+              if (line) {
+                inputEl.value = line.quantity;
+              }
+            }
+          }
+        }).catch(function() {
+          // If we can't fetch cart, just leave the input as is
+        });
+      }).finally(function(){
+        inflightByKey[key] = false;
+        // If user changed again while request in-flight, schedule next
+        var inputEl = itemEl && itemEl.querySelector && itemEl.querySelector('.qty-stepper__input');
+        var currentDesired = desiredByKey[key];
+        if (inputEl && String(inputEl.value) !== String(currentDesired)) {
+          // Sync visible field to desired while we re-run
+          inputEl.value = currentDesired;
+        }
+        if (timersByKey[key]) {
+          // another change already scheduled
+          return;
+        }
+        setDisabled(itemEl, false);
+      });
+    }
+
+    function scheduleQuantityChange(key, qty, itemEl) {
+      desiredByKey[key] = Math.max(0, parseInt(qty, 10) || 0);
+      clearTimeout(timersByKey[key]);
+      timersByKey[key] = setTimeout(function(){
+        timersByKey[key] = null;
+        performScheduled(key, itemEl);
+      }, 150);
     }
 
     // Quantity stepper handlers
@@ -230,24 +530,14 @@
       var input = itemEl.querySelector('.qty-stepper__input');
       if (!input || input.disabled) return;
       var key = itemEl.getAttribute('data-key');
-      if (!key) {
-        console.error('No data-key found on cart item');
-        return;
-      }
+      if (!key) { return; }
       var current = parseInt(input.value, 10) || 0;
       var delta = btn.getAttribute('data-action') === 'increment' ? 1 : -1;
       var next = Math.max(0, current + delta);
       if (next === current) return;
-      console.log('Updating quantity:', { key: key, current: current, next: next });
       setDisabled(itemEl, true);
-      changeQuantity(key, next).then(function(cart){
-        console.log('Cart updated successfully:', cart);
-        updateUIFromCart(cart, key);
-      }).catch(function(err){
-        console.error('Cart update error:', err);
-        // fallback: reload on error
-        window.location.reload();
-      }).finally(function(){ setDisabled(itemEl, false); });
+      input.value = next; // optimistic
+      scheduleQuantityChange(key, next, itemEl);
     });
 
     // Manual input (on blur and Enter)
@@ -260,10 +550,7 @@
       var val = Math.max(0, parseInt(input.value, 10) || 0);
       input.value = val;
       setDisabled(itemEl, true);
-      changeQuantity(key, val).then(function(cart){
-        updateUIFromCart(cart, key);
-      }).catch(function(){ window.location.reload(); })
-      .finally(function(){ setDisabled(itemEl, false); });
+      scheduleQuantityChange(key, val, itemEl);
     });
 
     section.addEventListener('keydown', function(e) {
@@ -284,27 +571,20 @@
       setDisabled(itemEl, true);
       changeQuantity(key, 0).then(function(cart){
         updateUIFromCart(cart, key);
-      }).catch(function(err){
-        console.error('Cart remove error:', err);
-        window.location.reload();
+        // Dispatch cart update event for header badge
+        document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cart } }));
+      }).catch(function(){
+        showCartError('Could not remove item. Please try again.');
       })
       .finally(function(){ setDisabled(itemEl, false); });
     });
 
-    // Promo code apply — use /discount/{code}?return_to=/cart
-    (function(){
-      var applyBtn = document.querySelector('.cart-promo__apply');
-      var input = document.getElementById('cart-promo-code');
-      if (!applyBtn || !input) return;
-      function apply() {
-        var code = (input.value || '').trim();
-        if (!code) return;
-        var href = '/discount/' + encodeURIComponent(code) + '?return_to=' + encodeURIComponent('/cart');
-        window.location.href = href;
+    // Listen for cart updates from coupon section
+    document.addEventListener('cart:updated', function(e) {
+      if (e.detail && e.detail.cart) {
+        updateUIFromCart(e.detail.cart);
       }
-      applyBtn.addEventListener('click', apply);
-      input.addEventListener('keydown', function(e){ if (e.key === 'Enter') { e.preventDefault(); apply(); } });
-    })();
+    });
   })();
 </script>
 

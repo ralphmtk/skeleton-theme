@@ -1,0 +1,343 @@
+{%- comment -%}
+  Cart coupon/promo code snippet - handles discount code application via AJAX
+{%- endcomment -%}
+
+<div class="cart-coupon" data-coupon-section>
+  <button class="cart-coupon__toggle" type="button" aria-expanded="false" aria-controls="cart-coupon-dropdown" data-coupon-toggle>
+    <span>{{ 'sections.cart.promo_toggle' | t | default: 'Have a promo code?' }}</span>
+    <span class="cart-coupon__chevron">▼</span>
+  </button>
+  
+  <div class="cart-coupon__dropdown" id="cart-coupon-dropdown" hidden data-coupon-dropdown>
+    <div class="cart-coupon__form" data-coupon-form>
+      <label class="visually-hidden" for="cart-coupon-code">{{ 'sections.cart.promo_label' | t | default: 'Enter discount code' }}</label>
+      <div class="cart-coupon__inputs">
+        <input 
+          id="cart-coupon-code" 
+          name="discount" 
+          class="cart-coupon__input" 
+          type="text" 
+          placeholder="{{ 'sections.cart.promo_placeholder' | t | default: 'Enter code' }}" 
+          autocomplete="off"
+          data-coupon-input
+        >
+        <button class="cart-coupon__apply" type="button" data-coupon-apply>
+          {{ 'sections.cart.apply' | t | default: 'Apply' }}
+        </button>
+      </div>
+      <p class="cart-coupon__message" data-coupon-message></p>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .cart-coupon {
+    display: grid;
+    gap: 8px;
+  }
+  
+  .cart-coupon__toggle {
+    background: none;
+    border: 0;
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: left;
+    padding: 0;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+  }
+  
+  .cart-coupon__chevron {
+    display: inline-block;
+    font-size: 10px;
+    transition: transform 0.2s ease;
+    line-height: 1;
+  }
+  
+  .cart-coupon__toggle[aria-expanded="true"] .cart-coupon__chevron {
+    transform: rotate(180deg);
+  }
+  
+  .cart-coupon__dropdown {
+    display: grid;
+    gap: 8px;
+    padding-top: 8px;
+  }
+  
+  .cart-coupon__dropdown[hidden] {
+    display: none !important;
+  }
+  
+  .cart-coupon__dropdown:not([hidden]) {
+    display: grid;
+  }
+  
+  .cart-coupon__inputs {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .cart-coupon__input {
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,.15);
+    padding: 0 12px;
+    font-size: 14px;
+  }
+  
+  .cart-coupon__input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .cart-coupon__apply {
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 8px;
+    border: 1px solid #000;
+    background: #000;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
+  }
+  
+  .cart-coupon__apply:hover:not(:disabled) {
+    opacity: 0.8;
+  }
+  
+  .cart-coupon__apply:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .cart-coupon__message {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.4;
+    font-weight: 600;
+    min-height: 16px;
+    margin-top: 5px;
+    margin-left: 7px;
+  }
+  
+  .cart-coupon__message.is-success {
+    color: #0a0;
+  }
+  
+  .cart-coupon__message.is-error {
+    color: #d00;
+  }
+  
+  .cart-coupon__hint {
+    margin: 0;
+    color: #666;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 1px, 1px);
+    white-space: nowrap;
+    border: 0;
+  }
+{% endstylesheet %}
+
+<script>
+  (function initCartCoupon() {
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCartCoupon);
+      return;
+    }
+    
+    var section = document.querySelector('[data-coupon-section]');
+    if (!section) return;
+    
+    // Prevent multiple initializations
+    if (section.dataset.initialized === 'true') return;
+    section.dataset.initialized = 'true';
+    
+    var toggleBtn = section.querySelector('[data-coupon-toggle]');
+    var dropdown = section.querySelector('[data-coupon-dropdown]');
+    var form = section.querySelector('[data-coupon-form]');
+    var input = section.querySelector('[data-coupon-input]');
+    var applyBtn = section.querySelector('[data-coupon-apply]');
+    var messageEl = section.querySelector('[data-coupon-message]');
+    
+    if (!toggleBtn || !dropdown || !form || !input || !applyBtn || !messageEl) return;
+    
+    // Toggle dropdown
+    toggleBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+      var newState = !isExpanded;
+      toggleBtn.setAttribute('aria-expanded', String(newState));
+      dropdown.hidden = !newState;
+      
+      // Focus input when opening
+      if (newState) {
+        setTimeout(function() {
+          input.focus();
+        }, 100);
+      }
+    });
+    
+    // Clear message helper
+    function clearMessage() {
+      messageEl.textContent = '';
+      messageEl.className = 'cart-coupon__message';
+    }
+    
+    // Show message helper
+    function showMessage(text, type) {
+      messageEl.textContent = text;
+      messageEl.className = 'cart-coupon__message';
+      if (type === 'success') {
+        messageEl.classList.add('is-success');
+      } else if (type === 'error') {
+        messageEl.classList.add('is-error');
+      }
+    }
+    
+    // Set loading state
+    function setLoading(loading) {
+      applyBtn.disabled = loading;
+      input.disabled = loading;
+      if (loading) {
+        applyBtn.textContent = 'Applying...';
+        clearMessage();
+      } else {
+        applyBtn.textContent = '{{ 'sections.cart.apply' | t | default: 'Apply' }}';
+      }
+    }
+    
+    // Fetch current cart state
+    function fetchCart() {
+      return fetch('/cart.js', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin'
+      }).then(function(response) {
+        if (!response.ok) {
+          throw new Error('Failed to fetch cart: ' + response.status);
+        }
+        return response.json();
+      });
+    }
+    
+    // Apply discount code using Shopify's Cart AJAX API (recommended approach)
+    function applyDiscountCode(code) {
+      // Use Shopify's Cart AJAX API to apply discount code
+      return fetch('/cart/update.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify({
+          discount: code
+        })
+      }).then(function(response) {
+        return response.json().then(function(data) {
+          // Check for errors from the HTTP status OR a description message in the body
+          if (!response.ok || data.description) {
+            throw new Error(data.description || 'The code you entered is invalid or has expired.');
+          }
+          return data; // Return the full cart object on success
+        });
+      });
+    }
+    
+    // Update cart UI (this will be called from parent cart section)
+    function updateCartUI(cart) {
+      // Dispatch a custom event that the cart section can listen to
+      var event = new CustomEvent('cart:updated', {
+        detail: { cart: cart },
+        bubbles: true
+      });
+      document.dispatchEvent(event);
+    }
+    
+    // Handle form submission
+    applyBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      var code = (input.value || '').trim();
+      if (!code) {
+        showMessage('Please enter a discount code.', 'error');
+        return;
+      }
+      
+      // Ensure dropdown is open to show messages
+      if (dropdown.hidden) {
+        dropdown.hidden = false;
+        toggleBtn.setAttribute('aria-expanded', 'true');
+      }
+      
+      setLoading(true);
+      clearMessage();
+      
+      applyDiscountCode(code)
+        .then(function(cart) {
+          setLoading(false);
+          
+          var codeUpper = code.toUpperCase();
+          var hasDiscount = (cart.discount_codes || []).some(function(d) {
+            return (d.code || '').toUpperCase() === codeUpper && d.applicable === true;
+          });
+          
+          if (hasDiscount) {
+            var appliedDiscount = cart.discount_codes.find(function(d) {
+              return (d.code || '').toUpperCase() === codeUpper;
+            });
+            // Success - show green message
+            showMessage('Discount "' + appliedDiscount.code + '" applied.', 'success');
+            input.value = '';
+            
+            // Update cart UI
+            updateCartUI(cart);
+          } else {
+            // This case should be caught by the .catch block, but as a fallback:
+            showMessage('The code you entered is invalid or has expired.', 'error');
+          }
+        })
+        .catch(function(err) {
+          console.error('Discount application error:', err);
+          setLoading(false);
+          showMessage(err.message || 'The code you entered is invalid or has expired.', 'error');
+        });
+    });
+
+    // Also handle Enter key
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        e.stopPropagation();
+        applyBtn.click();
+      }
+    });
+  })();
+</script>
+

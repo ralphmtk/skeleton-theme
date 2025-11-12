@@ -1,0 +1,352 @@
+{%- comment -%}
+  Creative FAQ page with animated accordions using brand colors (light blue and light pink)
+{%- endcomment -%}
+
+<section class="faq-page">
+  <div class="faq-page__container">
+    <div class="faq-page__header">
+      <h1 class="faq-page__title">{{ page.title | default: 'Frequently Asked Questions' }}</h1>
+      {% if page.content != blank %}
+        <div class="faq-page__intro rte">
+          {{ page.content }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="faq-page__accordions">
+      {% for block in section.blocks %}
+        {% if block.type == 'faq_item' %}
+          <div class="faq-accordion" {{ block.shopify_attributes }}>
+            <button class="faq-accordion__trigger" aria-expanded="false" type="button">
+              <span class="faq-accordion__number">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+              <span class="faq-accordion__question">{{ block.settings.question | default: 'Question goes here' }}</span>
+              <span class="faq-accordion__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </span>
+            </button>
+            <div class="faq-accordion__content">
+              <div class="faq-accordion__answer rte">
+                {{ block.settings.answer | default: 'Answer goes here. This is where you provide detailed information to help your customers.' }}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if section.blocks.size == 0 %}
+      <div class="faq-page__empty">
+        <p>No FAQ items yet. Add FAQ items in the theme editor.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% stylesheet %}
+  .faq-page {
+    width: 100%;
+    padding: 0;
+    background: #fff;
+    min-height: 60vh;
+  }
+  .faq-page__container {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0 var(--page-margin);
+  }
+  .faq-page__header {
+    margin-bottom: 32px;
+  }
+  .faq-page__title {
+    margin: 0;
+    padding: 0;
+  }
+  .faq-page__intro {
+    font-size: 18px;
+    line-height: 1.7;
+    color: rgba(0,0,0,.7);
+    margin-top: 24px;
+  }
+  .faq-page__intro.rte > *:first-child {
+    margin-top: 0;
+  }
+  .faq-page__intro.rte > *:last-child {
+    margin-bottom: 0;
+  }
+  .faq-page__accordions {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .faq-accordion {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    transition: transform .3s ease, box-shadow .3s ease;
+    position: relative;
+  }
+  .faq-accordion::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(180deg, #87ceeb 0%, #ffb6c1 100%);
+    transition: width .3s ease;
+  }
+  .faq-accordion:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,.12);
+  }
+  .faq-accordion:hover::before {
+    width: 8px;
+  }
+  .faq-accordion.is-open {
+    box-shadow: 0 8px 40px rgba(135, 206, 235, .25);
+  }
+  .faq-accordion.is-open::before {
+    width: 8px;
+    background: linear-gradient(180deg, #ffb6c1 0%, #87ceeb 100%);
+  }
+  .faq-accordion__trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 28px 32px;
+    background: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Exo 2', var(--font-primary--family);
+    transition: background-color .3s ease;
+    position: relative;
+  }
+  .faq-accordion__trigger:hover {
+    background: linear-gradient(90deg, rgba(135, 206, 235, .05) 0%, rgba(255, 182, 193, .05) 100%);
+  }
+  .faq-accordion__number {
+    font-size: 32px;
+    font-weight: 700;
+    color: #87ceeb;
+    min-width: 50px;
+    text-align: center;
+    transition: color .3s ease, transform .3s ease;
+    line-height: 1;
+  }
+  .faq-accordion.is-open .faq-accordion__number {
+    color: #ffb6c1;
+    transform: scale(1.1);
+  }
+  .faq-accordion__question {
+    flex: 1;
+    font-size: 20px;
+    font-weight: 600;
+    color: #000;
+    line-height: 1.4;
+    transition: color .3s ease;
+  }
+  .faq-accordion.is-open .faq-accordion__question {
+    color: #333;
+  }
+  .faq-accordion__icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #87ceeb 0%, #ffb6c1 100%);
+    color: #fff;
+    flex-shrink: 0;
+    transition: transform .3s ease, background .3s ease;
+  }
+  .faq-accordion__icon svg {
+    width: 18px;
+    height: 18px;
+    transition: transform .3s ease;
+  }
+  .faq-accordion.is-open .faq-accordion__icon {
+    transform: rotate(90deg);
+    background: linear-gradient(135deg, #ffb6c1 0%, #87ceeb 100%);
+  }
+  .faq-accordion.is-open .faq-accordion__icon svg {
+    transform: rotate(45deg);
+  }
+  .faq-accordion__content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .4s cubic-bezier(0.4, 0, 0.2, 1), padding .4s ease;
+    padding: 0 32px;
+  }
+  .faq-accordion.is-open .faq-accordion__content {
+    max-height: 1000px;
+    padding: 0 32px 32px;
+  }
+  .faq-accordion__answer {
+    padding-top: 8px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: rgba(0,0,0,.7);
+    padding-left: 70px;
+  }
+  .faq-accordion__answer p {
+    margin: 0 0 16px;
+  }
+  .faq-accordion__answer p:last-child {
+    margin-bottom: 0;
+  }
+  .faq-page__empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: rgba(0,0,0,.5);
+    font-size: 16px;
+  }
+
+  @media (max-width: 767px) {
+    .faq-page__title {
+      padding-top: 24px;
+    }
+    .faq-page__intro {
+      font-size: 16px;
+    }
+    .faq-accordion__trigger {
+      padding: 24px 20px;
+      gap: 16px;
+    }
+    .faq-accordion__number {
+      font-size: 24px;
+      min-width: 40px;
+    }
+    .faq-accordion__question {
+      font-size: 18px;
+    }
+    .faq-accordion__icon {
+      width: 28px;
+      height: 28px;
+    }
+    .faq-accordion__icon svg {
+      width: 16px;
+      height: 16px;
+    }
+    .faq-accordion__content {
+      padding: 0 20px;
+    }
+    .faq-accordion.is-open .faq-accordion__content {
+      padding: 0 20px 24px;
+    }
+    .faq-accordion__answer {
+      padding-left: 0;
+      font-size: 15px;
+    }
+  }
+{% endstylesheet %}
+
+<script>
+  (function() {
+    var accordions = document.querySelectorAll('.faq-accordion');
+    
+    accordions.forEach(function(accordion) {
+      var trigger = accordion.querySelector('.faq-accordion__trigger');
+      if (!trigger) return;
+      
+      trigger.addEventListener('click', function() {
+        var isOpen = accordion.classList.contains('is-open');
+        var wasOpen = isOpen;
+        
+        // Close all other accordions (only one open at a time)
+        accordions.forEach(function(other) {
+          if (other !== accordion) {
+            other.classList.remove('is-open');
+            other.querySelector('.faq-accordion__trigger').setAttribute('aria-expanded', 'false');
+          }
+        });
+        
+        // Toggle current accordion
+        if (wasOpen) {
+          accordion.classList.remove('is-open');
+          trigger.setAttribute('aria-expanded', 'false');
+        } else {
+          accordion.classList.add('is-open');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What is your return policy?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>We offer a 30-day return policy on all items. Items must be in their original condition with tags attached. Please contact us for a return authorization before sending items back.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is your shipping policy?",
+            "answer": "<p>We offer free shipping on orders over $50. Standard shipping takes 5-7 business days. Express shipping options are available at checkout.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How do I track my order?",
+            "answer": "<p>Once your order ships, you'll receive a tracking number via email. You can use this number to track your package on our carrier's website.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What payment methods do you accept?",
+            "answer": "<p>We accept all major credit cards (Visa, Mastercard, American Express), PayPal, and Apple Pay. All payments are processed securely.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Do you ship internationally?",
+            "answer": "<p>Yes, we ship to most countries worldwide. International shipping rates and delivery times vary by destination. Please check our shipping page for more details.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How can I contact customer service?",
+            "answer": "<p>You can reach us via email at support@zengaz.com or call us at 1-800-ZENGAZ. Our customer service team is available Monday-Friday, 9am-5pm EST.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

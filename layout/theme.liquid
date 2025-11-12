@@ -15,9 +15,26 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    {%- comment -%} Override primary font to use Exo 2 across the site {%- endcomment -%}
+    {%- comment -%} Gobold font {%- endcomment -%}
     <style>
-      :root { --font-primary--family: 'Exo 2', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+      @font-face {
+        font-family: 'Gobold';
+        src: url('{{ "Gobold-Regular.otf" | asset_url }}') format('opentype');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: 'Gobold';
+        src: url('{{ "Gobold-Bold.otf" | asset_url }}') format('opentype');
+        font-weight: 500;
+        font-style: normal;
+        font-display: swap;
+      }
+      :root { 
+        --font-primary--family: 'Exo 2', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+        --font-secondary--family: 'Gobold', sans-serif;
+      }
     </style>
 
     {{ content_for_header }}
@@ -35,5 +52,30 @@
     </main>
 
     {% sections 'footer-group' %}
+
+    {%- comment -%} Pre-initialize cart on first page load to avoid cold start delay {%- endcomment -%}
+    <script>
+      (function() {
+        // Only initialize once per session to avoid unnecessary requests
+        if (sessionStorage.getItem('cartInitialized') === 'true') return;
+        
+        // Mark as initialized immediately to prevent duplicate requests
+        sessionStorage.setItem('cartInitialized', 'true');
+        
+        // Make a lightweight request to initialize the cart session
+        // This runs in the background and doesn't block page rendering
+        fetch('/cart.js', {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          credentials: 'same-origin'
+        }).catch(function() {
+          // Silently fail - this is just a warm-up request
+          // If it fails, the cart will still initialize on first add-to-cart
+        });
+      })();
+    </script>
   </body>
 </html>
