@@ -1,0 +1,2149 @@
+{% comment %}
+  Contact page section
+{% endcomment %}
+
+<section class="contact full-width" style="background: #f9f9f9">
+  <div class="contact__container">
+    <div class="contact__content">
+      <div class="contact__left">
+        <h1 class="contact__title">
+          <span class="contact__title-line">LET'S</span>
+          <span class="contact__title-line contact__title-line--indented">TALK</span>
+        </h1>
+
+        <div class="contact__list-wrapper">
+          <p class="contact__list-title">I AM A:</p>
+          <ul class="contact__list">
+            <li class="contact__list-item" data-type="distributor">
+              <span class="contact__list-text">Distributor/Wholesaler</span>
+            </li>
+            <li class="contact__list-item" data-type="retailer">
+              <span class="contact__list-text">Shop/Retailer</span>
+            </li>
+            <li class="contact__list-item" data-type="consumer">
+              <span class="contact__list-text">Consumer</span>
+            </li>
+            <li class="contact__list-item" data-type="other">
+              <span class="contact__list-text">Other</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="contact__right">
+        <div class="contact__image-wrapper">
+          <img 
+            src="{{ 'contact_phones.png' | asset_url }}" 
+            alt="Contact phones" 
+            class="contact__image"
+            width="800"
+            height="600"
+            loading="lazy"
+          />
+        </div>
+        
+        <div class="contact__form-overlay" id="contactFormOverlay">
+          <!-- Distributor Form -->
+          <div class="contact__form-shell contact__form-shell--distributor">
+            <form class="contact__form" id="contactFormDistributor" novalidate>
+              <div class="contact__form-step contact__form-step--1 is-active" data-step="1">
+                <div class="contact__form-row">
+                  <div class="contact__form-field">
+                    <label for="firstName" class="contact__form-label">First Name <span class="contact__form-required">*</span></label>
+                    <input type="text" id="firstName" name="firstName" class="contact__form-input" required>
+                    <span class="contact__error-message">This field is required</span>
+                  </div>
+                  <div class="contact__form-field">
+                    <label for="lastName" class="contact__form-label">Last Name <span class="contact__form-required">*</span></label>
+                    <input type="text" id="lastName" name="lastName" class="contact__form-input" required>
+                    <span class="contact__error-message">This field is required</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field">
+                    <label for="companyName" class="contact__form-label">Company Name <span class="contact__form-required">*</span></label>
+                    <input type="text" id="companyName" name="companyName" class="contact__form-input" required>
+                    <span class="contact__error-message">This field is required</span>
+                  </div>
+                  <div class="contact__form-field">
+                    <label for="companyWebsite" class="contact__form-label">Company Website</label>
+                    <input type="url" id="companyWebsite" name="companyWebsite" class="contact__form-input" placeholder="https://">
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label for="country" class="contact__form-label">Country <span class="contact__form-required">*</span></label>
+                    <div class="contact__form-select-wrapper">
+                      <select id="country" name="country" class="contact__form-select" required>
+                        <option value="">Select a country</option>
+                      </select>
+                      <svg class="contact__form-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <span class="contact__error-message">Please select a country</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field">
+                    <label for="mobilePhone" class="contact__form-label">Mobile Phone</label>
+                    <input type="tel" id="mobilePhone" name="phone" class="contact__form-input">
+                  </div>
+                  <div class="contact__form-field">
+                    <label for="email" class="contact__form-label">Email <span class="contact__form-required">*</span></label>
+                    <input type="email" id="email" name="email" class="contact__form-input" required>
+                    <span class="contact__error-message">Please enter a valid email</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label for="hearAbout" class="contact__form-label">How did you hear about us? <span class="contact__form-required">*</span></label>
+                    <div class="contact__form-select-wrapper">
+                      <select id="hearAbout" name="hearAbout" class="contact__form-select" required>
+                        <option value="">Select an option</option>
+                        <option value="I already buy Zengaz">I already buy Zengaz</option>
+                        <option value="I saw Zengaz in a shop">I saw Zengaz in a shop</option>
+                        <option value="I received a client request for Zengaz">I received a client request for Zengaz</option>
+                        <option value="Word of mouth (friend, family, etc.)">Word of mouth (friend, family, etc.)</option>
+                        <option value="Social media">Social media</option>
+                        <option value="Online (Google, B2B platforms, etc.)">Online (Google, B2B platforms, etc.)</option>
+                        <option value="Trade show">Trade show</option>
+                      </select>
+                      <svg class="contact__form-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <span class="contact__error-message">Please select an option</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label for="help" class="contact__form-label">How can we help you? <span class="contact__form-required">*</span></label>
+                    <div class="contact__form-select-wrapper">
+                      <select id="help" name="help" class="contact__form-select" required>
+                        <option value="">Select an option</option>
+                        <option value="Purchasing request">Purchasing request</option>
+                        <option value="Customized lighters request">Customized lighters request</option>
+                        <option value="Marketing material request">Marketing material request</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      <svg class="contact__form-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <span class="contact__error-message">Please select an option</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-actions">
+                  <button type="button" class="contact__form-next">Next</button>
+                  <button type="button" class="contact__form-close">Close</button>
+                </div>
+              </div>
+
+              <div class="contact__form-step contact__form-step--2">
+                <div class="contact__form-step-header">
+                  <h3 class="contact__form-step-title">You're almost done.</h3>
+                  <p class="contact__form-step-subtitle">To save you time when we reach out, please let us know the below.</p>
+                </div>
+
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label class="contact__form-label">Industry (select all that apply)</label>
+                    <div class="contact__checkbox-group">
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="industry" value="FMCG">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">FMCG (Personal Care, Home Products, etc.)</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="industry" value="Smoking / Tobacco">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">Smoking / Tobacco</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="industry" value="Food Products">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">Food &amp; Beverages</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="industry" value="Beverages &amp; Spirits">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">Spirits &amp; Alcoholic beverages</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="industry" value="Generalist">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">Generalist</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="industry" value="Other">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">Other</span>
+                    </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label class="contact__form-label">Business model (select all that apply)</label>
+                    <div class="contact__checkbox-group">
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="businessModel" value="B2B - Direct distribution to retail shops">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">B2B - Direct distribution to retail shops</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="businessModel" value="B2B - Distribution through wholesalers">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">B2B - Distribution through wholesalers</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="businessModel" value="B2B - Van jobber">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">B2B - Van jobber</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="businessModel" value="B2B - Cash and carry facility">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">B2B - Cash and carry facility</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="businessModel" value="B2B - Trading company">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">B2B - Trading company</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="businessModel" value="B2B - Other (Brand, Dropshipper, etc.)">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">B2B - Other (Brand, Dropshipper, etc.)</span>
+                    </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="contact__form-actions">
+                  <button type="submit" class="contact__form-submit">Submit</button>
+                  <button type="button" class="contact__form-close">Close</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Retailer Form -->
+          <div class="contact__form-shell contact__form-shell--retailer">
+            <form class="contact__form" id="contactFormRetailer" novalidate>
+              <div class="contact__form-step contact__form-step--1 is-active" data-step="1">
+                <div class="contact__form-row">
+                  <div class="contact__form-field">
+                    <label for="retailerFirstName" class="contact__form-label">First Name <span class="contact__form-required">*</span></label>
+                    <input type="text" id="retailerFirstName" name="firstName" class="contact__form-input" required>
+                    <span class="contact__error-message">This field is required</span>
+                  </div>
+                  <div class="contact__form-field">
+                    <label for="retailerLastName" class="contact__form-label">Last Name <span class="contact__form-required">*</span></label>
+                    <input type="text" id="retailerLastName" name="lastName" class="contact__form-input" required>
+                    <span class="contact__error-message">This field is required</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field">
+                    <label for="retailerCompanyName" class="contact__form-label">Company Name <span class="contact__form-required">*</span></label>
+                    <input type="text" id="retailerCompanyName" name="companyName" class="contact__form-input" required>
+                    <span class="contact__error-message">This field is required</span>
+                  </div>
+                  <div class="contact__form-field">
+                    <label for="retailerCompanyWebsite" class="contact__form-label">Company Website</label>
+                    <input type="url" id="retailerCompanyWebsite" name="companyWebsite" class="contact__form-input" placeholder="https://">
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label for="retailerLocations" class="contact__form-label">Number of Locations <span class="contact__form-required">*</span></label>
+                    <div class="contact__form-select-wrapper">
+                      <select id="retailerLocations" name="locations" class="contact__form-select" required>
+                        <option value="">Select number of locations</option>
+                        <option value="1">1</option>
+                        <option value="2-10">2-10</option>
+                        <option value="11-49">11-49</option>
+                        <option value="50+">50+</option>
+                        <option value="online">Online</option>
+                      </select>
+                      <svg class="contact__form-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <span class="contact__error-message">Please select number of locations</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label for="retailerCountry" class="contact__form-label">Country <span class="contact__form-required">*</span></label>
+                    <div class="contact__form-select-wrapper">
+                      <select id="retailerCountry" name="country" class="contact__form-select" required>
+                        <option value="">Select a country</option>
+                      </select>
+                      <svg class="contact__form-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <span class="contact__error-message">Please select a country</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field">
+                    <label for="retailerPhone" class="contact__form-label">Phone</label>
+                    <input type="tel" id="retailerPhone" name="phone" class="contact__form-input">
+                  </div>
+                  <div class="contact__form-field">
+                    <label for="retailerEmail" class="contact__form-label">Email <span class="contact__form-required">*</span></label>
+                    <input type="email" id="retailerEmail" name="email" class="contact__form-input" required>
+                    <span class="contact__error-message">Please enter a valid email</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label for="retailerHearAbout" class="contact__form-label">How did you hear about us? <span class="contact__form-required">*</span></label>
+                    <div class="contact__form-select-wrapper">
+                      <select id="retailerHearAbout" name="hearAbout" class="contact__form-select" required>
+                        <option value="">Select an option</option>
+                        <option value="I already buy Zengaz">I already buy Zengaz</option>
+                        <option value="I saw Zengaz in a shop">I saw Zengaz in a shop</option>
+                        <option value="I received a client request for Zengaz">I received a client request for Zengaz</option>
+                        <option value="Word of mouth (friend, family, etc.)">Word of mouth (friend, family, etc.)</option>
+                        <option value="Social media">Social media</option>
+                        <option value="Online (Google, B2B platforms, etc.)">Online (Google, B2B platforms, etc.)</option>
+                        <option value="Trade show">Trade show</option>
+                      </select>
+                      <svg class="contact__form-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <span class="contact__error-message">Please select an option</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label for="retailerHelp" class="contact__form-label">How can we help you? <span class="contact__form-required">*</span></label>
+                    <div class="contact__form-select-wrapper">
+                      <select id="retailerHelp" name="help" class="contact__form-select" required>
+                        <option value="">Select an option</option>
+                        <option value="Purchasing request">Purchasing for my shop</option>
+                        <option value="Customized lighters request">Customized lighters request</option>
+                        <option value="Marketing material request">Marketing material request</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      <svg class="contact__form-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <span class="contact__error-message">Please select an option</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-actions">
+                  <button type="button" class="contact__form-next">Next</button>
+                  <button type="button" class="contact__form-close">Close</button>
+                </div>
+              </div>
+
+              <div class="contact__form-step contact__form-step--2">
+                <div class="contact__form-step-header">
+                  <h3 class="contact__form-step-title">You're almost done.</h3>
+                  <p class="contact__form-step-subtitle">To save you time when we reach out, please let us know the below.</p>
+                </div>
+
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label class="contact__form-label">Industry (Tick all that apply)</label>
+                    <div class="contact__checkbox-group">
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="industry" value="FMCG">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">FMCG (Personal Care, Home Products, etc.)</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="industry" value="Smoking / Tobacco">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">Smoking / Tobacco</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="industry" value="Food Products">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">Food &amp; Beverages</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="industry" value="Beverages &amp; Spirits">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">Spirits &amp; Alcoholic beverages</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="industry" value="Generalist">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">Generalist</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="industry" value="Other">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">Other</span>
+                    </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label class="contact__form-label">Business Model (Tick all that apply)</label>
+                    <div class="contact__checkbox-group">
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="businessModel" value="B2C - Convenience store">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">B2C - Convenience store</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="businessModel" value="B2C - Supermarket">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">B2C - Supermarket</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="businessModel" value="B2C - Tobacco/Smoke/Vape Shop">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">B2C - Tobacco/Smoke/Vape Shop</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="businessModel" value="B2C - Dispensary/Cannabis Store">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">B2C - Dispensary/Cannabis Store / CBD store</span>
+                    </label>
+                    <label class="contact__checkbox">
+                      <input type="checkbox" name="businessModel" value="B2C - Other (Souvenir, Hotel, Restaurant, Tattoo, etc.)">
+                      <span class="contact__checkbox-box"></span>
+                      <span class="contact__checkbox-label">B2C - Other (Souvenir, Alcohol, Hotel, Restaurant, Tattoo, etc.)</span>
+                    </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="contact__form-actions">
+                  <button type="submit" class="contact__form-submit">Submit</button>
+                  <button type="button" class="contact__form-close">Close</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Consumer Form -->
+          <div class="contact__form-shell contact__form-shell--consumer">
+            <form class="contact__form" id="contactFormConsumer" novalidate>
+              <div class="contact__form-step contact__form-step--1 is-active" data-step="1">
+                <div class="contact__form-row">
+                  <div class="contact__form-field">
+                    <label for="consumerFirstName" class="contact__form-label">First Name <span class="contact__form-required">*</span></label>
+                    <input type="text" id="consumerFirstName" name="firstName" class="contact__form-input" required>
+                    <span class="contact__error-message">This field is required</span>
+                  </div>
+                  <div class="contact__form-field">
+                    <label for="consumerLastName" class="contact__form-label">Last Name <span class="contact__form-required">*</span></label>
+                    <input type="text" id="consumerLastName" name="lastName" class="contact__form-input" required>
+                    <span class="contact__error-message">This field is required</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label for="consumerCountry" class="contact__form-label">Country <span class="contact__form-required">*</span></label>
+                    <div class="contact__form-select-wrapper">
+                      <select id="consumerCountry" name="country" class="contact__form-select" required>
+                        <option value="">Select a country</option>
+                      </select>
+                      <svg class="contact__form-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <span class="contact__error-message">Please select a country</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field">
+                    <label for="consumerPhone" class="contact__form-label">Phone</label>
+                    <input type="tel" id="consumerPhone" name="phone" class="contact__form-input">
+                  </div>
+                  <div class="contact__form-field">
+                    <label for="consumerEmail" class="contact__form-label">Email <span class="contact__form-required">*</span></label>
+                    <input type="email" id="consumerEmail" name="email" class="contact__form-input" required>
+                    <span class="contact__error-message">Please enter a valid email</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label for="consumerHearAbout" class="contact__form-label">How did you hear about us? <span class="contact__form-required">*</span></label>
+                    <div class="contact__form-select-wrapper">
+                      <select id="consumerHearAbout" name="hearAbout" class="contact__form-select" required>
+                        <option value="">Select an option</option>
+                        <option value="I already buy Zengaz">I already buy Zengaz</option>
+                        <option value="I saw Zengaz in a shop">I saw Zengaz in a shop</option>
+                        <option value="I received a client request for Zengaz">I received a client request for Zengaz</option>
+                        <option value="Word of mouth (friend, family, etc.)">Word of mouth (friend, family, etc.)</option>
+                        <option value="Social media">Social media</option>
+                        <option value="Online (Google, B2B platforms, etc.)">Online (Google, B2B platforms, etc.)</option>
+                        <option value="Trade show">Trade show</option>
+                      </select>
+                      <svg class="contact__form-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <span class="contact__error-message">Please select an option</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label for="consumerHelp" class="contact__form-label">How can we help you? <span class="contact__form-required">*</span></label>
+                    <div class="contact__form-select-wrapper">
+                      <select id="consumerHelp" name="help" class="contact__form-select" required>
+                        <option value="">Select an option</option>
+                        <option value="Review">Review</option>
+                        <option value="How to refill my Zengaz jet lighter?">How to refill my Zengaz jet lighter?</option>
+                        <option value="Do you sell replacement parts?">Do you sell replacement parts?</option>
+                        <option value="My lighter is not sparking">My lighter is not sparking</option>
+                        <option value="Fuel is leaking from my lighter">Fuel is leaking from my lighter</option>
+                        <option value="Where can I buy Zengaz jet lighters?">Where can I buy Zengaz jet lighters?</option>
+                        <option value="I am looking for a specific design">I am looking for a specific design</option>
+                        <option value="Custom Lighters">Custom Lighters</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      <svg class="contact__form-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <span class="contact__error-message">Please select an option</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row contact__form-row--other-textarea" style="display: none;">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label for="consumerOtherDetails" class="contact__form-label">Please provide more details <span class="contact__form-required">*</span></label>
+                    <textarea id="consumerOtherDetails" name="otherDetails" class="contact__form-textarea" rows="4"></textarea>
+                    <span class="contact__error-message">This field is required</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-actions">
+                  <button type="submit" class="contact__form-submit">Submit</button>
+                  <button type="button" class="contact__form-close">Close</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Other Form -->
+          <div class="contact__form-shell contact__form-shell--other">
+            <form class="contact__form" id="contactFormOther" novalidate>
+              <div class="contact__form-step contact__form-step--1 is-active" data-step="1">
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label for="otherSpecify" class="contact__form-label">Please specify <span class="contact__form-required">*</span></label>
+                    <div class="contact__form-select-wrapper">
+                      <select id="otherSpecify" name="specify" class="contact__form-select" required>
+                        <option value="">Select an option</option>
+                        <option value="Artist">Artist</option>
+                        <option value="Influencer">Influencer</option>
+                        <option value="Brand">Brand</option>
+                        <option value="Agency">Agency</option>
+                        <option value="Event Organizer">Event Organizer</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      <svg class="contact__form-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <span class="contact__error-message">Please select an option</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field">
+                    <label for="otherFirstName" class="contact__form-label">First Name <span class="contact__form-required">*</span></label>
+                    <input type="text" id="otherFirstName" name="firstName" class="contact__form-input" required>
+                    <span class="contact__error-message">This field is required</span>
+                  </div>
+                  <div class="contact__form-field">
+                    <label for="otherLastName" class="contact__form-label">Last Name <span class="contact__form-required">*</span></label>
+                    <input type="text" id="otherLastName" name="lastName" class="contact__form-input" required>
+                    <span class="contact__error-message">This field is required</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field">
+                    <label for="otherCompanyName" class="contact__form-label">Company Name</label>
+                    <input type="text" id="otherCompanyName" name="companyName" class="contact__form-input">
+                  </div>
+                  <div class="contact__form-field">
+                    <label for="otherCompanyWebsite" class="contact__form-label">Company Website</label>
+                    <input type="url" id="otherCompanyWebsite" name="companyWebsite" class="contact__form-input" placeholder="https://">
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label for="otherCountry" class="contact__form-label">Country <span class="contact__form-required">*</span></label>
+                    <div class="contact__form-select-wrapper">
+                      <select id="otherCountry" name="country" class="contact__form-select" required>
+                        <option value="">Select a country</option>
+                      </select>
+                      <svg class="contact__form-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <span class="contact__error-message">Please select a country</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field">
+                    <label for="otherPhone" class="contact__form-label">Phone <span class="contact__form-required">*</span></label>
+                    <input type="tel" id="otherPhone" name="phone" class="contact__form-input" required>
+                    <span class="contact__error-message">This field is required</span>
+                  </div>
+                  <div class="contact__form-field">
+                    <label for="otherEmail" class="contact__form-label">Email <span class="contact__form-required">*</span></label>
+                    <input type="email" id="otherEmail" name="email" class="contact__form-input" required>
+                    <span class="contact__error-message">Please enter a valid email</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label for="otherHearAbout" class="contact__form-label">How did you hear about us? <span class="contact__form-required">*</span></label>
+                    <div class="contact__form-select-wrapper">
+                      <select id="otherHearAbout" name="hearAbout" class="contact__form-select" required>
+                        <option value="">Select an option</option>
+                        <option value="I already buy Zengaz">I already buy Zengaz</option>
+                        <option value="I saw Zengaz in a shop">I saw Zengaz in a shop</option>
+                        <option value="I received a client request for Zengaz">I received a client request for Zengaz</option>
+                        <option value="Word of mouth (friend, family, etc.)">Word of mouth (friend, family, etc.)</option>
+                        <option value="Social media">Social media</option>
+                        <option value="Online (Google, B2B platforms, etc.)">Online (Google, B2B platforms, etc.)</option>
+                        <option value="Trade show">Trade show</option>
+                      </select>
+                      <svg class="contact__form-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <span class="contact__error-message">Please select an option</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-row">
+                  <div class="contact__form-field contact__form-field--full">
+                    <label for="otherMessage" class="contact__form-label">Message <span class="contact__form-required">*</span></label>
+                    <textarea id="otherMessage" name="message" class="contact__form-textarea" rows="4" required></textarea>
+                    <span class="contact__error-message">This field is required</span>
+                  </div>
+                </div>
+                
+                <div class="contact__form-actions">
+                  <button type="submit" class="contact__form-submit">Submit</button>
+                  <button type="button" class="contact__form-close">Close</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <div class="contact__lighters">
+        <img 
+          src="{{ 'contact_lighter1.png' | asset_url }}" 
+          alt="" 
+          class="contact__lighter contact__lighter--1"
+          width="120"
+          height="120"
+          loading="lazy"
+        />
+        <img 
+          src="{{ 'contact_lighter2.png' | asset_url }}" 
+          alt="" 
+          class="contact__lighter contact__lighter--2"
+          width="120"
+          height="120"
+          loading="lazy"
+        />
+        <img 
+          src="{{ 'contact_lighter3.png' | asset_url }}" 
+          alt="" 
+          class="contact__lighter contact__lighter--3"
+          width="120"
+          height="120"
+          loading="lazy"
+        />
+        <img 
+          src="{{ 'contact_lighter4.png' | asset_url }}" 
+          alt="" 
+          class="contact__lighter contact__lighter--4"
+          width="120"
+          height="120"
+          loading="lazy"
+        />
+        <img 
+          src="{{ 'contact_lighter5.png' | asset_url }}" 
+          alt="" 
+          class="contact__lighter contact__lighter--5"
+          width="120"
+          height="120"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .contact {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-end;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .contact__container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .contact__content {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(1rem, 3vw, 4rem);
+    width: 100%;
+    min-height: 100vh;
+    align-items: stretch;
+    position: relative;
+  }
+
+  .contact__left {
+    padding-top: clamp(0.75rem, 6.5vw, 10rem);
+    padding-right: clamp(2rem, 4vw, 4rem);
+    padding-bottom: clamp(2rem, 4vw, 4rem);
+    padding-left: clamp(2.5rem, 5vw, 5rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    z-index: 1;
+  }
+
+  .contact__title {
+    font-size: clamp(3.5rem, 9vw, 6.5rem);
+    font-weight: 700;
+    line-height: 0.95;
+    margin: 0 0 2rem 0;
+    padding: 0;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+  }
+
+  .contact__title-line {
+    display: block;
+  }
+
+  .contact__title-line--indented {
+    padding-left: clamp(1.5rem, 3vw, 3.5rem);
+  }
+
+  .contact__list-wrapper {
+    width: 100%;
+    max-width: 22rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-left: clamp(0.5rem, 3vw, 3rem);
+  }
+
+  .contact__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    width: 100%;
+  }
+
+  .contact__list-title {
+    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    margin: 0;
+  }
+
+  .contact__list-item {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .contact__list-item:hover {
+    transform: translateX(8px);
+    opacity: 0.8;
+  }
+
+  .contact__list-item.is-active {
+    color: #4a90e2;
+  }
+
+  .contact__list-item.is-active:hover {
+    opacity: 1;
+  }
+
+  .contact__list-text {
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    font-weight: 400;
+    line-height: 1.35;
+    display: block;
+    position: relative;
+    padding-left: 0;
+  }
+
+  .contact__list-item::before {
+    content: '';
+    position: absolute;
+    left: -1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 2px;
+    background-color: currentColor;
+    transition: width 0.3s ease;
+  }
+
+  .contact__list-item:hover::before,
+  .contact__list-item.is-active::before {
+    width: 1rem;
+  }
+
+  .contact__right {
+    position: relative;
+    min-height: 90vh;
+    padding: 0;
+  }
+
+  .contact__image-wrapper {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, filter 0.3s ease;
+  }
+
+  .contact__image {
+    width: 100%;
+    height: auto;
+    max-width: 100rem;
+    object-fit: contain;
+    object-position: bottom right;
+    display: block;
+  }
+
+  .contact__lighters {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .contact__lighter {
+    position: absolute;
+    width: auto;
+    height: auto;
+    max-width: clamp(140px, 15vw, 220px);
+    max-height: clamp(140px, 15vw, 220px);
+    object-fit: contain;
+    opacity: 0.4;
+    mix-blend-mode: multiply;
+  }
+
+  .contact__lighter--1 {
+    left: 45%;
+    top: 15%;
+    transform: rotate(-12deg);
+  }
+
+  .contact__lighter--2 {
+    left: 55%;
+    top: 35%;
+    transform: rotate(18deg);
+  }
+
+  .contact__lighter--3 {
+    left: 65%;
+    top: 60%;
+    transform: rotate(-8deg);
+  }
+
+  .contact__lighter--4 {
+    left: 50%;
+    top: 75%;
+    transform: rotate(15deg);
+  }
+
+  .contact__lighter--5 {
+    left: 70%;
+    top: 25%;
+    transform: rotate(-20deg);
+  }
+
+  @media (max-width: 1023px) {
+    .contact__lighters {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: clamp(240px, 55vw, 380px);
+      display: block;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .contact__lighter {
+      position: absolute;
+      max-width: clamp(66px, 12vw, 110px);
+      max-height: clamp(66px, 12vw, 110px);
+      opacity: 0.4;
+    }
+
+    .contact__lighter--1 {
+      left: 6%;
+      top: 10%;
+      transform: rotate(-24deg);
+    }
+
+    .contact__lighter--2 {
+      left: 45%;
+      top: 4%;
+      transform: rotate(16deg);
+    }
+
+    .contact__lighter--3 {
+      left: 82%;
+      top: 12%;
+      transform: rotate(-12deg);
+    }
+
+    .contact__lighter--4 {
+      left: 22%;
+      top: 30%;
+      transform: rotate(20deg);
+    }
+
+    .contact__lighter--5 {
+      left: 64%;
+      top: 32%;
+      transform: rotate(-18deg);
+    }
+
+    .contact__content {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      min-height: auto;
+      gap: 2rem;
+    }
+
+    .contact__left {
+      padding: 2rem 1.75rem 1.75rem 1.75rem;
+      order: 2;
+      grid-row: 2;
+    }
+
+    .contact__right {
+      display: contents;
+    }
+
+    .contact__image-wrapper {
+      order: 1;
+      grid-row: 1;
+      padding: 0;
+      display: flex !important;
+      justify-content: flex-end;
+      align-items: flex-end;
+      position: relative;
+      min-height: 200px;
+      width: 100%;
+    }
+
+    .contact__form-overlay {
+      order: 3;
+      grid-row: 3;
+      margin-top: 0;
+    }
+
+    .contact__image {
+      max-height: 320px;
+      max-width: min(70vw, 18rem);
+      object-position: bottom right;
+      width: 70%;
+      min-width: 70%;
+      display: block !important;
+      margin: 0;
+      padding: 0;
+    }
+
+    .contact__title {
+      margin-bottom: 1.5rem;
+    }
+
+    .contact__list-wrapper {
+      padding-left: 0;
+      max-width: none;
+    }
+
+    .contact__list {
+      gap: 0.85rem;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .contact__lighters {
+      height: clamp(220px, 70vw, 320px);
+    }
+
+    .contact__lighter {
+      max-width: clamp(54px, 15vw, 90px);
+      max-height: clamp(54px, 15vw, 90px);
+    }
+
+    .contact__lighter--1 {
+      left: 4%;
+      top: 12%;
+      transform: rotate(-26deg);
+    }
+
+    .contact__lighter--2 {
+      left: 65%;
+      top: 4%;
+      transform: rotate(18deg);
+    }
+
+    .contact__lighter--3 {
+      left: 84%;
+      top: 20%;
+      transform: rotate(-15deg);
+    }
+
+    .contact__lighter--4 {
+      left: 18%;
+      top: 34%;
+      transform: rotate(25deg);
+    }
+
+    .contact__lighter--5 {
+      left: 58%;
+      top: 36%;
+      transform: rotate(-18deg);
+    }
+
+    .contact__content {
+      gap: 0;
+    }
+
+    .contact__left {
+      order: 2;
+      padding: 1.75rem 1.25rem 2.25rem;
+      background: #fff;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.08);
+    }
+
+    .contact__right {
+      order: 1;
+      padding: 0;
+      padding-left: 1rem;
+      justify-content: flex-end;
+      align-items: flex-end;
+      overflow: visible;
+    }
+
+    .contact__title {
+      font-size: clamp(2.4rem, 11vw, 3.1rem);
+      text-align: left;
+      margin-bottom: 1rem;
+    }
+
+    .contact__title-line,
+    .contact__title-line--indented {
+      display: inline;
+      padding-left: 0;
+    }
+
+    .contact__list-wrapper {
+      padding: 0;
+      align-items: stretch;
+      text-align: left;
+      gap: 0.75rem;
+    }
+
+    .contact__list {
+      align-items: stretch;
+      gap: 0.75rem;
+      width: 100%;
+    }
+
+    .contact__list-item::before {
+      display: none;
+    }
+
+    .contact__list-item {
+      padding: 0.85rem 1.25rem;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.1);
+      background: rgba(0,0,0,0.02);
+    }
+
+    .contact__list-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .contact__image {
+      width: 70%;
+      min-width: 70%;
+      max-width: none;
+      height: auto;
+      max-height: none;
+      object-fit: contain;
+      object-position: bottom right;
+    }
+  }
+
+  body.has-contact-page .footer {
+    margin-top: 0 !important;
+  }
+
+  /* Form Overlay Styles */
+  .contact__form-overlay {
+    position: relative;
+    width: 100%;
+    min-height: 100%;
+    background: rgba(173, 216, 230, 0.5);
+    backdrop-filter: blur(2px);
+    border-radius: 0;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: clamp(2rem, 4vw, 4rem);
+    z-index: 10;
+  }
+
+  .contact__form-overlay.is-active {
+    display: flex;
+  }
+
+  .contact__image-wrapper {
+    transition: opacity 0.3s ease, filter 0.3s ease;
+  }
+
+  .contact__right.has-overlay .contact__image-wrapper {
+    opacity: 0.3;
+    filter: blur(1px);
+  }
+
+  .contact__form-shell {
+    display: none;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .contact__form-shell.is-active {
+    display: block;
+  }
+
+  .contact__form {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: clamp(2rem, 4vw, 3rem);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .contact__form-step {
+    display: none;
+  }
+
+  .contact__form-step.is-active {
+    display: block;
+  }
+
+  .contact__form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .contact__form-field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contact__form-field--full {
+    grid-column: 1 / -1;
+  }
+
+  .contact__form-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .contact__form-required {
+    color: #e74c3c;
+    margin-left: 2px;
+  }
+
+  .contact__form-input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+    font-family: inherit;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    background: #fff;
+    color: #333;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .contact__form-select {
+    width: 100%;
+    padding: 0.875rem 2.5rem 0.875rem 1rem;
+    font-size: 1rem;
+    font-family: inherit;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    background: #fff;
+    color: #333;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+  }
+
+  .contact__form-input:focus,
+  .contact__form-select:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+  }
+
+  .contact__form-input.is-invalid,
+  .contact__form-select.is-invalid {
+    border-color: #e74c3c;
+  }
+
+  .contact__form-input.is-invalid:focus,
+  .contact__form-select.is-invalid:focus {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+  }
+
+  .contact__form-input::placeholder {
+    color: #999;
+  }
+
+  .contact__form-textarea {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+    font-family: inherit;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    background: #fff;
+    color: #333;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .contact__form-textarea:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+  }
+
+  .contact__form-textarea.is-invalid {
+    border-color: #e74c3c;
+  }
+
+  .contact__form-textarea.is-invalid:focus {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+  }
+
+  .contact__error-message {
+    display: none;
+    font-size: 0.75rem;
+    color: #e74c3c;
+    margin-top: 0.25rem;
+  }
+
+  .contact__form-input.is-invalid ~ .contact__error-message,
+  .contact__form-select.is-invalid ~ .contact__error-message,
+  .contact__form-textarea.is-invalid ~ .contact__error-message {
+    display: block;
+  }
+
+  .contact__form-select-wrapper.is-invalid .contact__form-select {
+    border-color: #e74c3c;
+  }
+
+  .contact__form-select-wrapper.is-invalid ~ .contact__error-message {
+    display: block;
+  }
+
+  .contact__form-step-header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .contact__form-step-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .contact__form-step-subtitle {
+    font-size: 1rem;
+    color: #666;
+    margin: 0;
+  }
+
+  .contact__checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .contact__checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .contact__checkbox input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .contact__checkbox-box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .contact__checkbox input[type="checkbox"]:checked + .contact__checkbox-box {
+    background: #333;
+    border-color: #333;
+  }
+
+  .contact__checkbox input[type="checkbox"]:checked + .contact__checkbox-box::after {
+    content: '';
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    margin-top: -2px;
+  }
+
+  .contact__checkbox input[type="checkbox"]:focus + .contact__checkbox-box {
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+  }
+
+  .contact__checkbox-label {
+    font-size: 0.9375rem;
+    color: #333;
+    user-select: none;
+  }
+
+  .contact__form-select-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .contact__form-chevron {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #666;
+    transition: transform 0.2s ease;
+  }
+
+  .contact__form-select:focus + .contact__form-chevron {
+    transform: translateY(-50%) rotate(180deg);
+  }
+
+  .contact__form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .contact__form-submit,
+  .contact__form-next,
+  .contact__form-close {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .contact__form-submit,
+  .contact__form-next {
+    background: #333;
+    color: #fff;
+  }
+
+  .contact__form-submit:hover,
+  .contact__form-next:hover {
+    background: #000;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .contact__form-close {
+    background: #f5f5f5;
+    color: #333;
+  }
+
+  .contact__form-close:hover {
+    background: #e0e0e0;
+  }
+
+  @media (max-width: 1023px) {
+    .contact__form-overlay {
+      position: relative;
+      width: 100%;
+      min-height: auto;
+      background: rgba(173, 216, 230, 0.5);
+      backdrop-filter: blur(2px);
+      padding: 2rem 1.5rem;
+      margin-top: 0;
+      order: 3;
+    }
+
+    .contact__content {
+      gap: 0;
+    }
+
+    .contact__right.has-overlay .contact__image-wrapper {
+      opacity: 1;
+      filter: none;
+    }
+
+    .contact__form-shell {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .contact__form {
+      padding: 2rem 1.5rem;
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    .contact__form-row {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .contact__form-field--full {
+      grid-column: 1;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .contact__form-overlay {
+      padding: 1.5rem 1.25rem;
+      margin-top: 0;
+    }
+
+    .contact__form {
+      padding: 1.5rem 1.25rem;
+    }
+
+    .contact__form-actions {
+      flex-direction: column;
+    }
+
+    .contact__form-submit,
+    .contact__form-close {
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+<script>
+  (function(){
+    // Add class to body when contact section is present
+    if (document.querySelector('.contact')) {
+      document.body.classList.add('has-contact-page');
+    }
+
+    // Form overlay functionality
+    var listItems = document.querySelectorAll('.contact__list-item');
+    var formOverlay = document.querySelector('.contact__form-overlay');
+    var contactRight = document.querySelector('.contact__right');
+    var formShells = document.querySelectorAll('.contact__form-shell');
+    var currentFormType = null;
+
+    function showForm(type, clickedItem) {
+      // Remove active state from all list items
+      listItems.forEach(function(item) {
+        item.classList.remove('is-active');
+      });
+
+      // Add active state to clicked item
+      if (clickedItem) {
+        clickedItem.classList.add('is-active');
+      }
+
+      // Hide all form shells
+      formShells.forEach(function(shell) {
+        shell.classList.remove('is-active');
+      });
+
+      // Show the appropriate form
+      if (type === 'distributor') {
+        var distributorForm = document.querySelector('.contact__form-shell--distributor');
+        if (distributorForm) {
+          distributorForm.classList.add('is-active');
+          // Reset to step 1
+          var steps = distributorForm.querySelectorAll('.contact__form-step');
+          steps.forEach(function(step) {
+            step.classList.remove('is-active');
+          });
+          var step1 = distributorForm.querySelector('.contact__form-step--1');
+          if (step1) {
+            step1.classList.add('is-active');
+          }
+          // Reset form
+          var form = distributorForm.querySelector('form');
+          if (form) {
+            form.reset();
+            clearValidationErrors(form);
+          }
+        }
+      } else if (type === 'retailer') {
+        var retailerForm = document.querySelector('.contact__form-shell--retailer');
+        if (retailerForm) {
+          retailerForm.classList.add('is-active');
+          // Reset to step 1
+          var steps = retailerForm.querySelectorAll('.contact__form-step');
+          steps.forEach(function(step) {
+            step.classList.remove('is-active');
+          });
+          var step1 = retailerForm.querySelector('.contact__form-step--1');
+          if (step1) {
+            step1.classList.add('is-active');
+          }
+          // Reset form
+          var form = retailerForm.querySelector('form');
+          if (form) {
+            form.reset();
+            clearValidationErrors(form);
+          }
+        }
+      } else if (type === 'consumer') {
+        var consumerForm = document.querySelector('.contact__form-shell--consumer');
+        if (consumerForm) {
+          consumerForm.classList.add('is-active');
+          // Reset to step 1
+          var steps = consumerForm.querySelectorAll('.contact__form-step');
+          steps.forEach(function(step) {
+            step.classList.remove('is-active');
+          });
+          var step1 = consumerForm.querySelector('.contact__form-step--1');
+          if (step1) {
+            step1.classList.add('is-active');
+          }
+          // Reset form
+          var form = consumerForm.querySelector('form');
+          if (form) {
+            form.reset();
+            clearValidationErrors(form);
+            // Hide other textarea
+            var otherRow = consumerForm.querySelector('.contact__form-row--other-textarea');
+            if (otherRow) {
+              otherRow.style.display = 'none';
+            }
+            var otherTextarea = consumerForm.querySelector('#consumerOtherDetails');
+            if (otherTextarea) {
+              otherTextarea.removeAttribute('required');
+              otherTextarea.classList.remove('is-invalid');
+            }
+          }
+        }
+      } else if (type === 'other') {
+        var otherForm = document.querySelector('.contact__form-shell--other');
+        if (otherForm) {
+          otherForm.classList.add('is-active');
+          // Reset to step 1
+          var steps = otherForm.querySelectorAll('.contact__form-step');
+          steps.forEach(function(step) {
+            step.classList.remove('is-active');
+          });
+          var step1 = otherForm.querySelector('.contact__form-step--1');
+          if (step1) {
+            step1.classList.add('is-active');
+          }
+          // Reset form
+          var form = otherForm.querySelector('form');
+          if (form) {
+            form.reset();
+            clearValidationErrors(form);
+          }
+        }
+      }
+
+      // Show overlay
+      formOverlay.classList.add('is-active');
+      contactRight.classList.add('has-overlay');
+      currentFormType = type;
+
+      // Scroll to form on mobile
+      if (window.innerWidth <= 1023 && formOverlay) {
+        setTimeout(function() {
+          // Get header height
+          var header = document.querySelector('header') || document.querySelector('.header');
+          var headerHeight = header ? header.offsetHeight : 0;
+          var offset = headerHeight + 20; // Header height + padding
+          
+          // Get form position
+          var formRect = formOverlay.getBoundingClientRect();
+          var scrollPosition = window.pageYOffset + formRect.top - offset;
+          
+          window.scrollTo({
+            top: scrollPosition,
+            behavior: 'smooth'
+          });
+        }, 100);
+      }
+    }
+
+    function hideForm() {
+      formOverlay.classList.remove('is-active');
+      contactRight.classList.remove('has-overlay');
+      currentFormType = null;
+
+      // Remove active state from all list items
+      listItems.forEach(function(item) {
+        item.classList.remove('is-active');
+      });
+
+      // Reset all forms
+      formShells.forEach(function(shell) {
+        shell.classList.remove('is-active');
+        var form = shell.querySelector('form');
+        if (form) {
+          form.reset();
+          clearValidationErrors(form);
+        }
+      });
+    }
+
+    function clearValidationErrors(form) {
+      var inputs = form.querySelectorAll('.contact__form-input, .contact__form-select, .contact__form-textarea');
+      inputs.forEach(function(input) {
+        input.classList.remove('is-invalid');
+        input.removeAttribute('data-touched');
+      });
+      var wrappers = form.querySelectorAll('.contact__form-select-wrapper');
+      wrappers.forEach(function(wrapper) {
+        wrapper.classList.remove('is-invalid');
+      });
+    }
+
+    function toggleFormSubmittingState(form, isSubmitting) {
+      var controls = form.querySelectorAll('input, select, textarea, button:not(.contact__form-close)');
+      controls.forEach(function(control) {
+        if (isSubmitting) {
+          control.setAttribute('data-temp-disabled', 'true');
+          control.disabled = true;
+        } else if (control.hasAttribute('data-temp-disabled')) {
+          control.removeAttribute('data-temp-disabled');
+          control.disabled = false;
+        }
+      });
+    }
+
+    function validateField(field, forceShow) {
+      var isValid = field.checkValidity();
+      var wrapper = field.closest('.contact__form-select-wrapper');
+      var isTouched = field.hasAttribute('data-touched') || forceShow;
+      
+      // For textarea, also check if it's empty when required
+      if (field.tagName === 'TEXTAREA' && field.hasAttribute('required')) {
+        if (!field.value.trim()) {
+          isValid = false;
+        }
+      }
+      
+      if (!isValid && isTouched) {
+        field.classList.add('is-invalid');
+        if (wrapper) {
+          wrapper.classList.add('is-invalid');
+        }
+      } else {
+        field.classList.remove('is-invalid');
+        if (wrapper) {
+          wrapper.classList.remove('is-invalid');
+        }
+      }
+      return isValid;
+    }
+
+    function validateStep(step) {
+      var isValid = true;
+      var requiredFields = step.querySelectorAll('input[required], select[required], textarea[required]');
+      
+      requiredFields.forEach(function(field) {
+        // Force show errors when validating the whole step
+        if (!validateField(field, true)) {
+          isValid = false;
+        }
+      });
+
+      return isValid;
+    }
+
+    if (listItems.length && formOverlay && contactRight) {
+      // Handle list item clicks
+      listItems.forEach(function(item) {
+        item.addEventListener('click', function() {
+          var type = item.getAttribute('data-type');
+          showForm(type, item);
+        });
+      });
+
+      // Handle close buttons
+      var closeButtons = document.querySelectorAll('.contact__form-close');
+      closeButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+          hideForm();
+        });
+      });
+
+      // Handle Next buttons
+      var nextButtons = document.querySelectorAll('.contact__form-next');
+      nextButtons.forEach(function(nextButton) {
+        nextButton.addEventListener('click', function() {
+          var activeShell = document.querySelector('.contact__form-shell.is-active');
+          if (!activeShell) return;
+
+          var currentStep = activeShell.querySelector('.contact__form-step.is-active');
+          if (!currentStep) return;
+
+          // Validate current step
+          if (!validateStep(currentStep)) {
+            // Scroll to first invalid field
+            var firstInvalid = currentStep.querySelector('.is-invalid');
+            if (firstInvalid) {
+              firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              firstInvalid.focus();
+            }
+            return;
+          }
+
+          // Move to next step
+          currentStep.classList.remove('is-active');
+          var nextStep = activeShell.querySelector('.contact__form-step--2');
+          if (nextStep) {
+            nextStep.classList.add('is-active');
+            nextStep.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      // Handle form submission
+      var distributorForm = document.querySelector('#contactFormDistributor');
+      if (distributorForm) {
+        distributorForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // Validate step 2 (though it has no required fields)
+          var step2 = this.querySelector('.contact__form-step--2');
+          if (step2) {
+            var isValid = true;
+            // No required fields in step 2, so just proceed
+            
+            if (isValid) {
+              // Collect form data
+              var formData = new FormData(this);
+              var data = { type: 'distributor' };
+              for (var pair of formData.entries()) {
+                var key = pair[0];
+                var value = pair[1];
+                if (data[key]) {
+                  // Handle multiple checkboxes
+                  if (Array.isArray(data[key])) {
+                    data[key].push(value);
+                  } else {
+                    data[key] = [data[key], value];
+                  }
+                } else {
+                  data[key] = value;
+                }
+              }
+              
+              submitForm(data, this);
+            }
+          }
+        });
+      }
+
+      // Handle retailer form submission
+      var retailerForm = document.querySelector('#contactFormRetailer');
+      if (retailerForm) {
+        retailerForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // Validate step 2 (though it has no required fields)
+          var step2 = this.querySelector('.contact__form-step--2');
+          if (step2) {
+            var isValid = true;
+            // No required fields in step 2, so just proceed
+            
+            if (isValid) {
+              // Collect form data
+              var formData = new FormData(this);
+              var data = { type: 'retailer' };
+              for (var pair of formData.entries()) {
+                var key = pair[0];
+                var value = pair[1];
+                if (data[key]) {
+                  // Handle multiple checkboxes
+                  if (Array.isArray(data[key])) {
+                    data[key].push(value);
+                  } else {
+                    data[key] = [data[key], value];
+                  }
+                } else {
+                  data[key] = value;
+                }
+              }
+              
+              submitForm(data, this);
+            }
+          }
+        });
+      }
+
+      // Handle consumer form submission
+      var consumerForm = document.querySelector('#contactFormConsumer');
+      if (consumerForm) {
+        // Handle "Other" option toggle
+        var consumerHelpSelect = consumerForm.querySelector('#consumerHelp');
+        var otherTextareaRow = consumerForm.querySelector('.contact__form-row--other-textarea');
+        var otherTextarea = consumerForm.querySelector('#consumerOtherDetails');
+        
+        if (consumerHelpSelect && otherTextareaRow && otherTextarea) {
+          consumerHelpSelect.addEventListener('change', function() {
+            if (this.value === 'Other') {
+              otherTextareaRow.style.display = 'grid';
+              otherTextarea.setAttribute('required', 'required');
+            } else {
+              otherTextareaRow.style.display = 'none';
+              otherTextarea.removeAttribute('required');
+              otherTextarea.value = '';
+              otherTextarea.classList.remove('is-invalid');
+            }
+          });
+        }
+
+        consumerForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // Validate the form
+          var step1 = this.querySelector('.contact__form-step--1');
+          if (step1) {
+            // Check if "Other" is selected and textarea is required
+            if (consumerHelpSelect && consumerHelpSelect.value === 'Other') {
+              if (!otherTextarea.value.trim()) {
+                otherTextarea.classList.add('is-invalid');
+                otherTextarea.setAttribute('data-touched', 'true');
+                otherTextarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                otherTextarea.focus();
+                return;
+              } else {
+                otherTextarea.classList.remove('is-invalid');
+              }
+            }
+
+            if (!validateStep(step1)) {
+              // Scroll to first invalid field
+              var firstInvalid = step1.querySelector('.is-invalid');
+              if (firstInvalid) {
+                firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstInvalid.focus();
+              }
+              return;
+            }
+            
+            // Collect form data
+            var formData = new FormData(this);
+            var data = { type: 'consumer' };
+            for (var pair of formData.entries()) {
+              data[pair[0]] = pair[1];
+            }
+            
+            submitForm(data, this);
+          }
+        });
+      }
+
+      // Handle other form submission
+      var otherForm = document.querySelector('#contactFormOther');
+      if (otherForm) {
+        otherForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // Validate the form
+          var step1 = this.querySelector('.contact__form-step--1');
+          if (step1) {
+            if (!validateStep(step1)) {
+              // Scroll to first invalid field
+              var firstInvalid = step1.querySelector('.is-invalid');
+              if (firstInvalid) {
+                firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstInvalid.focus();
+              }
+              return;
+            }
+            
+            // Collect form data
+            var formData = new FormData(this);
+            var data = { type: 'other' };
+            for (var pair of formData.entries()) {
+              data[pair[0]] = pair[1];
+            }
+            
+            submitForm(data, this);
+          }
+        });
+      }
+
+      function submitForm(data, form) {
+        var submitBtn = form.querySelector('button[type="submit"]');
+        var originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Sending...';
+        submitBtn.disabled = true;
+        toggleFormSubmittingState(form, true);
+
+        var apiUrl = "{{ section.settings.api_url }}";
+        if (!apiUrl) {
+          console.error('API URL is not configured');
+          alert('Configuration error: API URL missing');
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+          toggleFormSubmittingState(form, false);
+          return;
+        }
+
+        fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+          if (result.success) {
+            // Check for consumer response
+            if (result.consumerResponse) {
+              // Create a modal or replace form content with response
+              var formContainer = form.closest('.contact__form-shell');
+              var responseHtml = `
+                <div class="contact__success-message">
+                  <h3 class="contact__form-step-title" style="margin-bottom: 1.5rem;">Here is the info you requested:</h3>
+                  <div class="contact__response-content" style="font-size: 1.1rem; line-height: 1.6;">
+                    ${result.consumerResponse}
+                  </div>
+                  <button type="button" class="contact__form-close" onclick="location.reload()" style="margin-top: 2rem;">Close</button>
+                </div>
+              `;
+              form.innerHTML = responseHtml;
+              
+              // Ensure the success message is visible and scrolled to
+              form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+              alert('Thank you! Your form has been submitted.');
+              hideForm();
+            }
+          } else {
+            alert('Something went wrong. Please try again.');
+            console.error('Submission error:', result);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Network error. Please try again later.');
+        })
+        .finally(() => {
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+          toggleFormSubmittingState(form, false);
+        });
+      }
+
+      // Real-time validation
+      var allForms = document.querySelectorAll('.contact__form');
+      allForms.forEach(function(form) {
+        var inputs = form.querySelectorAll('input, select, textarea');
+        inputs.forEach(function(input) {
+          // Mark as touched on blur
+          input.addEventListener('blur', function() {
+            this.setAttribute('data-touched', 'true');
+            validateField(this);
+          });
+
+          // Re-validate on input if already invalid
+          input.addEventListener('input', function() {
+            if (this.hasAttribute('data-touched') && this.classList.contains('is-invalid')) {
+              validateField(this);
+            }
+          });
+
+          // Mark as touched on change (for selects)
+          input.addEventListener('change', function() {
+            this.setAttribute('data-touched', 'true');
+            validateField(this);
+          });
+        });
+      });
+
+      // Close overlay when clicking outside the form
+      formOverlay.addEventListener('click', function(e) {
+        if (e.target === formOverlay) {
+          hideForm();
+        }
+      });
+    }
+
+    // Load and populate country dropdowns
+    (function() {
+      // Load countries from external file
+      var script = document.createElement('script');
+      script.src = "{{ 'countries.js' | asset_url }}";
+      script.onload = function() {
+        if (typeof countries !== 'undefined' && Array.isArray(countries)) {
+          // Find all country select elements
+          var countrySelects = document.querySelectorAll('select[name="country"]');
+          countrySelects.forEach(function(select) {
+            // Clear existing options except the first "Select a country" option
+            var firstOption = select.querySelector('option[value=""]');
+            select.innerHTML = '';
+            if (firstOption) {
+              select.appendChild(firstOption);
+            } else {
+              var defaultOption = document.createElement('option');
+              defaultOption.value = '';
+              defaultOption.textContent = 'Select a country';
+              select.appendChild(defaultOption);
+            }
+            
+            // Populate with countries from the array
+            countries.forEach(function(country) {
+              var option = document.createElement('option');
+              option.value = country; // Use exact country name as value (matches HubSpot)
+              option.textContent = country;
+              select.appendChild(option);
+            });
+          });
+        }
+      };
+      document.head.appendChild(script);
+    })();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Contact",
+  "settings": [
+    {
+      "type": "text",
+      "id": "api_url",
+      "label": "API URL",
+      "default": "https://new-zengaz-contact-form.vercel.app/api/contact",
+      "info": "The URL of your Vercel backend API"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact"
+    }
+  ]
+}
+{% endschema %}
+

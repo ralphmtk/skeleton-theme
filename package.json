@@ -1,0 +1,12 @@
+{
+    "name": "skeleton-theme-backend",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "@hubspot/api-client": "^11.0.0",
+        "axios": "^1.6.0"
+    }
+}
