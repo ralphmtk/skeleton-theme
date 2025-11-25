@@ -9,44 +9,44 @@
  */
 {
   "sections": {
-    "range": {
-      "type": "range",
+    "shop": {
+      "type": "shop",
       "blocks": {
-        "category_Cj9qwm": {
+        "category_VAhAMY": {
           "type": "category",
           "settings": {
-            "collection": "jet-lighters-1"
+            "collection": "jet-lighters"
           }
         },
-        "category_R3igBX": {
+        "category_EB7ixY": {
           "type": "category",
           "settings": {
-            "collection": "jet-torches-1"
+            "collection": "jet-torches"
           }
         },
-        "category_YTGiYi": {
+        "category_EMceMG": {
           "type": "category",
           "settings": {
-            "collection": "gas-refills-1"
+            "collection": "gas-refills"
           }
         },
-        "category_JbgXyz": {
+        "category_FMr3hC": {
           "type": "category",
           "settings": {
-            "collection": "displays-1"
+            "collection": "displays"
           }
         }
       },
       "block_order": [
-        "category_Cj9qwm",
-        "category_R3igBX",
-        "category_YTGiYi",
-        "category_JbgXyz"
+        "category_VAhAMY",
+        "category_EB7ixY",
+        "category_EMceMG",
+        "category_FMr3hC"
       ],
       "settings": {}
     }
   },
   "order": [
-    "range"
+    "shop"
   ]
 }

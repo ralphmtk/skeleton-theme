@@ -1,0 +1,97 @@
+{% comment %}
+  Renders a product card for the range page.
+  
+  Accepts:
+  - product: {Object} Product Liquid object
+  - is_unavailable: {Boolean} Whether the product is unavailable in the user's country
+  - user_country_code: {String} The user's country code (optional, mostly for debugging)
+  - localization: {Object} Localization object for country name
+{% endcomment %}
+
+{%- assign custom_style = product.metafields.custom.custom_style | strip | downcase -%}
+
+<a class="prod-card{% if is_unavailable %} prod-card--unavailable{% endif %}{% if custom_style != blank %} prod-card--custom prod-card--style-{{ custom_style }}{% endif %}" href="{{ product.url }}"{% if custom_style != blank %} data-custom-style="{{ custom_style }}"{% endif %}>
+  {%- if custom_style != blank -%}
+    {%- comment -%} Custom style: blank state with offset metafields support {%- endcomment -%}
+    {% if product.metafields.custom.animation_body and product.metafields.custom.animation_cap %}
+      {%- assign cap_y_offset = product.metafields.custom.animation_cap_y_offset | default: '65.5' -%}
+      {%- assign cap_x_offset = product.metafields.custom.animation_cap_x_offset | default: '0' -%}
+      {%- assign flame_y_offset = product.metafields.custom.animation_flame_y_offset | default: '100' -%}
+      {%- assign flame_x_offset = product.metafields.custom.animation_flame_x_offset | default: '0' -%}
+      {%- assign body_x_offset = product.metafields.custom.animation_body_x_offset | default: '0' -%}
+      {%- assign body_y_offset = product.metafields.custom.animation_body_y_offset | default: '0' -%}
+      {%- assign flame_count = product.metafields.custom.number_of_flames | default: 1 -%}
+      {%- assign flame_count_value = flame_count | plus: 0 -%}
+      {%- if custom_style == 'zl17' -%}
+        {%- assign flame_asset = 'zl17_flame.png' -%}
+      {%- elsif custom_style == 'zl19' -%}
+        {%- assign flame_asset = 'zl19_flame.png' -%}
+      {%- else -%}
+        {%- assign flame_asset = 'flame.png' -%}
+        {%- if flame_count != blank and flame_count_value >= 2 -%}
+          {%- assign flame_asset = 'double_flame.png' -%}
+        {%- endif -%}
+      {%- endif -%}
+      <div class="prod-card__image-wrapper prod-card__image-wrapper--parts">
+        {% if is_unavailable %}
+          <div class="prod-card__unavailable-label">Not available in {{ localization.country.name }}</div>
+        {% endif %}
+        <div class="prod-card__parts-container">
+          <img class="prod-card__body" src="{{ product.metafields.custom.animation_body | file_url }}" alt="{{ product.title }}" width="600" height="600" loading="lazy" style="transform: translate({{ body_x_offset }}px, {{ body_y_offset }}px);">
+          <img class="prod-card__cap" src="{{ product.metafields.custom.animation_cap | file_url }}" alt="" width="600" height="600" loading="lazy" style="bottom: {{ cap_y_offset }}%; left: calc(50% + {{ cap_x_offset }}px);">
+          <img class="prod-card__flame" src="{{ flame_asset | asset_url }}" alt="" width="600" height="600" loading="lazy" style="bottom: calc(50% + {{ flame_y_offset }}px); left: calc(48.5% + {{ flame_x_offset }}px);">
+        </div>
+      </div>
+    {% elsif product.featured_image %}
+      <div class="prod-card__image-wrapper">
+        {% if is_unavailable %}
+          <div class="prod-card__unavailable-label">Not available in {{ localization.country.name }}</div>
+        {% endif %}
+        {% render 'image', class: 'prod-card__image', image: product.featured_image, width: 600, height: 600, crop: 'center' %}
+      </div>
+    {% endif %}
+  {%- else -%}
+    {%- comment -%} Default animations and styling {%- endcomment -%}
+    {% if product.metafields.custom.animation_body and product.metafields.custom.animation_cap %}
+      {%- assign cap_y_offset = product.metafields.custom.animation_cap_y_offset | default: '65.5' -%}
+      {%- assign cap_x_offset = product.metafields.custom.animation_cap_x_offset | default: '0' -%}
+      {%- assign flame_y_offset = product.metafields.custom.animation_flame_y_offset | default: '100' -%}
+      {%- assign flame_x_offset = product.metafields.custom.animation_flame_x_offset | default: '0' -%}
+      {%- assign body_x_offset = product.metafields.custom.animation_body_x_offset | default: '0' -%}
+      {%- assign body_y_offset = product.metafields.custom.animation_body_y_offset | default: '0' -%}
+      {%- assign flame_count = product.metafields.custom.number_of_flames | default: 1 -%}
+      {%- assign flame_count_value = flame_count | plus: 0 -%}
+      {%- if custom_style == 'zl17' -%}
+        {%- assign flame_asset = 'zl17_flame.png' -%}
+      {%- elsif custom_style == 'zl19' -%}
+        {%- assign flame_asset = 'zl19_flame.png' -%}
+      {%- else -%}
+        {%- assign flame_asset = 'flame.png' -%}
+        {%- if flame_count != blank and flame_count_value >= 2 -%}
+          {%- assign flame_asset = 'double_flame.png' -%}
+        {%- endif -%}
+      {%- endif -%}
+      <div class="prod-card__image-wrapper prod-card__image-wrapper--parts">
+        {% if is_unavailable %}
+          <div class="prod-card__unavailable-label">Not available in {{ localization.country.name }}</div>
+        {% endif %}
+        <div class="prod-card__parts-container">
+          <img class="prod-card__body" src="{{ product.metafields.custom.animation_body | file_url }}" alt="{{ product.title }}" width="600" height="600" loading="lazy" style="transform: translate({{ body_x_offset }}px, {{ body_y_offset }}px);">
+          <img class="prod-card__cap" src="{{ product.metafields.custom.animation_cap | file_url }}" alt="" width="600" height="600" loading="lazy" style="bottom: {{ cap_y_offset }}%; left: calc(50% + {{ cap_x_offset }}px);">
+          <img class="prod-card__flame" src="{{ flame_asset | asset_url }}" alt="" width="600" height="600" loading="lazy" style="bottom: calc(50% + {{ flame_y_offset }}px); left: calc(48.5% + {{ flame_x_offset }}px);">
+        </div>
+      </div>
+    {% elsif product.featured_image %}
+      <div class="prod-card__image-wrapper">
+        {% if is_unavailable %}
+          <div class="prod-card__unavailable-label">Not available in {{ localization.country.name }}</div>
+        {% endif %}
+        {% render 'image', class: 'prod-card__image', image: product.featured_image, width: 600, height: 600, crop: 'center' %}
+      </div>
+    {% endif %}
+  {%- endif -%}
+  <div class="prod-card__info">
+    <div class="prod-card__name">{{ product.title }}</div>
+  </div>
+</a>
+

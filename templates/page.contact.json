@@ -8,17 +8,14 @@
  * ------------------------------------------------------------
  */
 {
-  "type": "header",
-  "name": "t:general.header",
   "sections": {
-    "header-solid": {
-      "type": "header-solid",
+    "contact": {
+      "type": "contact",
       "settings": {}
     }
   },
   "order": [
-    "header-solid"
-  ],
+    "contact"
+  ]
 }
-
 

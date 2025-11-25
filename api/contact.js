@@ -23,6 +23,11 @@ export default async function handler(req, res) {
     try {
         const data = req.body;
 
+        // DEBUG: Log ALL incoming form data
+        console.log("========== INCOMING FORM DATA ==========");
+        console.log("Full request body:", JSON.stringify(data, null, 2));
+        console.log("=========================================");
+
         // Normalize Data
         const userType = data.type || "";
         const country = data.country || "";
@@ -32,7 +37,17 @@ export default async function handler(req, res) {
         const isOther = userType === "other";
         const subject = isConsumer ? data.help : isOther ? "Other Request" : data.help; // Use 'help' as subject for consumer, or default for others if needed
 
-        console.log("Received form submission:", { email: data.email, type: userType, country });
+        console.log("Parsed form data:", {
+            email: data.email,
+            type: userType,
+            country,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            help: data.help,
+            isBusinessUser,
+            isConsumer,
+            isOther,
+        });
 
         // 1. Determine HubSpot Owner & Internal Recipient
         let ownerId = HUBSPOT_CONFIG.OWNER_IDS.KARIM;
@@ -144,21 +159,49 @@ export default async function handler(req, res) {
             ccRecipients = EMAIL_CONFIG.CC_RULES.PAUL;
         }
 
+        // Build shop types / business model string for email
+        let shopTypesStr = "";
+        if (data.businessModel) {
+            shopTypesStr = Array.isArray(data.businessModel) ? data.businessModel.join(", ") : data.businessModel;
+        }
+        if (data.industry) {
+            const industryStr = Array.isArray(data.industry) ? data.industry.join(", ") : data.industry;
+            shopTypesStr = shopTypesStr ? `${shopTypesStr}; Industry: ${industryStr}` : industryStr;
+        }
+
+        // Map data to match SMTP2GO template variable names (lowercase)
         await sendEmail({
             to: internalRecipientEmail,
             cc: ccRecipients,
             bcc: EMAIL_CONFIG.BCC_RULES.ALL,
             templateId: SMTP2GO_CONFIG.TEMPLATES.INTERNAL_NOTIFICATION,
             data: {
-                ...data,
                 userType: mapUserTypeToLabel(userType),
+                firstname: data.firstName,
+                lastname: data.lastName,
+                companyname: data.companyName || "",
+                companywebsite: data.companyWebsite || "",
+                country: data.country || "",
+                phone: data.phone || "",
+                email: data.email,
+                hearAboutUs: data.hearAbout || "",
+                howCanWeHelpYou: data.help || "",
+                numberOfLocations: data.locations || "",
+                subject: data.help || (isOther ? "Other Request" : ""),
+                message: data.message || data.otherDetails || "",
+                shopTypes: shopTypesStr,
+                specify: data.specify || "",
                 contactId,
-                subject: data.help,
             },
         });
 
-        // 8. Send Customer Auto-Response (If NOT enrolled in sequence)
+        // 8. Get Consumer Response Content (for both screen display and email)
         let consumerResponseHtml = "";
+        if (isConsumer) {
+            consumerResponseHtml = getConsumerResponseContent(data.help);
+        }
+
+        // 9. Send Customer Auto-Response (If NOT enrolled in sequence)
         if (!enrolledInSequence) {
             let customerTemplate = SMTP2GO_CONFIG.TEMPLATES.CUSTOMER_RESPONSE;
             let emailVariables = { firstName: data.firstName, lastName: data.lastName };
@@ -169,8 +212,7 @@ export default async function handler(req, res) {
                 customerTemplate = SMTP2GO_CONFIG.TEMPLATES.MARKETING_MATERIAL;
             } else if (isConsumer) {
                 customerTemplate = SMTP2GO_CONFIG.TEMPLATES.CUSTOMER_AUTO_RESPONSE;
-                consumerResponseHtml = getConsumerResponseContent(data.help);
-                emailVariables.content = consumerResponseHtml;
+                emailVariables.content = consumerResponseHtml; // Send the response content in email
             }
 
             if (customerTemplate) {
@@ -183,7 +225,7 @@ export default async function handler(req, res) {
             }
         }
 
-        // 9. Return Success with Consumer Content (if applicable)
+        // 10. Return Success with Consumer Content (for screen display)
         const responsePayload = { success: true, contactId };
         if (isConsumer && consumerResponseHtml) {
             responsePayload.consumerResponse = consumerResponseHtml;
@@ -202,8 +244,8 @@ export default async function handler(req, res) {
                     message: `An error occurred while processing a contact form submission.\n\nError Message: ${error.message}\n\nStack Trace:\n${error.stack}`,
                     userType: "System Error",
                     email: "system@zengaz.com",
-                    firstName: "System",
-                    lastName: "Error",
+                    firstname: "System",
+                    lastname: "Error",
                 },
             });
         } catch (emailError) {
@@ -342,15 +384,27 @@ async function sendEmail({ to, cc = [], bcc = [], templateId, data }) {
             sender: "ZENGAZ <hello@zengaz.net>",
             template_id: templateId,
             custom_headers: [{ header: "Reply-To", value: "hello@zengaz.net" }],
-            data: data,
+            template_data: data, // SMTP2GO uses template_data, not data
         };
 
         if (cc && cc.length > 0) payload.cc = cc;
         if (bcc && bcc.length > 0) payload.bcc = bcc;
 
-        await axios.post("https://api.smtp2go.com/v3/email/send", payload);
-        console.log(`Email sent ${templateId} to ${to}`);
+        // DEBUG: Log the full payload being sent to SMTP2GO
+        console.log("========== SMTP2GO EMAIL DEBUG ==========");
+        console.log("Template ID:", templateId);
+        console.log("To:", to);
+        console.log("CC:", cc);
+        console.log("BCC:", bcc);
+        console.log("Template Data:", JSON.stringify(data, null, 2));
+        console.log("Full Payload (excluding API key):", JSON.stringify({ ...payload, api_key: "[REDACTED]" }, null, 2));
+        console.log("==========================================");
+
+        const response = await axios.post("https://api.smtp2go.com/v3/email/send", payload);
+        console.log(`Email sent successfully! Template: ${templateId}, To: ${to}`);
+        console.log("SMTP2GO Response:", JSON.stringify(response.data, null, 2));
     } catch (error) {
         console.error("SMTP2GO Error:", error.response?.data || error.message);
+        console.error("Failed payload (excluding API key):", JSON.stringify({ ...arguments[0], api_key: "[REDACTED]" }, null, 2));
     }
 }

@@ -1,26 +1,38 @@
 {% comment %}
   Range page
+  
+  Product Sorting:
+  - Products are displayed in the order they appear in the collection (set in Shopify admin)
+  - Available products are shown first, followed by unavailable products at the end
 {% endcomment %}
 
-{% assign has_cats = false %}
+{{ 'range.css' | asset_url | stylesheet_tag }}
+{{ 'range-style-overrides.css' | asset_url | stylesheet_tag }}
+
+{% assign user_country_code = localization.country.iso_code | downcase %}
+
+{%- comment -%} Count categories with products {%- endcomment -%}
+{% assign category_count = 0 %}
 {% for block in section.blocks %}
   {% if block.type == 'category' and block.settings.collection != blank %}
-    {% assign has_cats = true %}
-    {% break %}
+    {% assign col = block.settings.collection %}
+    {% assign has_products = false %}
+    {% for product in col.products limit: 1 %}
+      {% assign has_products = true %}
+    {% endfor %}
+    {% if has_products %}
+      {% assign category_count = category_count | plus: 1 %}
+    {% endif %}
   {% endif %}
 {% endfor %}
-{% unless has_cats %}
-  {% assign collections_list = "c1,c2,c3,c4" | split: ',' %}
-  {% for key in collections_list %}
-    {% assign col = section.settings[key] %}
-    {% if col %}
-      {% assign has_cats = true %}
-      {% break %}
-    {% endif %}
-  {% endfor %}
-{% endunless %}
 
-<section class="range">
+{% assign show_header = false %}
+{% if category_count > 1 %}
+  {% assign show_header = true %}
+{% endif %}
+
+<section class="range full-width">
+  {% if show_header %}
   <div class="range__header">
     <div class="range__header-inner">
       <h1 class="range__title">RANGE</h1>
@@ -31,24 +43,11 @@
       {% for block in section.blocks %}
         {% if block.type == 'category' and block.settings.collection != blank %}
           {% assign col = block.settings.collection %}
-          {% assign mobile_title = col.title %}
-          {% if mobile_title == 'Jet Lighters' %}{% assign mobile_title = 'Lighters' %}{% endif %}
-          {% if mobile_title == 'Jet Torches' %}{% assign mobile_title = 'Torches' %}{% endif %}
-          {% if mobile_title == 'Gas Refills' %}{% assign mobile_title = 'Gas' %}{% endif %}
-          <button class="range__category-filter{% if first %} is-active{% endif %}" data-target="{{ col.handle }}" type="button">
-            <img class="range__category-icon" src="{{ 'flame-icon.png' | asset_url }}" alt="" width="16" height="16" loading="lazy">
-            <span class="range__category-text">{{ col.title }}</span>
-            <span class="range__category-text--mobile">{{ mobile_title }}</span>
-          </button>
-          {% assign first = false %}
-        {% endif %}
-      {% endfor %}
-      {% unless has_cats %}
-        {% assign collections_list = "c1,c2,c3,c4" | split: ',' %}
-        {% assign first = true %}
-        {% for key in collections_list %}
-          {% assign col = section.settings[key] %}
-          {% if col %}
+          {% assign has_products = false %}
+          {% for product in col.products limit: 1 %}
+            {% assign has_products = true %}
+          {% endfor %}
+          {% if has_products %}
             {% assign mobile_title = col.title %}
             {% if mobile_title == 'Jet Lighters' %}{% assign mobile_title = 'Lighters' %}{% endif %}
             {% if mobile_title == 'Jet Torches' %}{% assign mobile_title = 'Torches' %}{% endif %}
@@ -60,372 +59,103 @@
             </button>
             {% assign first = false %}
           {% endif %}
-        {% endfor %}
-      {% endunless %}
+        {% endif %}
+      {% endfor %}
       </div>
     </div>
   </div>
   
   {%- comment -%} Spacer to prevent content from going under fixed header {%- endcomment -%}
   <div class="range__header-spacer"></div>
+  {% endif %}
 
   <div class="range__content">
-    {% assign has_cats = false %}
     {% for block in section.blocks %}
       {% if block.type == 'category' and block.settings.collection != blank %}
-        {% assign has_cats = true %}
         {% assign col = block.settings.collection %}
-        <div class="range__category-section" id="category-{{ col.handle }}">
-          <h2 class="range__cat-title">{{ col.title }}</h2>
-          <div class="prod-grid">
-            {% for product in col.products %}
-              <a class="prod-card" href="{{ product.url }}">
-                {% if product.featured_image %}
-                  <div class="prod-card__image-wrapper">
-                    {% render 'image', class: 'prod-card__image', image: product.featured_image, width: 600, height: 600, crop: 'center' %}
-                  </div>
-                {% endif %}
-                <div class="prod-card__info">
-                  <div class="prod-card__name">{{ product.title }}</div>
-                  <div class="prod-card__price">{{ product.price | money }}</div>
-                </div>
-              </a>
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
-    {% endfor %}
-    {% unless has_cats %}
-      {% assign collections_list = "c1,c2,c3,c4" | split: ',' %}
-      {% for key in collections_list %}
-          {% assign col = section.settings[key] %}
-          {% if col %}
-            <div class="range__category-section" id="category-{{ col.handle }}">
-              <h2 class="range__cat-title">{{ col.title }}</h2>
+        {% assign has_products = false %}
+        {% for product in col.products limit: 1 %}
+          {% assign has_products = true %}
+        {% endfor %}
+        {% if has_products %}
+          <div class="range__category-section" id="category-{{ col.handle }}">
+            <h2 class="range__cat-title">{{ col.title }}</h2>
             <div class="prod-grid">
+              {%- comment -%} Single pass with capture for sorting {%- endcomment -%}
+              {% capture available_output %}
+              {% endcapture %}
+              {% capture unavailable_output %}
+              {% endcapture %}
+
               {% for product in col.products %}
-                <a class="prod-card" href="{{ product.url }}">
-                  {% if product.featured_image %}
-                    <div class="prod-card__image-wrapper">
-                      {% render 'image', class: 'prod-card__image', image: product.featured_image, width: 600, height: 600, crop: 'center' %}
-                    </div>
-                  {% endif %}
-                  <div class="prod-card__info">
-                    <div class="prod-card__name">{{ product.title }}</div>
-                    <div class="prod-card__price">{{ product.price | money }}</div>
-                  </div>
-                </a>
+                {%- comment -%} Check product availability based on metafields {%- endcomment -%}
+                {% assign is_unavailable = false %}
+                {% assign available_countries = product.metafields.custom.available_countries | downcase | strip %}
+                {% assign unavailable_countries = product.metafields.custom.unavailable_countries | downcase | strip %}
+                
+                {% if available_countries != blank %}
+                  {%- comment -%} Product is only available in listed countries {%- endcomment -%}
+                  {% assign available_list = available_countries | split: ',' %}
+                  {% assign country_found = false %}
+                  {% for country in available_list %}
+                    {% assign country_trimmed = country | strip %}
+                    {% if country_trimmed == user_country_code %}
+                      {% assign country_found = true %}
+                      {% break %}
+                    {% endif %}
+                  {% endfor %}
+                  {% unless country_found %}
+                    {% assign is_unavailable = true %}
+                  {% endunless %}
+                {% elsif unavailable_countries != blank %}
+                  {%- comment -%} Product is unavailable in listed countries {%- endcomment -%}
+                  {% assign unavailable_list = unavailable_countries | split: ',' %}
+                  {% for country in unavailable_list %}
+                    {% assign country_trimmed = country | strip %}
+                    {% if country_trimmed == user_country_code %}
+                      {% assign is_unavailable = true %}
+                      {% break %}
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+                
+                {% if is_unavailable %}
+                  {% capture unavailable_output %}
+                    {{ unavailable_output }}
+                    {% render 'range-product-card', product: product, is_unavailable: true, localization: localization %}
+                  {% endcapture %}
+                {% else %}
+                  {% capture available_output %}
+                    {{ available_output }}
+                    {% render 'range-product-card', product: product, is_unavailable: false, localization: localization %}
+                  {% endcapture %}
+                {% endif %}
               {% endfor %}
+              
+              {{ available_output }}
+              {{ unavailable_output }}
             </div>
           </div>
         {% endif %}
-      {% endfor %}
-    {% endunless %}
+      {% endif %}
+    {% endfor %}
   </div>
 </section>
 
 
-{% stylesheet %}
-  .range { 
-    width: 100%; 
-    max-width: 100%;
-    box-sizing: border-box;
-    position: relative;
-  }
-  
-  .range__header {
-    position: fixed;
-    top: 5rem;
-    left: 0;
-    z-index: 10;
-    width: 100%;
-    box-sizing: border-box;
-    background: #fff;
-    border-bottom: 1px solid rgba(0,0,0,.08);
-    box-shadow: 0 2px 8px rgba(0,0,0,.04);
-  }
-  
-  .range__header-inner {
-    max-width: var(--page-width, 1280px);
-    margin: 0 auto;
-    padding: 20px var(--page-margin);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 32px;
-    box-sizing: border-box;
-  }
-  
-  .range__header-spacer {
-    height: 80px; /* Approximate header height, will be calculated by JS */
-  }
-  
-  .range__title { 
-    margin: 0; 
-    padding: 0;
-    flex-shrink: 0;
-  font-family: var(--font-primary--family);
-  font-size: 20px;
-  }
-  
-  .range__category-filters {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-  
-  .range__category-filter {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 18px;
-    border: 1px solid rgba(0,0,0,.12);
-    border-radius: 8px;
-    background: #fff;
-    color: #000;
-    font-family: 'Poppins', var(--font-primary--family);
-    font-weight: 600;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: .02em;
-    cursor: pointer;
-    transition: all .2s ease;
-    white-space: nowrap;
-  }
-  
-  .range__category-filter:hover {
-    border-color: rgba(0,0,0,.25);
-    background: rgba(0,0,0,.02);
-  }
-  
-  .range__category-filter.is-active {
-    background: #e3f2fd;
-    border-color: #90caf9;
-    color: #1976d2;
-  }
-  
-  .range__category-icon {
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-    display: block;
-    object-fit: contain;
-  }
-  
-  .range__category-text--mobile {
-    display: none;
-  }
-  
-  .range__content {
-    max-width: var(--page-width, 1280px);
-    margin: 0 auto;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  .range__category-section {
-    scroll-margin-top: calc(5rem + 80px + 15px);
-    margin-bottom: 80px;
-  }
-  
-  .range__category-section:last-child {
-    margin-bottom: 0;
-  }
-  
-  .range__cat-title { 
-    margin: 0 0 24px; 
-    font-size: 30px; 
-    font-weight: 700;
-    font-family: 'Exo 2', var(--font-primary--family);
-  }
-  
-  .prod-grid { 
-    display: grid; 
-    grid-template-columns: 1fr; 
-    gap: 24px 24px; 
-  }
-  
-  .prod-grid .prod-card:nth-child(n+2) {
-    margin-top: 24px;
-  }
-  
-  @media (min-width: 640px) { 
-    .prod-grid { 
-      grid-template-columns: repeat(2, 1fr); 
-      gap: 0 24px;
-    }
-    /* For 2-column grid, add margin-top starting from 3rd item (2nd row) */
-    .prod-grid .prod-card:nth-child(1),
-    .prod-grid .prod-card:nth-child(2) {
-      margin-top: 0;
-    }
-    .prod-grid .prod-card:nth-child(n+3) {
-      margin-top: 32px;
-    }
-  }
-  
-  @media (min-width: 1024px) { 
-    .prod-grid { 
-      grid-template-columns: repeat(3, 1fr); 
-      gap: 0 24px;
-    }
-    /* For 3-column grid, add margin-top starting from 4th item (2nd row) */
-    .prod-grid .prod-card:nth-child(1),
-    .prod-grid .prod-card:nth-child(2),
-    .prod-grid .prod-card:nth-child(3) {
-      margin-top: 0;
-    }
-    .prod-grid .prod-card:nth-child(n+4) {
-      margin-top: 32px;
-    }
-  }
-  
-  @media (max-width: 1023px) {
-    .range__header-inner {
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 10px var(--page-margin);
-    }
-    
-    .range__title {
-      display: none;
-    }
-    
-    .range__category-filters {
-      width: 100%;
-      justify-content: center;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      padding-bottom: 2px;
-      flex-wrap: nowrap;
-      gap: 8px;
-    }
-    
-    .range__category-filters::-webkit-scrollbar {
-      display: none;
-    }
-    
-    .range__category-filter {
-      flex-shrink: 0;
-      padding: 8px 10px;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      border-radius: 8px;
-      min-width: 60px;
-    }
-    
-    .range__category-icon {
-      width: 18px;
-      height: 18px;
-      flex-shrink: 0;
-      display: block;
-      object-fit: contain;
-    }
-    
-    .range__category-text {
-      display: none;
-    }
-    
-    .range__category-text--mobile {
-      display: block;
-      font-size: 10px;
-      text-align: center;
-      line-height: 1.2;
-      white-space: nowrap;
-    }
-    
-    .range__header-spacer {
-      height: 60px;
-    }
-    
-    .range__cat-title { 
-      margin: 0 0 20px; 
-      font-size: 24px; 
-    }
-    
-    .range__category-section {
-      scroll-margin-top: calc(5rem + 60px + 15px);
-      margin-bottom: 60px;
-    }
-  }
-  
-  .prod-card { 
-    display: flex; 
-    flex-direction: column; 
-    text-decoration: none; 
-    color: inherit; 
-    border: none;
-    border-radius: 0; 
-    background: transparent;
-    transition: transform .2s ease;
-  }
-  
-  .prod-card:hover {
-    transform: translateY(-2px);
-  }
-  
-  .prod-card:hover .prod-card__name {
-    text-decoration: underline;
-  }
-  
-  .prod-card__image-wrapper {
-    width: 100%;
-    aspect-ratio: 1;
-    overflow: hidden;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(0,0,0,.12);
-    border-radius: 3px;
-  }
-  
-  .prod-card__image { 
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  
-  .prod-card__info {
-    padding: 12px 0 0 0;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  
-  .prod-card__name { 
-    font-weight: 500;
-    font-family: var(--font-secondary--family);
-    font-size: 14px;
-    line-height: 1.4;
-    color: #000;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-  }
-  
-  .prod-card__price {
-    font-weight: 400;
-    font-family: var(--font-secondary--family);
-    font-size: 30px;
-    color: #000;
-  }
-{% endstylesheet %}
 
 <script>
   (function(){
+    var header = document.querySelector('.range__header');
+    var spacer = document.querySelector('.range__header-spacer');
+    
     // Calculate and set header spacer height dynamically
     var updateHeaderSpacer = function(){
-      var header = document.querySelector('.range__header');
-      var spacer = document.querySelector('.range__header-spacer');
-      if (header && spacer) {
+      if (header && spacer && header.offsetParent !== null) {
         spacer.style.height = header.offsetHeight + 'px';
+        spacer.style.display = 'block';
+      } else if (spacer) {
+        spacer.style.display = 'none';
       }
     };
     
@@ -463,9 +193,12 @@
       btn.classList.add('is-active');
       
       // Get header height dynamically
-      var header = document.querySelector('.range__header');
-      var headerHeight = header ? header.offsetHeight : 80;
-      var headerOffset = 5 * 16 + headerHeight + 15; // 5rem main header + range header height + 15px extra spacing
+      var headerHeight = header && header.offsetParent !== null ? header.offsetHeight : 0;
+      // Responsive offset: main header (5rem) + range header + title height + extra spacing
+      var isMobile = window.innerWidth <= 1023;
+      var titleHeight = isMobile ? 40 : 50; // Approximate title height (mobile: 24px font + margin, desktop: 30px font + margin)
+      var extraSpacing = isMobile ? 55 : 60; // Extra spacing for visual clearance
+      var headerOffset = 5 * 16 + headerHeight + titleHeight + extraSpacing;
       var targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - headerOffset;
       
       window.scrollTo({
@@ -480,7 +213,8 @@
       var buttons = document.querySelectorAll('.range__category-filter');
       if (sections.length === 0 || buttons.length === 0) return;
       
-      var headerOffset = 5 * 16 + 80 + 15;
+      var headerHeight = header && header.offsetParent !== null ? header.offsetHeight : 0;
+      var headerOffset = 5 * 16 + headerHeight + 15;
       var scrollY = window.pageYOffset || window.scrollY;
       var viewportMiddle = scrollY + window.innerHeight / 2;
       
@@ -532,12 +266,7 @@
 {% schema %}
 {
   "name": "Range",
-  "settings": [
-    { "type": "collection", "id": "c1", "label": "Jet Lighters" },
-    { "type": "collection", "id": "c2", "label": "Jet Torches" },
-    { "type": "collection", "id": "c3", "label": "Gas Refills" },
-    { "type": "collection", "id": "c4", "label": "Displays" }
-  ],
+  "settings": [],
   "blocks": [
     {
       "type": "category",

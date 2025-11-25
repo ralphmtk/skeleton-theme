@@ -1,0 +1,114 @@
+/*
+Range product custom style overrides
+To create custom style override, set product's Custom Style metafield.
+Then, use .prod-card--custom and .prod-card--style-<custom_style> selectors to apply the overrides.
+*/
+
+.prod-card--custom {
+    /* Shared tweaks for all custom-styled cards */
+}
+
+/* ZL1 ---------------------------------------------------- */
+.prod-card--style-zl1 .prod-card__parts-container {
+    transform: scale(0.7);
+    transform-origin: center center;
+}
+
+.prod-card--style-zl1 .prod-card__cap {
+    transform-origin: left bottom;
+    transition: transform 0.4s ease;
+}
+
+.prod-card--style-zl1:hover .prod-card__cap {
+    transform: rotate(-90deg) translate(0px, -45px);
+}
+
+.prod-card--style-zl1 .prod-card__flame {
+    transform: scale(1.5);
+    transform-origin: center bottom;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.prod-card--style-zl1:hover .prod-card__flame {
+    opacity: 1;
+    transition-delay: 0.2s;
+}
+
+/* ZL5 ---------------------------------------------------- */
+.prod-card--style-zl5 {
+    /* TODO: add ZL5-specific transforms/animations */
+}
+
+/* ZL7 ---------------------------------------------------- */
+.prod-card--style-zl7 .prod-card__parts-container {
+    transform: scale(0.6);
+    transform-origin: center center;
+}
+
+.prod-card--style-zl7 .prod-card__flame {
+    transform: scale(1.4);
+    transform-origin: center bottom;
+}
+
+.prod-card--style-zl7 .prod-card__cap {
+    transform-origin: left bottom;
+    transform: translate(0, 0) scale(0.85);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.prod-card--style-zl7:hover .prod-card__cap {
+    transform: translate(-20px, 50px) rotate(-30deg) scale(0.8);
+}
+
+.prod-card--style-zl7 .prod-card__flame {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.prod-card--style-zl7:hover .prod-card__flame {
+    opacity: 1;
+    transition-delay: 0.2s;
+}
+
+/* ZL17 --------------------------------------------------- */
+.prod-card--style-zl17 .prod-card__cap {
+    transform-origin: center bottom;
+    transform: scale(0.28);
+    transition: transform 0.35s ease;
+}
+
+.prod-card--style-zl17:hover .prod-card__cap {
+    transform: scale(0.28) rotate(-120deg);
+}
+
+.prod-card--style-zl17 .prod-card__flame {
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    scale: 0.5;
+}
+
+.prod-card--style-zl17:hover .prod-card__flame {
+    opacity: 1;
+}
+
+/* ZL19 --------------------------------------------------- */
+.prod-card--style-zl19 .prod-card__cap {
+    transform-origin: right bottom;
+    transform: scale(0.31);
+    transition: transform 0.35s ease;
+}
+
+.prod-card--style-zl19:hover .prod-card__cap {
+    transform: scale(0.31) rotate(-90deg) translate(57px, -20px);
+}
+
+.prod-card--style-zl19 .prod-card__flame {
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    scale: 0.9;
+}
+
+.prod-card--style-zl19:hover .prod-card__flame {
+    opacity: 1;
+}

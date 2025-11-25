@@ -30,6 +30,7 @@ export const HUBSPOT_CONFIG = {
         lead_source: "Ali Express",
         lead_source_details: "Website",
         hs_lead_status: "New Untouched Leads (Inbound/Outbound)",
+        hidden_id: "Zengaz.com Contact Form",
     },
 };
 
@@ -67,12 +68,12 @@ export const EMAIL_CONFIG = {
 
 // Internal Emails
 export const INTERNAL_EMAILS = {
-    YAZBECK: "yazbeck.bousamra@naarinternational.com",
-    PAUL: "paul-joe@naarusa.com",
-    ZALPHA: "zalpha.rizk@naarusa.com",
-    KARIM: "karim.attoue@naarinternational.com",
-    YARA: "hello@zengaz.net",
-    CHRIS: "chris.maatouk@naarinternational.com",
+    YAZBECK: "ralph.maatouk+yazbeck.bousamra@naarinternational.com",
+    PAUL: "ralph.maatouk+paul-joe@naarusa.com",
+    ZALPHA: "ralph.maatouk+zalpha.rizk@naarusa.com",
+    KARIM: "ralph.maatouk+karim.attoue@naarinternational.com",
+    YARA: "ralph.maatouk+hello@zengaz.net",
+    CHRIS: "ralph.maatouk+chris.maatouk@naarinternational.com",
     RALPH: "ralph.maatouk@zengaz.co",
 };
 

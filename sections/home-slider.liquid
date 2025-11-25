@@ -1,30 +1,32 @@
 <section class="home-slider" aria-label="Showcase slider">
-  <div class="home-slider__card">
-    <div class="home-slider__header">
-      <h2>Latest News</h2>
-    </div>
-    <div class="home-slider__viewport" role="region" aria-roledescription="carousel" aria-label="Featured slides">
-      <div class="home-slider__track" data-index="0">
-        {% assign slides = (1..5) %}
-        {% for i in slides %}
-          <div class="home-slider__slide" aria-roledescription="slide" aria-label="Slide {{ forloop.index }} of {{ slides.size }}">
-            <div class="home-slider__content">
-              <h3>Slide {{ forloop.index }}</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dapibus, nunc at facilisis feugiat, velit nulla aliquet.</p>
-              <a href="#" class="button">Explore</a>
+  <div class="home-slider__container">
+    <div class="home-slider__card">
+      <div class="home-slider__header">
+        <h2>Latest News</h2>
+      </div>
+      <div class="home-slider__viewport" role="region" aria-roledescription="carousel" aria-label="Featured slides">
+        <div class="home-slider__track" data-index="0">
+          {% assign slides = (1..5) %}
+          {% for i in slides %}
+            <div class="home-slider__slide" aria-roledescription="slide" aria-label="Slide {{ forloop.index }} of {{ slides.size }}">
+              <div class="home-slider__content">
+                <h3>Slide {{ forloop.index }}</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dapibus, nunc at facilisis feugiat, velit nulla aliquet.</p>
+                <a href="#" class="button">Explore</a>
+              </div>
             </div>
-          </div>
-        {% endfor %}
+          {% endfor %}
+        </div>
+
+        <button class="home-slider__nav home-slider__nav--prev" aria-label="Previous slide" type="button">&#10094;</button>
+        <button class="home-slider__nav home-slider__nav--next" aria-label="Next slide" type="button">&#10095;</button>
       </div>
 
-      <button class="home-slider__nav home-slider__nav--prev" aria-label="Previous slide" type="button">&#10094;</button>
-      <button class="home-slider__nav home-slider__nav--next" aria-label="Next slide" type="button">&#10095;</button>
-    </div>
-
-    <div class="home-slider__dots" role="tablist" aria-label="Slide navigation">
-      {% for i in slides %}
-        <button class="home-slider__dot{% if forloop.first %} is-active{% endif %}" role="tab" aria-label="Go to slide {{ forloop.index }}" data-slide="{{ forloop.index0 }}" type="button"></button>
-      {% endfor %}
+      <div class="home-slider__dots" role="tablist" aria-label="Slide navigation">
+        {% for i in slides %}
+          <button class="home-slider__dot{% if forloop.first %} is-active{% endif %}" role="tab" aria-label="Go to slide {{ forloop.index }}" data-slide="{{ forloop.index0 }}" type="button"></button>
+        {% endfor %}
+      </div>
     </div>
   </div>
 
@@ -32,9 +34,21 @@
     .home-slider {
       padding: 3rem 0 4rem;
     }
+    .home-slider__container {
+      width: 100%;
+      max-width: var(--content-width, calc(var(--page-width, 1280px) - var(--page-margin, 24px) * 2));
+      margin: 0 auto;
+      padding: 0 var(--page-margin);
+      box-sizing: border-box;
+    }
+    @media (max-width: 1023px) {
+      .home-slider__container {
+        padding: 0 16px;
+      }
+    }
     .home-slider__card {
       margin-inline: auto;
-      width: min(100%, 1080px);
+      width: 100%;
       border-radius: 16px;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.12);

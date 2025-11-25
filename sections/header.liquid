@@ -1,10 +1,16 @@
-<header class="full-width">
+{%- liquid
+  assign is_home = false
+  if template.name == 'index' or template == 'index'
+    assign is_home = true
+  endif
+-%}
+<header class="full-width{% unless is_home %} is-solid{% endunless %}">
   <nav class="header__container">
     {%- comment -%} Mobile: Logo on left, hamburger on right {%- endcomment -%}
     <h1 class="header__logo header__logo--mobile">
       <a href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
         <img
-          src="{{ 'zengaz-logo-white.png' | asset_url }}"
+          src="{% if is_home %}{{ 'zengaz-logo-white.png' | asset_url }}{% else %}{{ 'zengaz-logo.png' | asset_url }}{% endif %}"
           data-logo-light="{{ 'zengaz-logo-white.png' | asset_url }}"
           data-logo-dark="{{ 'zengaz-logo.png' | asset_url }}"
           alt="{{ shop.name }}"
@@ -39,21 +45,23 @@
     <div class="header__center">
       <div class="header__nav-left">
       {% if section.settings.menu.links.size > 0 %}
+        {% assign current_path = request.path | split: '?' | first %}
         {% for link in section.settings.menu.links %}
           {% if forloop.index <= 2 %}
-            {{ link.title | link_to: link.url }}
+            <a href="{{ link.url }}" {% if link.url == current_path %}aria-current="page"{% endif %}>{{ link.title }}</a>
           {% endif %}
         {% endfor %}
       {% else %}
-        <a href="/pages/shop">Shop</a>
-        <a href="/pages/range">Range</a>
+        {% assign current_path = request.path | split: '?' | first %}
+        <a href="/pages/shop"{% if current_path == '/pages/shop' %} aria-current="page"{% endif %}>Shop</a>
+        <a href="/pages/range"{% if current_path == '/pages/range' %} aria-current="page"{% endif %}>Range</a>
       {% endif %}
       </div>
 
       <h1 class="header__logo header__logo--desktop">
         <a href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
         <img
-          src="{{ 'zengaz-logo-white.png' | asset_url }}"
+          src="{% if is_home %}{{ 'zengaz-logo-white.png' | asset_url }}{% else %}{{ 'zengaz-logo.png' | asset_url }}{% endif %}"
           data-logo-light="{{ 'zengaz-logo-white.png' | asset_url }}"
           data-logo-dark="{{ 'zengaz-logo.png' | asset_url }}"
           alt="{{ shop.name }}"
@@ -65,14 +73,16 @@
 
       <div class="header__nav-right">
       {% if section.settings.menu.links.size > 0 %}
+        {% assign current_path = request.path | split: '?' | first %}
         {% for link in section.settings.menu.links %}
           {% if forloop.index > 2 %}
-            {{ link.title | link_to: link.url }}
+            <a href="{{ link.url }}" {% if link.url == current_path %}aria-current="page"{% endif %}>{{ link.title }}</a>
           {% endif %}
         {% endfor %}
       {% else %}
-        <a href="/pages/wholesale">Wholesale</a>
-        <a href="/pages/contact">Contact</a>
+        {% assign current_path = request.path | split: '?' | first %}
+        <a href="/pages/wholesale"{% if current_path == '/pages/wholesale' %} aria-current="page"{% endif %}>Wholesale</a>
+        <a href="/pages/contact"{% if current_path == '/pages/contact' %} aria-current="page"{% endif %}>Contact</a>
       {% endif %}
       </div>
     </div>
@@ -82,14 +92,16 @@
       <div class="header__mobile-menu-content">
         <nav class="header__mobile-nav">
           {% if section.settings.menu.links.size > 0 %}
+            {% assign current_path = request.path | split: '?' | first %}
             {% for link in section.settings.menu.links %}
-              <a href="{{ link.url }}">{{ link.title }}</a>
+              <a href="{{ link.url }}" {% if link.url == current_path %}aria-current="page"{% endif %}>{{ link.title }}</a>
             {% endfor %}
           {% else %}
-            <a href="/pages/shop">Shop</a>
-            <a href="/pages/range">Range</a>
-            <a href="/pages/wholesale">Wholesale</a>
-            <a href="/pages/contact">Contact</a>
+            {% assign current_path = request.path | split: '?' | first %}
+            <a href="/pages/shop"{% if current_path == '/pages/shop' %} aria-current="page"{% endif %}>Shop</a>
+            <a href="/pages/range"{% if current_path == '/pages/range' %} aria-current="page"{% endif %}>Range</a>
+            <a href="/pages/wholesale"{% if current_path == '/pages/wholesale' %} aria-current="page"{% endif %}>Wholesale</a>
+            <a href="/pages/contact"{% if current_path == '/pages/contact' %} aria-current="page"{% endif %}>Contact</a>
           {% endif %}
           <div class="header__mobile-locale-item">
             {% form 'localization', class: 'header__locale header__locale--mobile', id: 'header-locale-form-mobile' %}
@@ -204,7 +216,8 @@
 </header>
 
 {% stylesheet %}
-  header {
+  /* Homepage: transparent header that becomes solid on scroll */
+  header.homepage-header {
     height: 5rem;
     display: grid;
     place-items: center;
@@ -218,16 +231,45 @@
     box-shadow: none;
     transition: background-color .25s ease, color .25s ease, box-shadow .25s ease, top .25s ease;
   }
+  
+  /* Other pages: always solid header */
+  header:not(.homepage-header),
+  header.homepage-header.is-solid,
+  header.homepage-header.is-open {
+    height: 5rem;
+    display: grid;
+    place-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    background: #ffffff;
+    color: #000000;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    transition: background-color .25s ease, color .25s ease, box-shadow .25s ease, top .25s ease;
+  }
+  
   .header__container {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     width: 100%;
     height: 100%;
-    max-width: 100%;
+    max-width: var(--content-width, calc(var(--page-width, 1280px) - var(--page-margin, 24px) * 2));
+    margin: 0 auto;
     padding: 0 var(--page-margin);
     box-sizing: border-box;
+  }
+  
+  /* Non-homepage: left-aligned layout */
+  header:not(.homepage-header) .header__container {
+    justify-content: space-between;
+  }
+  
+  /* Homepage: centered layout with absolute positioned clusters */
+  header.homepage-header .header__container {
+    justify-content: center;
   }
 
   /* Mobile: Logo on left, hamburger on right */
@@ -291,7 +333,14 @@
     z-index: 100;
     overflow-y: auto;
     transform: translateX(100%);
-    transition: transform .3s ease;
+    transition: transform .3s ease, top .25s ease;
+  }
+  header.homepage-header .header__mobile-menu {
+    top: calc(5rem + 50px);
+  }
+  header.homepage-header.is-solid .header__mobile-menu,
+  header.homepage-header.is-open .header__mobile-menu {
+    top: 5rem;
   }
   header.is-open .header__mobile-menu {
     transform: translateX(0);
@@ -391,7 +440,7 @@
     background: rgba(0,0,0,.06);
   }
 
-  /* Desktop: Original centered layout */
+  /* Desktop: Original centered layout - properly centered ignoring left/right clusters */
   .header__center {
     position: absolute;
     left: 50%;
@@ -399,6 +448,10 @@
     display: flex;
     align-items: center;
     gap: 1.25rem;
+  }
+  header.homepage-header .header__center {
+    width: fit-content;
+    max-width: calc(100% - 320px); /* Ensure it doesn't overlap with side clusters */
   }
   .header__nav-left,
   .header__nav-right {
@@ -411,32 +464,36 @@
   .header__cart-badge { position: absolute; top: -8px; right: -10px; background: #e00000; color: #fff; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; line-height: 1; text-align: center; font-weight: 700; }
   .header__cart-badge[hidden] { display: none !important; }
   @media (max-width: 1023px) {
+    .header__container {
+      justify-content: space-between;
+      padding: 0 var(--page-margin);
+    }
     .header__menu-toggle {
       position: absolute;
-      right: calc(var(--page-margin) + 16px);
+      right: calc(var(--page-margin) + 50px);
       z-index: 1001;
       pointer-events: auto;
     }
     .header__right-cluster { 
-      right: calc(var(--page-margin) + 90px); 
+      right: var(--page-margin);
       gap: 0;
       z-index: 100;
     }
+    /* Hide locale dropdown on mobile (it's in mobile menu) */
+    .header__right-cluster .header__locale {
+      display: none;
+    }
+    /* Cart on right side, after hamburger */
     .header__cart {
       z-index: 100;
       position: relative;
+      margin: 0;
+      margin-right: 0;
     }
     .header__cart-badge {
       z-index: 100;
       right: -6px;
       top: -6px;
-    }
-    /* Ensure locale dropdown menu doesn't overlap hamburger on mobile */
-    .header__right-cluster .locale-dropdown .menu {
-      z-index: 99;
-      max-width: calc(100vw - var(--page-margin) * 2 - 80px - 16px - 20px);
-      right: 0;
-      left: auto;
     }
   }
   .header__logo--desktop {
@@ -446,16 +503,16 @@
 
   .header__logo img {
     display: block;
-    height: 34px;
+    height: 56px;
     width: auto;
-    max-width: 120px;
-    max-height: 34px;
+    max-width: 199px;
+    max-height: 56px;
   }
   @media (max-width: 1023px) {
     .header__logo img {
-      height: 28px;
-      max-height: 28px;
-      max-width: 100px;
+      height: 47px;
+      max-height: 47px;
+      max-width: 166px;
     }
   }
 
@@ -464,23 +521,27 @@
     .header__logo--desktop { display: none; }
     .header__menu-toggle { 
       display: flex; 
+      color: #000;
+    }
+    header.homepage-header .header__menu-toggle {
       color: inherit;
+    }
+    header.homepage-header.is-solid .header__menu-toggle,
+    header.homepage-header.is-open .header__menu-toggle {
+      color: #000;
+    }
+    header.homepage-header:not(.is-solid):not(.is-open) .header__menu-toggle {
+      color: #fff;
     }
     .header__center { display: none !important; }
     .header__locale:not(.header__locale--mobile) { display: none !important; }
     .header__left-cluster { display: none !important; }
     .header__mobile-menu { display: block; }
-    header.is-solid .header__menu-toggle {
-      color: #000;
-    }
-    header:not(.is-solid) .header__menu-toggle {
-      color: #fff;
-    }
   }
 
   .header__left-cluster {
     position: absolute;
-    left: calc(var(--page-margin) + 16px);
+    left: 0;
     display: flex;
     align-items: center;
     gap: 1.5rem;
@@ -488,7 +549,7 @@
 
   .header__right-cluster {
     position: absolute;
-    right: calc(var(--page-margin) + 16px);
+    right: 0;
     display: flex;
     align-items: center;
     gap: 1.5rem;
@@ -525,11 +586,21 @@
     line-height: 1;
     padding: .5rem .85rem .5rem 0.85rem;
     border-radius: 999px;
+    border: 1px solid rgba(0,0,0,.15);
+    background: #fff;
+    color: #000;
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
+  }
+  header.homepage-header .locale-dropdown summary {
     border: 1px solid rgba(255,255,255,.6);
     background: transparent;
     color: #fff;
     backdrop-filter: none;
-    transition: background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
+  }
+  header.homepage-header.is-solid .locale-dropdown summary { 
+    background: #fff; 
+    color: #000; 
+    border-color: rgba(0,0,0,.15); 
   }
   /* Hide country selector */
   .locale-dropdown--country { display: none !important; }
@@ -545,7 +616,6 @@
   .locale-dropdown summary:focus { outline: none; box-shadow: none; }
   .locale-dropdown summary:focus-visible { outline: none; box-shadow: none; }
   .locale-dropdown summary { -webkit-tap-highlight-color: transparent; }
-  header.is-solid .locale-dropdown summary { background: #fff; color: #000; border-color: rgba(0,0,0,.15); }
   .locale-dropdown .menu {
     position: absolute;
     top: calc(100% + 8px);
@@ -555,14 +625,26 @@
     overflow: auto;
     padding: .35rem;
     border-radius: 12px;
+    border: 1px solid rgba(0,0,0,.15);
+    background: #fff;
+    color: #000;
+    box-shadow: 0 10px 30px rgba(0,0,0,.12);
+    z-index: 1000;
+  }
+  header.homepage-header .locale-dropdown .menu {
     border: 1px solid rgba(255,255,255,.35);
     background: rgba(0,0,0,.7);
     color: #fff;
     backdrop-filter: blur(6px);
     box-shadow: 0 10px 30px rgba(0,0,0,.25);
-    z-index: 1000;
   }
-  header.is-solid .locale-dropdown .menu { background: #fff; color: #000; border-color: rgba(0,0,0,.15); }
+  header.homepage-header.is-solid .locale-dropdown .menu { 
+    background: #fff; 
+    color: #000; 
+    border-color: rgba(0,0,0,.15);
+    backdrop-filter: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,.12);
+  }
   .locale-dropdown .menu-item {
     display: flex;
     width: 100%;
@@ -580,8 +662,9 @@
     text-transform: uppercase;
     font-size: .82em;
   }
-  .locale-dropdown .menu-item:hover { background: rgba(255,255,255,.1); }
-  header.is-solid .locale-dropdown .menu-item:hover { background: rgba(0,0,0,.06); }
+  .locale-dropdown .menu-item:hover { background: rgba(0,0,0,.06); }
+  header.homepage-header .locale-dropdown .menu-item:hover { background: rgba(255,255,255,.1); }
+  header.homepage-header.is-solid .locale-dropdown .menu-item:hover { background: rgba(0,0,0,.06); }
   .locale-dropdown .menu-item.is-active { outline: 2px solid rgb(64,128,255); outline-offset: 0; }
   .locale-dropdown .menu-item:focus,
   .locale-dropdown .menu-item:focus-visible,
@@ -590,22 +673,29 @@
   header a {
     position: relative;
     text-decoration: none;
-    color: #ffffff;
+    color: #000000;
     font-family: 'Poppins', var(--font-primary--family);
     font-weight: 600;
     letter-spacing: .02em;
     text-transform: uppercase;
     display: flex;
-    align-items: center; /* center text vertically to match logo */
-    font-size: 0.88em; /* ~12% smaller */
+    align-items: center;
+    font-size: 0.88em;
+  }
+  header.homepage-header a {
+    color: #ffffff;
+  }
+  header.homepage-header.is-solid a,
+  header.homepage-header.is-open a {
+    color: #000000;
   }
   .header__nav-left a,
   .header__nav-right a {
     padding: .25rem .5rem;
-    line-height: 1; /* tighter vertical alignment */
+    line-height: 1;
   }
 
-  /* Link states */
+  /* Link states - hover and active same color */
   .header__nav-left a:hover,
   .header__nav-left a:focus,
   .header__nav-left a:active,
@@ -613,11 +703,13 @@
   .header__nav-right a:focus,
   .header__nav-right a:active {
     color: rgb(64, 128, 255);
+    text-decoration: none;
   }
-  /* Active page state via aria-current */
+  /* Active page state via aria-current - same color as hover */
   .header__nav-left a[aria-current="page"],
   .header__nav-right a[aria-current="page"] {
     color: rgb(64, 128, 255);
+    text-decoration: none;
   }
 
   .header__social svg {
@@ -629,37 +721,21 @@
   }
   .header__social a:hover svg { opacity: 1; transform: translateY(-1px); }
   /* Improve contrast over video (subtle/no glow) */
-  header:not(.is-solid) a { text-shadow: none; }
-  header:not(.is-solid) .header__social svg { filter: none; }
-
-  /* Solid header state after scrolling past header height */
-  header.is-solid {
-    background: #ffffff;
-    color: #000000;
-    box-shadow: 0 2px 8px rgba(0,0,0,.06);
-    top: 0; /* snap to top when solid */
-  }
-  header.is-solid a {
-    color: #000000;
-  }
-  header.is-solid .header__nav-left a:hover,
-  header.is-solid .header__nav-left a:focus,
-  header.is-solid .header__nav-left a:active,
-  header.is-solid .header__nav-right a:hover,
-  header.is-solid .header__nav-right a:focus,
-  header.is-solid .header__nav-right a:active {
-    color: rgb(64, 128, 255);
-  }
-  header.is-solid .header__nav-left a[aria-current="page"],
-  header.is-solid .header__nav-right a[aria-current="page"] {
-    color: rgb(64, 128, 255);
-  }
+  header.homepage-header:not(.is-solid) a { text-shadow: none; }
+  header.homepage-header:not(.is-solid) .header__social svg { filter: none; }
 {% endstylesheet %}
 
 <script>
   (function() {
     var headerEl = document.querySelector('header');
     if (!headerEl) return;
+    
+    var isHomepage = {% if is_home %}true{% else %}false{% endif %};
+    
+    // Add homepage-header class for CSS targeting
+    if (isHomepage) {
+      headerEl.classList.add('homepage-header');
+    }
 
     // Mobile menu toggle
     var menuToggle = headerEl.querySelector('.header__menu-toggle');
@@ -668,6 +744,33 @@
         var isOpen = headerEl.classList.toggle('is-open');
         menuToggle.setAttribute('aria-expanded', isOpen);
         document.body.style.overflow = isOpen ? 'hidden' : '';
+        
+        if (isHomepage) {
+          // When menu opens, force solid header state
+          if (isOpen) {
+            headerEl.classList.add('is-solid');
+            // Swap to dark logo
+            var logoImgs = headerEl.querySelectorAll('.header__logo img');
+            logoImgs.forEach(function(logoImg) {
+              var dark = logoImg.getAttribute('data-logo-dark');
+              if (dark) logoImg.src = dark;
+            });
+          } else {
+            // When menu closes, restore scroll-based state
+            var y = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+            var threshold = 75;
+            if (y <= threshold) {
+              headerEl.classList.remove('is-solid');
+              // Swap to light logo
+              var logoImgs = headerEl.querySelectorAll('.header__logo img');
+              logoImgs.forEach(function(logoImg) {
+                var light = logoImg.getAttribute('data-logo-light');
+                if (light) logoImg.src = light;
+              });
+            }
+          }
+        }
+        
         // Close menu on link click
         if (isOpen) {
           var links = headerEl.querySelectorAll('.header__mobile-nav a');
@@ -676,40 +779,60 @@
               headerEl.classList.remove('is-open');
               menuToggle.setAttribute('aria-expanded', 'false');
               document.body.style.overflow = '';
+              
+              if (isHomepage) {
+                // Restore scroll-based state when closing
+                var y = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                var threshold = 75;
+                if (y <= threshold) {
+                  headerEl.classList.remove('is-solid');
+                  var logoImgs = headerEl.querySelectorAll('.header__logo img');
+                  logoImgs.forEach(function(logoImg) {
+                    var light = logoImg.getAttribute('data-logo-light');
+                    if (light) logoImg.src = light;
+                  });
+                }
+              }
             }, { once: true });
           });
         }
       });
     }
 
-    var threshold = 75; // px after which header becomes solid
-    var onScroll = function() {
-      var y = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-      if (y > threshold) {
-        headerEl.classList.add('is-solid');
-      } else {
-        headerEl.classList.remove('is-solid');
-      }
-
-      // Swap logo based on state (both mobile and desktop)
-      var logoImgs = headerEl.querySelectorAll('.header__logo img');
-      logoImgs.forEach(function(logoImg) {
-        var light = logoImg.getAttribute('data-logo-light');
-        var dark = logoImg.getAttribute('data-logo-dark');
-        if (headerEl.classList.contains('is-solid')) {
-          if (dark && logoImg.src !== dark) logoImg.src = dark;
+    // Scroll logic only for homepage
+    if (isHomepage) {
+      var threshold = 75; // px after which header becomes solid
+      var onScroll = function() {
+        // Don't change state if menu is open (keep it solid)
+        if (headerEl.classList.contains('is-open')) return;
+        
+        var y = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+        if (y > threshold) {
+          headerEl.classList.add('is-solid');
         } else {
-          if (light && logoImg.src !== light) logoImg.src = light;
+          headerEl.classList.remove('is-solid');
         }
-      });
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', onScroll, { once: true });
-    } else {
-      onScroll();
+
+        // Swap logo based on state (both mobile and desktop)
+        var logoImgs = headerEl.querySelectorAll('.header__logo img');
+        logoImgs.forEach(function(logoImg) {
+          var light = logoImg.getAttribute('data-logo-light');
+          var dark = logoImg.getAttribute('data-logo-dark');
+          if (headerEl.classList.contains('is-solid')) {
+            if (dark && logoImg.src !== dark) logoImg.src = dark;
+          } else {
+            if (light && logoImg.src !== light) logoImg.src = light;
+          }
+        });
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', onScroll, { once: true });
+      } else {
+        onScroll();
+      }
+      window.addEventListener('load', onScroll, { once: true });
     }
-    window.addEventListener('load', onScroll, { once: true });
 
     // Locale dropdown logic -> updates hidden inputs and submits the form
     var form = document.getElementById('header-locale-form');
@@ -817,6 +940,48 @@
 
     // Also update on page load
     updateCartBadge();
+
+    // Set active state on navigation links based on current URL
+    function setActiveNavLinks() {
+      var currentPath = window.location.pathname;
+      var navLinks = headerEl.querySelectorAll('.header__nav-left a, .header__nav-right a');
+      
+      navLinks.forEach(function(link) {
+        try {
+          // Handle both absolute and relative URLs
+          var linkUrl = link.getAttribute('href');
+          var linkPath;
+          
+          if (linkUrl.startsWith('http://') || linkUrl.startsWith('https://')) {
+            linkPath = new URL(linkUrl).pathname;
+          } else if (linkUrl.startsWith('/')) {
+            linkPath = linkUrl;
+          } else {
+            // Relative URL - resolve against current location
+            var baseUrl = window.location.origin + window.location.pathname;
+            var resolvedUrl = new URL(linkUrl, baseUrl);
+            linkPath = resolvedUrl.pathname;
+          }
+          
+          // Remove trailing slashes for comparison
+          var normalizedCurrent = currentPath.replace(/\/$/, '');
+          var normalizedLink = linkPath.replace(/\/$/, '');
+          
+          // Check if current path matches link path exactly
+          if (normalizedCurrent === normalizedLink) {
+            link.setAttribute('aria-current', 'page');
+          } else {
+            link.removeAttribute('aria-current');
+          }
+        } catch (e) {
+          // If URL parsing fails, skip this link
+          console.warn('Failed to parse link URL:', link.href, e);
+        }
+      });
+    }
+    
+    // Set active links on page load
+    setActiveNavLinks();
   })();
 </script>
 

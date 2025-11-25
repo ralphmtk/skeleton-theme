@@ -1,451 +1,565 @@
 {%- comment -%}
-  This section is used in the product template to render product page with media, content, and add-to-cart form.
+  Product page section with image gallery, product info, and purchase form
 {%- endcomment -%}
 
 {%- assign selected_variant = product.selected_or_first_available_variant -%}
+{%- assign is_range_product = false -%}
+{%- if product.metafields.custom.range_product_only == 1 -%}
+  {%- assign is_range_product = true -%}
+{%- endif -%}
 
-<div class="product-page__subheader">
+<div class="product-page__back">
   <button class="product-page__back-button" onclick="window.history.back()" aria-label="Go back">
     ← Back
   </button>
 </div>
 
-<section class="product-page">
+<section class="product-page full-width{% if is_range_product %} product-page--range{% endif %}">
   <div class="product-page__container">
-    <div class="product-gallery__wrapper">
-      <div class="product-page__gallery" role="region" aria-roledescription="carousel" aria-label="Product media">
-        {%- for media in product.media -%}
-          <div class="product-page__gallery-item">
-            {%- render 'image', image: media, class: 'product-page__gallery-image' -%}
-          </div>
-        {%- endfor -%}
-      </div>
-      <button class="product-gallery__nav product-gallery__nav--prev" aria-label="Previous image" type="button">&#10094;</button>
-      <button class="product-gallery__nav product-gallery__nav--next" aria-label="Next image" type="button">&#10095;</button>
-    </div>
-
-    <div class="product-gallery__dots" role="tablist" aria-label="Image navigation">
-      {%- for media in product.media -%}
-        <button class="product-gallery__dot{% if forloop.first %} is-active{% endif %}" role="tab" aria-label="Go to image {{ forloop.index }}" data-slide="{{ forloop.index0 }}" type="button"></button>
-      {%- endfor -%}
-    </div>
-
-    <div class="product-page__info">
-      <div class="product-page__info-inner">
-        {%- if product.featured_image -%}
-          <div class="product-page__thumbnail">
-            {%- render 'image', image: product.featured_image, class: 'product-page__thumbnail-image', width: 300, height: 300 -%}
+    <!-- Product Gallery -->
+    <div class="product-page__gallery-wrapper">
+      <div class="product-page__gallery" id="product-gallery" role="region" aria-label="Product images">
+        {%- if product.media.size > 1 -%}
+          <button class="product-page__gallery-nav product-page__gallery-nav--prev" aria-label="Previous image" type="button">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
+          </button>
+          <button class="product-page__gallery-nav product-page__gallery-nav--next" aria-label="Next image" type="button">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </button>
+        {%- endif -%}
+        
+        {%- if product.media.size > 0 -%}
+          {%- for media in product.media -%}
+            <div class="product-page__gallery-slide{% if forloop.first %} is-active{% endif %}" data-slide-index="{{ forloop.index0 }}">
+              {%- if media.media_type == 'image' -%}
+                {%- render 'image', image: media, class: 'product-page__gallery-image' -%}
+              {%- elsif media.media_type == 'video' -%}
+                {{ media | video_tag: image_size: '1024x', autoplay: false, loop: true, controls: true, class: 'product-page__gallery-video' }}
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          <div class="product-page__gallery-slide is-active">
+            <div class="product-page__gallery-placeholder">
+              <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="200" height="200" fill="#f5f5f5"/>
+                <path d="M80 70L120 100L80 130V70Z" fill="#ccc"/>
+              </svg>
+            </div>
           </div>
         {%- endif -%}
+      </div>
+
+      {%- if product.media.size > 1 -%}
+        <div class="product-page__gallery-thumbnails">
+          {%- for media in product.media -%}
+            <button class="product-page__gallery-thumbnail{% if forloop.first %} is-active{% endif %}" 
+                    data-slide-index="{{ forloop.index0 }}" 
+                    aria-label="View image {{ forloop.index }}" 
+                    type="button">
+              {%- render 'image', image: media, class: 'product-page__gallery-thumbnail-image', width: 80, height: 80 -%}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <!-- Product Info -->
+    <div class="product-page__info">
+      <div class="product-page__info-content">
         <h1 class="product-page__title">{{ product.title }}</h1>
 
         {%- if product.description != blank -%}
           <div class="product-page__description rte">
             {{ product.description }}
+            
+            <!-- Tree Planting Message -->
+            {%- unless is_range_product -%}
+            <div class="product-page__tree-message">
+              <div class="product-page__tree-content">
+                <span class="product-page__tree-icon">🌱</span>
+                <div>
+                  <strong>We Plant a Tree</strong>
+                  <p>For every product sold, we plant a tree to help restore our planet.</p>
+                </div>
+              </div>
+            </div>
+            {%- endunless -%}
           </div>
         {%- endif -%}
 
-        <div class="product-page__features">
-          {%- for block in section.blocks -%}
-            {%- if block.type == 'feature' -%}
-              <div class="product-page__feature-item">
-                {%- if block.settings.icon != blank -%}
-                  {%- render 'image', image: block.settings.icon, class: 'product-page__feature-icon', width: 48, height: 48 -%}
-                {%- endif -%}
-                {%- if block.settings.text != blank -%}
-                  <div class="product-page__feature-text">{{ block.settings.text }}</div>
-                {%- endif -%}
+        {%- form 'product', product, class: 'product-page__form', id: 'product-form' -%}
+          {%- if product.variants.size > 1 -%}
+            <div class="product-page__variants">
+              {%- for option in product.options_with_values -%}
+                <div class="product-page__variant-group">
+                  <label class="product-page__variant-label" for="option-{{ forloop.index }}">
+                    {{ option.name }}:
+                  </label>
+                  <div class="product-page__variant-options">
+                    {%- for value in option.values -%}
+                      {%- assign variant_option = 'option' | append: forloop.parentloop.index -%}
+                      {%- assign variant_value = value -%}
+                      {%- assign variant_available = false -%}
+                      {%- for variant in product.variants -%}
+                        {%- if variant[variant_option] == variant_value and variant.available -%}
+                          {%- assign variant_available = true -%}
+                          {%- break -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+                      <input type="radio" 
+                             name="options[{{ option.name }}]" 
+                             id="variant-{{ option.position }}-{{ forloop.index }}" 
+                             value="{{ value }}"
+                             {% if forloop.first %}checked{% endif %}
+                             {% unless variant_available %}disabled{% endunless %}
+                             class="product-page__variant-input"
+                             data-option-index="{{ option.position }}">
+                      <label for="variant-{{ option.position }}-{{ forloop.index }}" 
+                             class="product-page__variant-option{% unless variant_available %} is-unavailable{% endunless %}">
+                        {{ value }}
+                      </label>
+                    {%- endfor -%}
+                  </div>
+                </div>
+              {%- endfor -%}
+              <input type="hidden" name="id" id="variant-id" value="{{ selected_variant.id }}">
+            </div>
+          {%- else -%}
+            <input type="hidden" name="id" value="{{ selected_variant.id }}">
+          {%- endif -%}
+
+          <!-- Purchase Section: Price, Quantity, Add to Cart -->
+          {%- unless is_range_product -%}
+          <div class="product-page__purchase-section">
+            <div class="product-page__price-wrapper">
+              <span class="product-page__price" id="product-price">
+                {{ selected_variant.price | money }}
+              </span>
+              {%- if selected_variant.compare_at_price > selected_variant.price -%}
+                <span class="product-page__compare-price">
+                  {{ selected_variant.compare_at_price | money }}
+                </span>
+                <span class="product-page__sale-badge">Sale</span>
+              {%- endif -%}
+            </div>
+
+            <div class="product-page__purchase-controls">
+              <div class="product-page__quantity-wrapper">
+                <label class="product-page__quantity-label" for="product-quantity">Quantity:</label>
+                <div class="product-page__quantity-controls">
+                  <button type="button" class="product-page__quantity-btn product-page__quantity-btn--minus" aria-label="Decrease quantity">−</button>
+                  <input type="number" 
+                         id="product-quantity" 
+                         name="quantity" 
+                         value="1" 
+                         min="1" 
+                         class="product-page__quantity-input"
+                         aria-label="Quantity">
+                  <button type="button" class="product-page__quantity-btn product-page__quantity-btn--plus" aria-label="Increase quantity">+</button>
+                </div>
               </div>
-            {%- endif -%}
-          {%- endfor -%}
+
+              <button type="submit" 
+                      class="product-page__buy-button" 
+                      id="add-to-cart-btn"
+                      {% unless selected_variant.available %}disabled{% endunless %}>
+                {%- if selected_variant.available -%}
+                  Add to Cart
+                {%- else -%}
+                  Sold Out
+                {%- endif -%}
+              </button>
+            </div>
+          </div>
+          {%- else -%}
+          <!-- Inquire Now Section for Range Products -->
+          <div class="product-page__purchase-section">
+            <a href="/pages/contact" class="product-page__inquire-button">
+              Inquire Now
+            </a>
+          </div>
+          {%- endunless -%}
+        {%- endform -%}
+
+        <!-- Shipping & Returns Info -->
+        <div class="product-page__shipping-returns">
+          <div class="product-page__shipping-returns-item">
+            <div class="product-page__shipping-returns-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z"/>
+                <path d="M5 8v13M19 8v13"/>
+              </svg>
+            </div>
+            <div class="product-page__shipping-returns-content">
+              <strong>Free Shipping</strong>
+              <p>On orders over $50. Standard delivery 3-5 business days.</p>
+            </div>
+          </div>
+          <div class="product-page__shipping-returns-item">
+            <div class="product-page__shipping-returns-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 7h-4V4c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v3H0v2h2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V9h2V7z"/>
+              </svg>
+            </div>
+            <div class="product-page__shipping-returns-content">
+              <strong>Easy Returns</strong>
+              <p>30-day return policy. No questions asked. Free returns on all orders.</p>
+            </div>
+          </div>
         </div>
+
+        <!-- How To Use Link -->
+        {%- if section.settings.how_to_use_page != blank -%}
+          <a href="{{ section.settings.how_to_use_page }}" class="product-page__how-to-use-link">
+            How to use this product →
+          </a>
+        {%- endif -%}
       </div>
     </div>
   </div>
 </section>
 
-<div class="product-page__sticky-footer">
-  <div class="product-page__sticky-footer-container">
-    <h2 class="product-page__sticky-title">{{ product.title }}</h2>
-    <div class="product-page__sticky-price">{{ selected_variant.price | money }}</div>
-    {%- form 'product', product, class: 'product-page__sticky-form' -%}
-      <input type="hidden" name="id" value="{{ selected_variant.id }}">
-      <button type="submit" class="product-page__sticky-buy-button">Buy Now</button>
-    {%- endform -%}
-  </div>
-</div>
-
 {%- if section.settings.show_related_products -%}
   <section class="product-page__related">
-    <h2 class="product-page__related-title">{{ section.settings.related_products_title | default: 'Related Products' }}</h2>
-    <div class="product-page__related-carousel">
-      {%- assign related_collection = collections[section.settings.related_collection] | default: product.collections.first -%}
-      {%- if related_collection -%}
-        {%- assign products_limit = section.settings.related_products_limit | default: 4 -%}
-        {%- assign products_count = 0 -%}
-        {%- for related_product in related_collection.products -%}
-          {%- unless related_product.id == product.id -%}
-            {%- if products_count < products_limit -%}
-              <div class="product-page__related-item">
-                <a href="{{ related_product.url }}" class="product-page__related-link">
-                  {%- if related_product.featured_image -%}
-                    <div class="product-page__related-image">
-                      {%- render 'image', image: related_product.featured_image, class: 'product-page__related-image-img', width: 400, height: 400 -%}
+    <div class="product-page__related-container">
+      <h2 class="product-page__related-title">
+        {{ section.settings.related_products_title | default: 'You May Also Like' }}
+      </h2>
+      <div class="product-page__related-grid">
+        {%- assign related_collection = collections[section.settings.related_collection] | default: product.collections.first -%}
+        {%- if related_collection -%}
+          {%- assign products_limit = section.settings.related_products_limit | default: 4 -%}
+          {%- assign products_count = 0 -%}
+          {%- for related_product in related_collection.products -%}
+            {%- unless related_product.id == product.id -%}
+              {%- if products_count < products_limit -%}
+                <div class="product-page__related-item">
+                  <a href="{{ related_product.url }}" class="product-page__related-link">
+                    {%- if related_product.featured_image -%}
+                      <div class="product-page__related-image">
+                        {%- render 'image', image: related_product.featured_image, class: 'product-page__related-image-img', width: 400, height: 400 -%}
+                      </div>
+                    {%- endif -%}
+                    <div class="product-page__related-info">
+                      <h3 class="product-page__related-name">{{ related_product.title }}</h3>
+                      <div class="product-page__related-price">
+                        {{ related_product.price | money }}
+                      </div>
                     </div>
-                  {%- endif -%}
-                  <div class="product-page__related-info">
-                    <h3 class="product-page__related-name">{{ related_product.title }}</h3>
-                    <div class="product-page__related-price">
-                      {{ related_product.price | money }}
-                    </div>
-                  </div>
-                </a>
-              </div>
+                  </a>
+                </div>
+              {%- endif -%}
               {%- assign products_count = products_count | plus: 1 -%}
-            {%- endif -%}
-          {%- endunless -%}
-        {%- endfor -%}
-      {%- endif -%}
+            {%- endunless -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
     </div>
   </section>
 {%- endif -%}
 
 <script>
   (function() {
-    // Fallback pinning: toggles fixed positioning for the right column within gallery bounds
-    var section = document.querySelector('.product-page');
-    var gallery = document.querySelector('.product-page__gallery');
-    var panel = document.querySelector('.product-page__info');
-    if (!section || !gallery || !panel) return;
+    'use strict';
 
-    // Disable desktop sticky/locking behavior on mobile
-    if (window.matchMedia('(max-width: 1023px)').matches) return;
+    // Gallery slider functionality
+    var gallery = document.getElementById('product-gallery');
+    if (gallery) {
+      var slides = Array.prototype.slice.call(gallery.querySelectorAll('.product-page__gallery-slide'));
+      var thumbnails = Array.prototype.slice.call(document.querySelectorAll('.product-page__gallery-thumbnail'));
+      var prevBtn = document.querySelector('.product-page__gallery-nav--prev');
+      var nextBtn = document.querySelector('.product-page__gallery-nav--next');
+      var currentIndex = 0;
 
-    var headerOffset = 96; // 5rem + 16px
-
-    function enableFixed() {
-      var rect = panel.getBoundingClientRect();
-      var left = rect.left + window.scrollX;
-      panel.style.setProperty('--fixed-left', left + 'px');
-      panel.style.setProperty('--fixed-width', rect.width + 'px');
-      panel.classList.add('is-fixed');
-      panel.classList.remove('is-locked');
-    }
-
-    function disableFixed() {
-      panel.classList.remove('is-fixed');
-      panel.style.removeProperty('--fixed-left');
-      panel.style.removeProperty('--fixed-width');
-      panel.style.removeProperty('transform');
-    }
-
-    function onScroll() {
-      var sectionRect = section.getBoundingClientRect();
-      var galleryRect = gallery.getBoundingClientRect();
-      var panelRect = panel.getBoundingClientRect();
-      var containerRect = panel.parentElement.getBoundingClientRect();
-
-      var sectionTop = sectionRect.top + window.scrollY;
-      var galleryTop = galleryRect.top + window.scrollY;
-      var galleryBottom = galleryRect.bottom + window.scrollY;
-      var containerTop = containerRect.top + window.scrollY;
-      var scrollY = window.scrollY;
-      var scrollPosition = scrollY + headerOffset;
-
-      // Panel height for calculations
-      var panelHeight = panelRect.height;
-      
-      // Calculate the scroll position where panel bottom would align with gallery bottom
-      // When scroll reaches this point, panel bottom = gallery bottom
-      var lockThreshold = galleryBottom - panelHeight;
-      
-      // Check if we're within the gallery scrolling range AND haven't reached lock threshold
-      var withinGallery = scrollPosition >= galleryTop && scrollPosition < lockThreshold;
-      
-      // Check if we've reached the point where panel bottom should lock to gallery bottom
-      var shouldLock = scrollPosition >= lockThreshold && scrollPosition >= galleryTop;
-
-      if (withinGallery) {
-        // Still scrolling through gallery - keep it fixed at top
-        enableFixed();
-        panel.style.transform = '';
-        panel.classList.remove('is-locked');
-        panel.style.removeProperty('--lock-top');
-        panel.style.removeProperty('--lock-left');
-        panel.style.removeProperty('--lock-width');
-      } else if (shouldLock) {
-        // Panel bottom should be locked to gallery bottom - use absolute positioning
-        if (!panel.classList.contains('is-locked')) {
-          // Get current position before switching
-          var currentRect = panel.getBoundingClientRect();
-          
-          // Calculate absolute positions relative to container
-          var galleryBottomRelative = galleryBottom - containerTop;
-          var absoluteTop = galleryBottomRelative - panelHeight;
-          
-          // Calculate left position relative to container
-          var containerLeft = containerRect.left + window.scrollX;
-          var panelLeft = currentRect.left + window.scrollX;
-          var relativeLeft = panelLeft - containerLeft;
-          var relativeWidth = currentRect.width;
-          
-          // Switch to locked (absolute positioning) - this happens only once
-          panel.classList.remove('is-fixed');
-          panel.style.removeProperty('--fixed-left');
-          panel.style.removeProperty('--fixed-width');
-          panel.classList.add('is-locked');
-          panel.style.setProperty('--lock-top', absoluteTop + 'px');
-          panel.style.setProperty('--lock-left', relativeLeft + 'px');
-          panel.style.setProperty('--lock-width', relativeWidth + 'px');
-          panel.style.transform = '';
-        }
-        // Once locked, it stays locked - no further updates needed
-      } else {
-        // Above gallery: natural flow
-        disableFixed();
-        panel.classList.remove('is-locked');
-        panel.style.removeProperty('--lock-top');
-        panel.style.removeProperty('--lock-left');
-        panel.style.removeProperty('--lock-width');
+      function showSlide(index) {
+        if (slides.length === 0) return;
+        currentIndex = (index + slides.length) % slides.length;
+        
+        slides.forEach(function(slide, i) {
+          slide.classList.toggle('is-active', i === currentIndex);
+        });
+        
+        thumbnails.forEach(function(thumb, i) {
+          thumb.classList.toggle('is-active', i === currentIndex);
+        });
       }
-    }
 
-    var ro = new ResizeObserver(function() { onScroll(); });
-    ro.observe(panel);
-    ro.observe(gallery);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    requestAnimationFrame(onScroll);
-  })();
-</script>
+      if (prevBtn) {
+        prevBtn.addEventListener('click', function() {
+          showSlide(currentIndex - 1);
+        });
+      }
 
-<script>
-  (function() {
-    function handleFormSubmit(e) {
-      e.preventDefault();
-      var form = e.target;
-      var button = form.querySelector('button[type="submit"]');
-      var originalText = button.textContent;
-      button.disabled = true;
-      button.textContent = 'Adding...';
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+          showSlide(currentIndex + 1);
+        });
+      }
 
-      var formData = new FormData(form);
-      
-      fetch('/cart/add.js', {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => {
-        if (response.status === 422) {
-          return response.json().then(data => {
-            throw new Error(data.description || 'Could not add to cart.');
-          });
+      thumbnails.forEach(function(thumb) {
+        thumb.addEventListener('click', function() {
+          var index = parseInt(thumb.getAttribute('data-slide-index'), 10);
+          showSlide(index);
+        });
+      });
+
+      // Keyboard navigation
+      gallery.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          showSlide(currentIndex - 1);
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          showSlide(currentIndex + 1);
         }
-        if (!response.ok) {
-          throw new Error('Request failed with status: ' + response.status);
-        }
-        return response.json();
-      })
-      .then(data => {
-        // Dispatch cart update event for header badge
-        fetch('/cart.js')
-          .then(r => r.ok ? r.json() : null)
-          .then(cart => {
-            if (cart) {
-              document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cart } }));
-            }
-          })
-          .catch(() => {});
-        // Success, redirect to cart
-        window.location.href = '/cart';
-      })
-      .catch(error => {
-        console.error('Error adding to cart:', error);
-        button.textContent = error.message || 'Error';
-        setTimeout(() => {
-          button.disabled = false;
-          button.textContent = originalText;
-        }, 3000);
       });
     }
 
-    // Handle both forms if they exist
-    var stickyForm = document.querySelector('.product-page__sticky-form');
-    if (stickyForm) {
-      stickyForm.addEventListener('submit', handleFormSubmit);
-    }
-  })();
-</script>
+    // Quantity controls
+    var quantityInput = document.getElementById('product-quantity');
+    var minusBtn = document.querySelector('.product-page__quantity-btn--minus');
+    var plusBtn = document.querySelector('.product-page__quantity-btn--plus');
 
-<script>
-  (function() {
-    // Sticky footer that stops at the end of related products section
-    var stickyFooter = document.querySelector('.product-page__sticky-footer');
-    if (!stickyFooter) return;
-
-    // Find the related products section or the product page section as the stopping point
-    var relatedSection = document.querySelector('.product-page__related');
-    var productPage = document.querySelector('.product-page');
-    var stopPoint = relatedSection || productPage;
-    
-    if (!stopPoint) return;
-
-    function updateStickyFooter() {
-      var stopPointRect = stopPoint.getBoundingClientRect();
-      var windowHeight = window.innerHeight;
-      var scrollY = window.scrollY || window.pageYOffset;
-      
-      // Calculate the bottom of the stop point (end of related products or product page)
-      var stopPointBottom = stopPointRect.bottom + scrollY;
-      
-      // Calculate where sticky footer would be if fixed (bottom of viewport)
-      var viewportBottom = scrollY + windowHeight;
-      
-      // Add spacing between stop point and sticky footer (40px)
-      var spacing = 40;
-      
-      // If we've scrolled past the stop point, make it static (no longer sticky)
-      if (viewportBottom >= stopPointBottom) {
-        // Get the parent section for positioning context
-        var parentSection = stickyFooter.closest('.shopify-section');
-        if (parentSection) {
-          var sectionRect = parentSection.getBoundingClientRect();
-          var sectionTop = sectionRect.top + scrollY;
-          
-          // Position relative to the section with spacing
-          // Ensure it breaks out of any grid constraints
-          stickyFooter.style.position = 'absolute';
-          stickyFooter.style.bottom = 'auto';
-          stickyFooter.style.top = (stopPointBottom - sectionTop + spacing) + 'px';
-          stickyFooter.style.left = '0';
-          stickyFooter.style.right = '0';
-          stickyFooter.style.width = '100vw';
-          stickyFooter.style.maxWidth = '100%';
-          stickyFooter.style.transform = 'none';
-          stickyFooter.style.marginLeft = '0';
-          stickyFooter.style.marginRight = '0';
+    if (minusBtn && quantityInput) {
+      minusBtn.addEventListener('click', function() {
+        var current = parseInt(quantityInput.value, 10) || 1;
+        if (current > 1) {
+          quantityInput.value = current - 1;
         }
-      } else {
-        // Still within the content, keep it fixed at bottom
-        stickyFooter.style.position = 'fixed';
-        stickyFooter.style.bottom = '0';
-        stickyFooter.style.top = 'auto';
-        stickyFooter.style.left = '0';
-        stickyFooter.style.right = '0';
-        stickyFooter.style.width = '100%';
-        stickyFooter.style.transform = 'none';
+      });
+    }
+
+    if (plusBtn && quantityInput) {
+      plusBtn.addEventListener('click', function() {
+        var current = parseInt(quantityInput.value, 10) || 1;
+        quantityInput.value = current + 1;
+      });
+    }
+
+    // Variant selection and price update
+    var variantInputs = document.querySelectorAll('.product-page__variant-input');
+    var priceElement = document.getElementById('product-price');
+    var comparePriceElement = document.querySelector('.product-page__compare-price');
+    var saleBadge = document.querySelector('.product-page__sale-badge');
+    var addToCartBtn = document.getElementById('add-to-cart-btn');
+    var productForm = document.getElementById('product-form');
+
+    // Build variants data structure
+    var variantsData = {
+      {%- for variant in product.variants -%}
+        {{ variant.id }}: {
+          id: {{ variant.id }},
+          price: {{ variant.price }},
+          compare_at_price: {{ variant.compare_at_price | default: 0 }},
+          available: {{ variant.available | json }},
+          option1: {{ variant.option1 | json }},
+          option2: {{ variant.option2 | json }},
+          option3: {{ variant.option3 | json }}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    };
+
+    function updateVariant() {
+      var selectedOptions = {};
+      
+      // Collect selected option values by option index
+      variantInputs.forEach(function(input) {
+        if (input.checked) {
+          var optionIndex = input.getAttribute('data-option-index');
+          selectedOptions[optionIndex] = input.value;
+        }
+      });
+
+      // Find matching variant
+      var selectedVariant = null;
+      for (var variantId in variantsData) {
+        var variant = variantsData[variantId];
+        var match = true;
+        
+        if (selectedOptions['1'] && variant.option1 !== selectedOptions['1']) match = false;
+        if (selectedOptions['2'] && variant.option2 !== selectedOptions['2']) match = false;
+        if (selectedOptions['3'] && variant.option3 !== selectedOptions['3']) match = false;
+        
+        if (match) {
+          selectedVariant = variant;
+          break;
+        }
+      }
+
+      if (selectedVariant) {
+        // Update hidden variant ID input
+        var variantIdInput = document.getElementById('variant-id');
+        if (variantIdInput) {
+          variantIdInput.value = selectedVariant.id;
+        }
+
+        // Update price
+        if (priceElement) {
+          priceElement.textContent = formatMoney(selectedVariant.price);
+        }
+
+        // Update compare price
+        if (selectedVariant.compare_at_price > selectedVariant.price) {
+          if (comparePriceElement) {
+            comparePriceElement.textContent = formatMoney(selectedVariant.compare_at_price);
+            comparePriceElement.style.display = 'inline';
+          }
+          if (saleBadge) {
+            saleBadge.style.display = 'inline-block';
+          }
+        } else {
+          if (comparePriceElement) comparePriceElement.style.display = 'none';
+          if (saleBadge) saleBadge.style.display = 'none';
+        }
+
+        // Update button
+        if (addToCartBtn) {
+          if (selectedVariant.available) {
+            addToCartBtn.disabled = false;
+            addToCartBtn.textContent = 'Add to Cart';
+          } else {
+            addToCartBtn.disabled = true;
+            addToCartBtn.textContent = 'Sold Out';
+          }
+        }
       }
     }
 
-    // Initialize as fixed
-    stickyFooter.style.position = 'fixed';
-    stickyFooter.style.bottom = '0';
-    stickyFooter.style.left = '0';
-    stickyFooter.style.right = '0';
-    
-    window.addEventListener('scroll', updateStickyFooter, { passive: true });
-    window.addEventListener('resize', updateStickyFooter);
-    
-    // Use ResizeObserver to watch for changes
-    var ro = new ResizeObserver(updateStickyFooter);
-    if (relatedSection) ro.observe(relatedSection);
-    ro.observe(productPage);
-    ro.observe(stickyFooter);
-    
-    updateStickyFooter();
+    function formatMoney(cents) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: '{{ cart.currency.iso_code | default: shop.currency }}'
+      }).format(cents / 100);
+    }
+
+    if (variantInputs.length > 0) {
+      variantInputs.forEach(function(input) {
+        input.addEventListener('change', updateVariant);
+      });
+      // Initialize on page load
+      updateVariant();
+    }
+
+    // Form submission
+    if (productForm) {
+      productForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        var button = addToCartBtn;
+        var originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = 'Adding...';
+
+        var formData = new FormData(productForm);
+        
+        fetch('/cart/add.js', {
+          method: 'POST',
+          body: formData
+        })
+        .then(function(response) {
+          if (response.status === 422) {
+            return response.json().then(function(data) {
+              throw new Error(data.description || 'Could not add to cart.');
+            });
+          }
+          if (!response.ok) {
+            throw new Error('Request failed with status: ' + response.status);
+          }
+          return response.json();
+        })
+        .then(function(data) {
+          // Dispatch cart update event
+          fetch('/cart.js')
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(cart) {
+              if (cart) {
+                document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cart } }));
+              }
+            })
+            .catch(function() {});
+
+          // Redirect to cart
+          window.location.href = '/cart';
+        })
+        .catch(function(error) {
+          console.error('Error adding to cart:', error);
+          button.textContent = error.message || 'Error';
+          setTimeout(function() {
+            button.disabled = false;
+            button.textContent = originalText;
+          }, 3000);
+        });
+      });
+    }
+
+    // Hide reviews section for range products
+    {% if is_range_product %}
+    (function() {
+      function hideReviews() {
+        var reviewsSection = document.getElementById('judgeme_product_reviews');
+        if (reviewsSection) {
+          reviewsSection.style.display = 'none';
+        }
+        // Also try to hide parent section if reviews are in a section
+        var reviewsParent = reviewsSection ? reviewsSection.closest('.shopify-section') : null;
+        if (reviewsParent && reviewsParent.querySelector('#judgeme_product_reviews')) {
+          reviewsParent.style.display = 'none';
+        }
+      }
+      // Run immediately and after DOM is ready
+      hideReviews();
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hideReviews);
+      }
+      // Also run after a delay to catch dynamically loaded content
+      setTimeout(hideReviews, 1000);
+    })();
+    {% endif %}
   })();
 </script>
 
-<script>
-  (function() {
-    // Mobile gallery carousel controls (only on mobile)
-    if (!window.matchMedia('(max-width: 1023px)').matches) return;
-    var wrapper = document.querySelector('.product-gallery__wrapper');
-    var gallery = document.querySelector('.product-page__gallery');
-    if (!wrapper || !gallery) return;
-    var slides = Array.prototype.slice.call(gallery.querySelectorAll('.product-page__gallery-item'));
-    var prev = wrapper.querySelector('.product-gallery__nav--prev');
-    var next = wrapper.querySelector('.product-gallery__nav--next');
-    var dots = Array.prototype.slice.call(document.querySelectorAll('.product-gallery__dot'));
-    var index = 0;
-
-    function slideWidth() { return gallery.clientWidth; }
-
-    function setScroll(left, behavior) {
-      try {
-        gallery.scrollTo({ left: left, behavior: behavior || 'smooth' });
-      } catch (e) {
-        gallery.scrollLeft = left; // fallback for older browsers
-      }
-    }
-
-    function goTo(i, behavior) {
-      if (!slides.length) return;
-      index = (i + slides.length) % slides.length;
-      var left = index * slideWidth();
-      setScroll(left, behavior);
-      dots.forEach(function(d, di){ d.classList.toggle('is-active', di === index); });
-    }
-
-    function syncFromScroll() {
-      if (!slides.length) return;
-      var w = slideWidth() || 1;
-      var approx = Math.round(gallery.scrollLeft / w);
-      if (approx !== index) {
-        index = Math.max(0, Math.min(slides.length - 1, approx));
-        dots.forEach(function(d, di){ d.classList.toggle('is-active', di === index); });
-      }
-    }
-
-    var dotsWrapper = document.querySelector('.product-gallery__dots');
-    // Hide controls when there's only one image
-    if (slides.length <= 1) {
-      if (prev) prev.style.display = 'none';
-      if (next) next.style.display = 'none';
-      if (dotsWrapper) dotsWrapper.style.display = 'none';
-    }
-    if (prev) prev.addEventListener('click', function(){ goTo(index - 1); });
-    if (next) next.addEventListener('click', function(){ goTo(index + 1); });
-    dots.forEach(function(d){ d.addEventListener('click', function(){ var i = parseInt(d.getAttribute('data-slide'), 10); goTo(i); }); });
-    gallery.addEventListener('scroll', syncFromScroll, { passive: true });
-    window.addEventListener('resize', function(){ goTo(index, 'auto'); });
-
-    // Ensure info panel is fully static on mobile (no residual classes)
-    var panel = document.querySelector('.product-page__info');
-    if (panel) {
-      panel.classList.remove('is-fixed', 'is-locked');
-      panel.style.removeProperty('--fixed-left');
-      panel.style.removeProperty('--fixed-width');
-      panel.style.removeProperty('--lock-top');
-      panel.style.removeProperty('--lock-left');
-      panel.style.removeProperty('--lock-width');
-      panel.style.removeProperty('transform');
-    }
-
-    goTo(0, 'auto');
-  })();
-</script>
 {% stylesheet %}
-  /* Ensure parent section doesn't interfere with sticky */
+
+
+  #judgeme_product_reviews {
+    margin-top: 80px !important;
+    background: #f8f8f8;
+    max-width: 1280px !important;
+    padding: 40px 0;
+  }
+
+  /* Hide reviews section for range products */
+  body:has(.product-page--range) #judgeme_product_reviews {
+    display: none !important;
+  }
+
   .shopify-section:has(.product-page) {
     overflow: visible;
   }
-  
-  /* Remove page-content padding for product pages */
+
   body.has-sticky-header .page-content:has(.product-page) {
     padding-top: 0;
   }
-  
-  /* Subheader with back button */
-  .product-page__subheader {
-    grid-column: 1 / -1;
+
+  /* Back Button */
+  .product-page__back {
     width: 100%;
-    padding: 12px var(--page-margin);
-    background: #fff;
-    border-bottom: 1px solid rgba(0,0,0,.15);
-    position: relative;
-    z-index: 1;
+    max-width: var(--content-width, calc(var(--page-width, 1280px) - var(--page-margin, 24px) * 2));
+    margin: 0 auto;
+    padding: 20px 0 0;
   }
+  
+  @media (max-width: 1023px) {
+    .product-page__back {
+      padding: 20px 16px 0;
+    }
+  }
+
   .product-page__back-button {
     background: none;
     border: none;
@@ -458,217 +572,695 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     transition: opacity 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
   }
+
   .product-page__back-button:hover {
     opacity: 0.7;
   }
-  
-  /* Break out of the section grid to be full-width */
+
   .product-page {
-    grid-column: 1 / -1;
     width: 100%;
-    position: relative;
-    overflow: visible;
-    padding-bottom: 100px; /* Space for sticky footer */
+    padding: 20px 0 40px;
+    max-width: var(--content-width, calc(var(--page-width, 1280px) - var(--page-margin, 24px) * 2));
+    margin: 0 auto;
   }
+
   .product-page__container {
     display: grid;
-    grid-template-columns: 50vw 1fr;
-    align-items: stretch;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  /* Gallery */
+  .product-page__gallery-wrapper {
     position: relative;
-    gap: 0;
     width: 100%;
   }
-  .product-gallery__wrapper {
-    position: relative;
-  }
+
   .product-page__gallery {
-    border-right: 1px solid rgba(0,0,0,.15);
     position: relative;
-    z-index: 1;
-  }
-  /* Hide carousel controls on desktop */
-  .product-gallery__nav,
-  .product-gallery__dots {
-    display: none;
-  }
-  .product-page__gallery-item {
-    padding: 8px var(--page-margin);
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%;
     aspect-ratio: 1 / 1;
-    background: #fff;
+    overflow: hidden;
+    background: #f8f8f8;
+    border-radius: 8px;
   }
-  .product-page__gallery-item .image {
+
+  .product-page__gallery-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: auto;
-    height: auto;
-    max-width: 70%;
-    max-height: 70%;
+    padding: 40px;
+    box-sizing: border-box;
+    overflow: hidden;
   }
+
+  .product-page__gallery-slide.is-active {
+    opacity: 1;
+    position: relative;
+  }
+
+  .product-page__gallery-slide .image,
   .product-page__gallery-image {
-    max-width: 70%;
-    max-height: 70%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+ 
+  .product-page__gallery-image > img {
     width: auto;
     height: auto;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
-    margin-top: -96px;
   }
-  .product-page__gallery-item .image img {
+
+  .product-page__gallery-video {
     max-width: 100%;
     max-height: 100%;
     width: auto;
     height: auto;
     object-fit: contain;
   }
-  .product-page__info {
-    position: relative;
-    z-index: 2;
-    background: white;
-    box-sizing: border-box;
-    width: 100%;
-    align-self: start;
-    overflow: visible;
+
+  .product-page__gallery-placeholder {
     display: flex;
-    justify-content: center;
-  }
-  .product-page__info-inner {
-    position: -webkit-sticky;
-    position: sticky;
-    top: calc(5rem + 60px);
-    padding: var(--page-margin);
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    text-align: center;
-    font-family: var(--font-primary--family);
-    background: white;
-    width: 100%;
-    max-width: var(--page-width, 1280px);
-    box-sizing: border-box;
-  }
-  .product-page__thumbnail {
-    width: 200px;
-    height: 200px;
-    margin: 0 auto 24px;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #f8f8f8;
-  }
-  .product-page__thumbnail .image {
+    justify-content: center;
     width: 100%;
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .product-page__thumbnail .image img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-  .product-page__title {
-    font-size: 32px;
-    margin: 0 0 24px;
-    text-transform: uppercase;
-    font-family: var(--font-primary--family);
-    font-weight: 700;
-  }
-  .product-page__description {
-    max-width: 400px;
-    margin: 0 auto 24px;
-    color: #666;
-  }
-  .product-page__features {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    max-width: 500px;
-    margin: 0 auto 24px;
-  }
-  .product-page__feature-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-  .product-page__feature-icon {
-    width: 48px;
-    height: 48px;
-    object-fit: contain;
-  }
-  .product-page__feature-text {
-    font-size: 12px;
-    font-weight: 600;
-  }
-  .product-page__form {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-  }
-  .product-page__buy-button {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px 32px;
-    border: 1px solid #000;
-    background: transparent;
-    font-size: 18px;
-    font-weight: 700;
-    text-transform: uppercase;
-    cursor: pointer;
-    width: 100%;
-    font-family: var(--font-primary--family);
-    letter-spacing: 0.5px;
-    transition: all 0.2s ease;
-  }
-  .product-page__buy-button:hover,
-  .product-page__buy-button:focus {
-    background: #000;
-    color: #fff;
-    outline: none;
   }
 
-  .product-page__related {
-    width: 100%;
-    padding: var(--page-margin);
-    margin-top: 80px;
-    margin-bottom: 40px;
-    border-top: 1px solid rgba(0,0,0,.15);
+  .product-page__gallery-nav {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    width: 48px;
+    height: 48px;
+    transform: translateY(-50%);
+    border: none;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 0;
+    line-height: 0;
   }
-  .product-page__related-title {
-    font-size: 32px;
+
+  .product-page__gallery-nav--next {
+    left: auto;
+    right: 16px;
+  }
+
+  .product-page__gallery-nav svg {
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  .product-page__gallery-nav:hover {
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .product-page__gallery-nav:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  .product-page__gallery-thumbnails {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .product-page__gallery-thumbnail {
+    width: 80px;
+    height: 80px;
+    padding: 0;
+    border: 2px solid transparent;
+    background: none;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .product-page__gallery-thumbnail:hover {
+    border-color: rgba(0, 0, 0, 0.3);
+    transform: scale(1.08) translateY(-2px);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .product-page__gallery-thumbnail.is-active {
+    border-color: #000;
+  }
+
+  .product-page__gallery-thumbnail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Product Info */
+  .product-page__info {
+    align-self: start;
+  }
+
+  .product-page__info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  .product-page__title {
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0;
+    color: #000 !important;
+    line-height: 1.2;
+    font-family: var(--font-secondary--family);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Purchase Section */
+  .product-page__purchase-section {
+    margin-top: 32px;
+    padding: 0;
+    background: transparent;
+    border: none;
+  }
+
+  .product-page__price-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .product-page__price {
+    font-size: 40px;
+    font-weight: 700;
+    color: #000;
+    font-family: var(--font-secondary--family);
+    letter-spacing: -0.5px;
+  }
+
+  .product-page__compare-price {
+    font-size: 24px;
+    color: #999;
+    text-decoration: line-through;
+    display: none;
+  }
+
+  .product-page__sale-badge {
+    display: none;
+    background: #ff4444;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .product-page__description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+  }
+
+  .product-page__description p {
+    margin: 0 0 16px;
+  }
+
+  .product-page__description p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Tree Planting Message */
+  .product-page__tree-message {
+    margin-top: 24px;
+    padding: 16px 20px;
+    background: #f8f9f6;
+    border: 1px solid #e8ebe4;
+    border-radius: 0;
+  }
+
+  .product-page__tree-content {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .product-page__tree-icon {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .product-page__tree-content > div {
+    flex: 1;
+  }
+
+  .product-page__tree-content strong {
+    display: block;
+    font-size: 14px;
+    color: #2d5016;
+    margin-bottom: 2px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .product-page__tree-content p {
+    margin: 0;
+    color: #4a6741;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  /* Shipping & Returns */
+  .product-page__shipping-returns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 24px;
+    padding: 24px;
+    background: #f8f8f8;
+    border-radius: 8px;
+  }
+
+  .product-page__shipping-returns-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .product-page__shipping-returns-icon {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+  }
+
+  .product-page__shipping-returns-content {
+    flex: 1;
+  }
+
+  .product-page__shipping-returns-content strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .product-page__shipping-returns-content p {
+    margin: 0;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
+  }
+
+  /* How To Use Link */
+  .product-page__how-to-use-link {
+    display: inline-block;
+    margin-top: 24px;
+    font-size: 14px;
+    color: #666;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    font-weight: 500;
+  }
+
+  .product-page__how-to-use-link:hover {
+    color: #000;
+  }
+
+  /* Variants */
+  .product-page__variants {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .product-page__variant-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .product-page__variant-label {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #000;
+  }
+
+  .product-page__variant-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .product-page__variant-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .product-page__variant-option {
+    padding: 10px 20px;
+    border: 2px solid #ddd;
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    min-width: 60px;
+    position: relative;
+  }
+
+  .product-page__variant-option:hover {
+    border-color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-page__variant-option.is-unavailable {
+    opacity: 0.5;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+
+  .product-page__variant-input:checked + .product-page__variant-option {
+    border-color: #000;
+    background: #000;
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .product-page__variant-input:disabled + .product-page__variant-option {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .product-page__purchase-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Quantity */
+  .product-page__quantity-wrapper {
+    flex-shrink: 0;
+  }
+
+  .product-page__quantity-label {
+    display: none;
+  }
+
+  .product-page__quantity-controls {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 0;
+    overflow: hidden;
+    background: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    height: 48px;
+  }
+
+  .product-page__quantity-controls:hover {
+    border-color: #000;
+    box-shadow: 0 0 0 1px #000;
+  }
+
+  .product-page__quantity-btn {
+    width: 48px;
+    height: 48px;
+    border: none;
+    background: #fff;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: #000;
+    position: relative;
+  }
+
+  .product-page__quantity-btn:hover {
+    background: #f8f8f8;
+  }
+
+  .product-page__quantity-btn:active {
+    background: #eee;
+  }
+
+  .product-page__quantity-input {
+    width: 60px;
+    height: 48px;
+    border: none;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    appearance: textfield;
+    -moz-appearance: textfield;
+    background: #fff;
+    color: #000;
+    transition: background 0.2s ease;
+  }
+
+  .product-page__quantity-input:focus {
+    outline: none;
+    background: #fafafa;
+  }
+
+  .product-page__quantity-input::-webkit-outer-spin-button,
+  .product-page__quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
+
+  /* Buy Button */
+  .product-page__buy-button {
+    flex: 1;
+    padding: 0 32px;
+    background: #000;
+    color: #fff;
+    border: 2px solid #000;
+    border-radius: 0;
+    font-size: 16px;
     font-weight: 700;
     text-transform: uppercase;
-    margin: 0 0 32px;
-    text-align: center;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
     font-family: var(--font-primary--family);
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
   }
-  .product-page__related-carousel {
+
+  .product-page__buy-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+  }
+
+  .product-page__buy-button:hover:not(:disabled)::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  .product-page__buy-button:hover:not(:disabled) {
+    background: #000;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .product-page__buy-button:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-page__buy-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Inquire Now Button for Range Products */
+  .product-page__inquire-button {
+    display: block;
+    width: 100%;
+    padding: 0 32px;
+    background: #000;
+    color: #fff;
+    border: 2px solid #000;
+    border-radius: 0;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: var(--font-primary--family);
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    margin-top: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-page__inquire-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+  }
+
+  .product-page__inquire-button:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  .product-page__inquire-button:hover {
+    background: #000;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .product-page__inquire-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Related Products */
+  .product-page__related {
+    margin-top: 80px;
+    padding-top: 60px;
+    border-top: 1px solid #eee;
+  }
+
+  .product-page__related-container {
+    width: 100%;
+    max-width: var(--content-width, calc(var(--page-width, 1280px) - var(--page-margin, 24px) * 2));
+    margin: 0 auto;
+    padding: 0;
+  }
+  
+  @media (max-width: 1023px) {
+    .product-page__related-container {
+      padding: 0 16px;
+    }
+  }
+
+  .product-page__related-title {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    margin: 0 0 40px;
+    font-family: var(--font-primary--family);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .product-page__related-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 32px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
   }
+
   .product-page__related-item {
-    scroll-snap-align: start;
-    min-width: 250px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
+
+  .product-page__related-item:hover {
+    transform: translateY(-6px) scale(1.02);
+  }
+
+  .product-page__related-image {
+    transition: transform 0.3s ease;
+    overflow: hidden;
+  }
+
+  .product-page__related-item:hover .product-page__related-image {
+    transform: scale(1.05);
+  }
+
   .product-page__related-link {
     display: block;
     text-decoration: none;
     color: inherit;
-    transition: transform 0.2s ease;
   }
-  .product-page__related-link:hover {
-    transform: translateY(-4px);
-  }
+
   .product-page__related-image {
     width: 100%;
     aspect-ratio: 1 / 1;
@@ -677,27 +1269,25 @@
     overflow: hidden;
     margin-bottom: 16px;
   }
-  .product-page__related-image .image {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+
   .product-page__related-image-img {
     width: 100%;
     height: 100%;
     object-fit: contain;
   }
+
   .product-page__related-info {
     text-align: center;
   }
+
   .product-page__related-name {
     font-size: 18px;
     font-weight: 600;
     margin: 0 0 8px;
     font-family: var(--font-primary--family);
+    color: #000;
   }
+
   .product-page__related-price {
     font-size: 20px;
     font-weight: 700;
@@ -705,260 +1295,115 @@
     color: #000;
   }
 
-  /* Sticky footer */
-  .product-page__sticky-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    background: #fff;
-    border-top: 1px solid rgba(0,0,0,.15);
-    z-index: 50;
-    box-shadow: 0 -2px 8px rgba(0,0,0,.06);
-    transition: transform 0.2s ease;
-    will-change: transform;
-  }
-  .product-page__sticky-footer[style*="position: absolute"] {
-    position: absolute !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100vw !important;
-    max-width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    grid-column: 1 / -1 !important;
-  }
-  .product-page__sticky-footer-container {
-    max-width: 100%;
-    width: 100%;
-    margin: 0 auto;
-    padding: 16px var(--page-margin);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    box-sizing: border-box;
-  }
-  .product-page__sticky-title {
-    font-size: 18px;
-    font-weight: 700;
-    text-transform: uppercase;
-    margin: 0;
-    font-family: var(--font-primary--family);
-    color: #000;
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .product-page__sticky-price {
-    font-size: 20px;
-    font-weight: 700;
-    font-family: var(--font-primary--family);
-    color: #000;
-    flex-shrink: 0;
-  }
-  .product-page__sticky-form {
-    flex-shrink: 0;
-  }
-  .product-page__sticky-buy-button {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    padding: 16px 32px;
-    border: 1px solid #000;
-    background: #000;
-    color: #fff;
-    font-size: 16px;
-    font-weight: 700;
-    text-transform: uppercase;
-    cursor: pointer;
-    font-family: var(--font-primary--family);
-    letter-spacing: 0.5px;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-  }
-  .product-page__sticky-buy-button:hover,
-  .product-page__sticky-buy-button:focus {
-    background: transparent;
-    color: #000;
-    outline: none;
-  }
-
-  /* JS fallback: fixed state for right panel when CSS sticky is unreliable */
-  .product-page__info.is-fixed {
-    position: fixed !important;
-    top: calc(5rem + 16px);
-    left: var(--fixed-left, auto);
-    width: var(--fixed-width, auto);
-    z-index: 3;
-  }
-  .product-page__info.is-fixed .product-page__info-inner {
-    position: static;
-  }
-  .product-page__info.is-locked {
-    position: absolute !important;
-    top: var(--lock-top, 0px);
-    left: var(--lock-left, 50%);
-    width: var(--lock-width, 50%);
-    z-index: 2;
-  }
-  .product-page__info.is-locked .product-page__info-inner {
-    position: static;
-  }
-
+  /* Responsive */
   @media (max-width: 1023px) {
+    .product-page {
+      padding: 20px 16px 40px;
+    }
+
     .product-page__container {
       grid-template-columns: 1fr;
-      width: 100%;
+      gap: 40px;
     }
-    .product-gallery__wrapper {
-      position: relative;
-      width: 100%;
-    }
-    .product-page__gallery {
-      border-right: none;
-      width: 100%;
-      /* Mobile carousel */
-      display: grid;
-      grid-auto-flow: column;
-      grid-auto-columns: 100%;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-    }
-    .product-page__gallery-item {
-      scroll-snap-align: start;
-      /* Constrain mobile slide height so large images don't make the slideshow too tall */
-      aspect-ratio: auto;
-      height: clamp(260px, 85vw, 520px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding-bottom: calc(var(--page-margin) + 100px); /* Account for sticky footer */
-    }
-    .product-page__gallery-image {
-      /* Keep image within the constrained slide height while preserving aspect ratio */
-      height: 100%;
-      width: auto;
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-    /* Show carousel controls on mobile */
-    .product-gallery__nav {
-      display: grid;
-    }
-    .product-gallery__dots {
-      display: flex;
-    }
-    /* Carousel controls - positioned relative to wrapper */
-    .product-gallery__nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 40px; height: 40px;
-      border: none;
-      background: transparent;
-      color: #000;
-      display: grid; place-items: center;
-      cursor: pointer;
-      z-index: 2;
-      transition: opacity .2s ease;
-    }
-    .product-gallery__nav:hover { opacity: .7; }
-    .product-gallery__nav--prev { left: 12px; }
-    .product-gallery__nav--next { right: 12px; }
-    .product-gallery__dots {
-      display: flex;
-      justify-content: center;
-      gap: .5rem;
-      padding: 12px 0 20px;
-    }
-    .product-gallery__dot {
-      width: 10px; height: 10px;
-      border-radius: 999px;
-      background: #fff;
-      border: 1px solid rgba(0,0,0,0.3);
-      cursor: pointer;
-      opacity: 0.2;
-      transition: transform .2s ease, background-color .2s ease;
-    }
-    .product-gallery__dot.is-active { background: #000; transform: scale(1.1); opacity: 0.2; }
+
     .product-page__info {
       position: static;
-      height: auto;
-      overflow-y: visible;
-      border-top: 1px solid rgba(0,0,0,.15);
-      width: 100%;
-      display: block;
     }
-    .product-page__info-inner {
-      max-width: 100%;
+
+    .product-page__title {
+      font-size: 28px;
     }
-    /* Forcefully neutralize any fixed/locked leftover state on mobile */
-    .product-page__info.is-fixed,
-    .product-page__info.is-locked {
-      position: static !important;
-      top: auto !important;
-      left: auto !important;
-      width: auto !important;
-      transform: none !important;
-      z-index: auto !important;
+
+    .product-page__price {
+      font-size: 28px;
     }
-    .product-page__info-inner {
-      position: static;
-    }
-    /* Hide thumbnail on mobile */
-    .product-page__thumbnail {
-      display: none;
-    }
-    /* Fix buy button text color on mobile */
-    .product-page__buy-button {
-      color: #000;
-    }
-    .product-page__buy-button:hover,
-    .product-page__buy-button:focus {
-      background: #000;
-      color: #fff;
-      outline: none;
-    }
-    .product-page__related-carousel {
+
+    .product-page__related-grid {
       grid-template-columns: repeat(2, 1fr);
       gap: 24px;
     }
-    .product-page__related-item {
-      min-width: 0;
+  }
+
+  @media (max-width: 767px) {
+    .product-page__gallery {
+      aspect-ratio: 4 / 3;
     }
-    /* Subheader mobile */
-    .product-page__subheader {
-      top: 5rem;
+
+    .product-page__gallery-nav {
+      width: 40px;
+      height: 40px;
     }
-    /* Sticky footer mobile */
-    .product-page__sticky-footer-container {
+
+    .product-page__gallery-nav--prev {
+      left: 8px;
+    }
+
+    .product-page__gallery-nav--next {
+      right: 8px;
+    }
+
+    .product-page__gallery-thumbnails {
+      gap: 8px;
+    }
+
+    .product-page__gallery-thumbnail {
+      width: 60px;
+      height: 60px;
+    }
+
+    .product-page__related-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .product-page__shipping-returns {
+      grid-template-columns: 1fr;
+    }
+
+    .product-page__purchase-controls {
       flex-direction: column;
       align-items: stretch;
       gap: 12px;
     }
-    .product-page__sticky-title {
-      font-size: 16px;
-      text-align: center;
-    }
-    .product-page__sticky-price {
-      font-size: 18px;
-      text-align: center;
-    }
-    .product-page__sticky-buy-button {
+
+    .product-page__quantity-wrapper {
       width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .product-page__quantity-controls {
+      width: auto;
+      min-width: 160px;
+    }
+
+    .product-page__buy-button {
+      width: 100%;
+      height: 48px;
+      padding: 0 32px;
+      flex: none;
+    }
+
+    .product-page__inquire-button {
+      width: 100%;
+      height: 48px;
+      padding: 0 32px;
+    }
+
+    .product-page__tree-content {
+      flex-direction: column;
+      text-align: center;
+      gap: 10px;
+    }
+
+    .product-page__tree-icon {
+      margin: 0 auto;
     }
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:general.product",
+  "name": "Product",
   "settings": [
     {
       "type": "checkbox",
@@ -970,7 +1415,7 @@
       "type": "text",
       "id": "related_products_title",
       "label": "Related products title",
-      "default": "Related Products"
+      "default": "You May Also Like"
     },
     {
       "type": "collection",
@@ -986,24 +1431,12 @@
       "max": 12,
       "step": 1,
       "default": 4
-    }
-  ],
-  "blocks": [
+    },
     {
-      "type": "feature",
-      "name": "Feature",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "icon",
-          "label": "Icon"
-        },
-        {
-          "type": "text",
-          "id": "text",
-          "label": "Text"
-        }
-      ]
+      "type": "page",
+      "id": "how_to_use_page",
+      "label": "How to use page",
+      "info": "Select a page to link to for product usage instructions"
     }
   ],
   "disabled_on": {

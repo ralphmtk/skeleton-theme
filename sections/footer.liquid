@@ -1,4 +1,4 @@
-<footer class="footer">
+<footer class="footer full-width">
   <div class="footer__container">
     <div class="footer__top">
       <div class="footer__brand">
@@ -81,13 +81,15 @@
     background: #fff;
     color: #000;
     margin-top: 80px;
-    padding: 40px 0 24px;
+    padding: 40px 0 24px 0;
     border-top: 1px solid rgba(0,0,0,.15);
   }
   .footer__container {
-    max-width: var(--page-width, 1280px);
+    width: 100%;
+    max-width: var(--content-width, calc(var(--page-width, 1280px) - var(--page-margin, 24px) * 2));
     margin: 0 auto;
-    padding: 0 var(--page-margin);
+    padding: 0;
+    box-sizing: border-box;
   }
   .footer__top {
     display: flex;
@@ -105,7 +107,7 @@
   }
   .footer__logo img {
     display: block;
-    height: 40px;
+    height: 55px;
     width: auto;
   }
   .footer__description {
@@ -200,6 +202,9 @@
     .footer {
       padding: 32px 0 20px;
       margin-top: 60px;
+    }
+    .footer__container {
+      padding: 0 var(--page-margin, 24px);
     }
     .footer__top {
       flex-direction: column;

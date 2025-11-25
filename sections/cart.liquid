@@ -2,7 +2,7 @@
   Cart page UI — static scaffold matching design. Interactive behavior (AJAX qty, promo code, etc.) will be added later.
 {%- endcomment -%}
 
-<section class="cart-page">
+<section class="cart-page full-width">
   <div class="cart-page__container">
     <form action="/cart" method="post" class="cart-page__grid">
       <h1 class="cart-page__title">{{ 'sections.cart.title' | t | default: 'CART' | upcase }}</h1>
@@ -72,8 +72,23 @@
 </section>
 
 {% stylesheet %}
-  .cart-page { width: 100%; margin: 0; padding: 0; }
-  .cart-page__container { padding: var(--page-margin); padding-top: 0 !important; }
+  .cart-page {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .cart-page__container {
+    width: 100%;
+    max-width: var(--content-width, calc(var(--page-width, 1280px) - var(--page-margin, 24px) * 2));
+    margin: 0 auto;
+    padding: 0 0;
+    box-sizing: border-box;
+  }
+  @media (max-width: 1023px) {
+    .cart-page__container {
+      padding: 0 0;
+    }
+  }
   .cart-page__title {
     grid-column: 1 / -1;
     margin: 0;

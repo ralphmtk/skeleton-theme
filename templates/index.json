@@ -16,11 +16,7 @@
         "home-slider": {
             "type": "home-slider",
             "settings": {}
-        },
-        "main": {
-            "type": "hello-world",
-            "settings": {}
         }
     },
-    "order": ["hero-video", "home-slider", "main"]
+    "order": ["hero-video", "home-slider"]
 }

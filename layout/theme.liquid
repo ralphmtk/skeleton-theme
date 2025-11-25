@@ -35,6 +35,44 @@
         --font-primary--family: 'Exo 2', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
         --font-secondary--family: 'Gobold', sans-serif;
       }
+      .site-preloader {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(251, 251, 251, 1);
+        backdrop-filter: blur(6px);
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 1 ease, visibility 0s linear 0.55s;
+      }
+      .site-preloader--active {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.55s ease;
+      }
+      .site-preloader--hidden {
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
+        transition: opacity 0.45s ease, visibility 0s linear 0.45s;
+      }
+      .site-preloader__media {
+        width: clamp(160px, 25vw, 320px);
+        max-width: 360px;
+        height: auto;
+        display: block;
+        transform: scale(1.4);
+        transform-origin: center;
+      }
+      body.site-preloader-active {
+        overflow: hidden;
+        height: 100vh;
+      }
     </style>
 
     {{ content_for_header }}
@@ -42,10 +80,11 @@
 
   <body{% unless template.name == 'index' or template == 'index' %} class="has-sticky-header"{% endunless %}>
     {% if template.name == 'index' or template == 'index' %}
-      {% sections 'header-group' %}
-    {% else %}
-      {% sections 'header-solid-group' %}
+      <div id="site-preloader" class="site-preloader" aria-live="polite" aria-label="{{ 'general.loading' | t | default: 'Loading' }}">
+        <video class="site-preloader__media" src="{{ 'preloader.webm' | asset_url }}" autoplay muted playsinline preload="auto"></video>
+      </div>
     {% endif %}
+    {% sections 'header-group' %}
 
     <main class="page-content">
       {{ content_for_layout }}
@@ -56,6 +95,63 @@
     {%- comment -%} Pre-initialize cart on first page load to avoid cold start delay {%- endcomment -%}
     <script>
       (function() {
+        var preloader = document.getElementById('site-preloader');
+        if (preloader) {
+          var body = document.body;
+          var media = preloader.querySelector('.site-preloader__media');
+          var isHardNavigation = true;
+
+          if (window.performance && typeof window.performance.getEntriesByType === 'function') {
+            var navEntries = window.performance.getEntriesByType('navigation');
+            if (navEntries && navEntries[0]) {
+              isHardNavigation = navEntries[0].type === 'navigate' || navEntries[0].type === 'reload';
+            }
+          }
+
+          var hidePreloader = function(forceImmediate) {
+            if (!preloader || preloader.classList.contains('site-preloader--hidden')) return;
+            preloader.classList.remove('site-preloader--active');
+            preloader.classList.add('site-preloader--hidden');
+            body.classList.remove('site-preloader-active');
+            window.setTimeout(function() {
+              if (preloader && preloader.parentNode) {
+                preloader.parentNode.removeChild(preloader);
+                preloader = null;
+              }
+            }, forceImmediate ? 0 : 550);
+          };
+
+          if (!isHardNavigation) {
+            hidePreloader(true);
+          } else {
+            body.classList.add('site-preloader-active');
+            window.requestAnimationFrame(function() {
+              window.requestAnimationFrame(function() {
+                if (preloader) {
+                  preloader.classList.add('site-preloader--active');
+                }
+              });
+            });
+
+            if (media) {
+              media.playbackRate = 2;
+              media.addEventListener('ended', hidePreloader);
+              media.addEventListener('error', hidePreloader);
+              media.play().catch(function() {
+                hidePreloader();
+              });
+            }
+
+            window.setTimeout(hidePreloader, 12000);
+          }
+
+          window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+              hidePreloader(true);
+            }
+          });
+        }
+
         // Only initialize once per session to avoid unnecessary requests
         if (sessionStorage.getItem('cartInitialized') === 'true') return;
         
