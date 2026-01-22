@@ -18,7 +18,7 @@ export const HUBSPOT_CONFIG = {
     ENROLLERS: {
         CHRIS: { userId: "44723114", email: "hello@zengaz.net" },
         KARIM: { userId: "44727677", email: "karim.attoue@zengaz.net" },
-        PAUL: { userId: "75038571", email: "zalpha.rizk@naarusa.com" },
+        PAUL: { userId: "75038571", email: "zalpha.rizk@naarusa.com" }, // Paul uses Zalpha
         YARA: { userId: "44723114", email: "hello@zengaz.net" },
         DEFAULT: { userId: "44723114", email: "hello@zengaz.net" },
     },
@@ -36,7 +36,7 @@ export const HUBSPOT_CONFIG = {
 // Country Routing
 export const COUNTRY_ROUTING = {
     NAAR: ["Bahrain", "Iraq", "Jordan", "Kuwait", "Lebanon", "Morocco", "Oman", "Qatar", "United Arab Emirates", "Armenia", "Turkey", "Türkiye", "Nigeria", "Dominican Republic", "Mexico", "Bolivia", "Brazil", "Chile", "Colombia", "India"],
-    FC_EU: ["Cyprus", "Albania", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Kosovo", "Latvia", "Lithuania", "Macedonia (FYROM)", "Malta", "Moldova", "Montenegro", "Netherlands", "Norway", "Poland", "Portugal", "Romania", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "United Kingdom", "Andorra", "Austria", "Belarus", "Czech Republic", "Iceland", "Italy", "Liechtenstein", "Luxembourg", "Monaco", "San Marino", "Ukraine"],
+    FC_EU: ["Cyprus", "Albania", "Belgium", "Bosnia and Herzegovina", "Bulgaria", "Croatia", "Denmark", "Estonia", "Finland", "France", "Germany", "Greece", "Hungary", "Ireland", "Kosovo", "Latvia", "Lithuania", "Macedonia (FYROM)", "Malta", "Moldova", "Montenegro", "Netherlands", "Norway", "Poland", "Portugal", "Romania", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "United Kingdom", "Andorra", "Austria", "Belarus", "Czech Republic", "Iceland", "Italy", "Liechtenstein", "Luxembourg", "Monaco", "San Marino", "Ukraine", "Martinique"],
     FC_CN: ["Palestine", "Israel", "China", "Georgia", "Russia", "Thailand", "Macau", "Hong Kong", "Angola", "Botswana", "Democratic Republic of the Congo", "Swaziland", "Lesotho", "Mozambique", "Madagascar", "Malawi", "Mauritius", "Namibia", "South Africa", "Tanzania", "Zambia", "Zimbabwe", "Barbados", "Costa Rica", "Grenada", "Saint Lucia", "Saint Vincent and the Grenadines", "Trinidad and Tobago", "Argentina", "Uruguay", "Australia", "New Zealand", "Fiji", "Kiribati", "Marshall Islands", "Micronesia", "Nauru", "Palau", "Papua New Guinea", "Samoa", "Solomon Islands", "Tuvalu", "Tonga", "Vanuatu"],
     NAAR_USA: ["USA", "Canada", "United States", "US", "Puerto Rico"],
 };
@@ -76,7 +76,7 @@ export const INTERNAL_EMAILS = {
     RALPH: "ralph.maatouk@zengaz.co",
 };
 
-// Consumer Response Content
+// Consumer Response Content (Shared frontend/backend logic if needed, or just backend)
 export const CONSUMER_RESPONSES = {
     "How to refill my Zengaz jet lighter?": 'To refill your Zengaz jet lighter, please follow these simple steps:<br /><br />1. Flip your Zengaz lighter upside down.<br />2. Insert the butane gas tip vertically into the refill valve.<br />3. Press down firmly for 5 seconds.<br />4. Allow 2 minutes for the gas to reach room temperature.<br />5. Adjust the flame regulator to the desired level before use.<br />For optimal performance, we recommend using premium butane gas.<br /><br />Still having issues? Contact us at <a href="mailto:hello@zengaz.net">hello@zengaz.net</a> for additional support.',
     "Do you sell replacement parts?": 'We do not offer individual spare parts. However, your Zengaz lighter comes with a one-year warranty! <br /><br />If you believe your Zengaz lighter is experiencing a factory defect (excluding damage from misuse such as excessive dropping, breaking the top off…), kindly fill out this replacement form: <a href="https://forms.gle/vLZKyeYvJ7T5w5Nv9" target="_blank">Replacement Form</a>.',

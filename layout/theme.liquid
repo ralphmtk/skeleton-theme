@@ -10,6 +10,10 @@
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}
 
+    {% # Favicon %}
+    <link rel="icon" type="image/x-icon" href="{{ 'favicon.ico' | asset_url }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ 'favicon.ico' | asset_url }}">
+
     {%- comment -%} Google Fonts: Exo 2 {%- endcomment -%}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

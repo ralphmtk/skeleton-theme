@@ -274,7 +274,8 @@
     }
 
     .range .prod-card__image-wrapper,
-    .range .prod-card__image-wrapper--parts {
+    .range .prod-card__image-wrapper--parts,
+    .range .prod-card__image-wrapper--simple {
         max-width: min(400px, calc(100vw - 48px));
     }
 }
@@ -486,4 +487,59 @@
     color: #000;
     text-transform: uppercase;
     letter-spacing: 0.02em;
+}
+
+/* Simple image swap cards (Torches, Gas Refills, Displays) */
+.range .prod-card--simple {
+    /* Override default hover behavior */
+}
+
+.range .prod-card--simple:hover {
+    transform: translateY(-2px);
+}
+
+.range .prod-card__image-wrapper--simple {
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 1;
+    overflow: hidden;
+    position: relative;
+    margin: 0 auto;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #fff;
+}
+
+.range .prod-card__image-wrapper--simple .prod-card__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.range .prod-card__image-wrapper--simple .prod-card__image--primary {
+    opacity: 1;
+}
+
+.range .prod-card__image-wrapper--simple .prod-card__image--secondary {
+    opacity: 0;
+}
+
+.range .prod-card--simple:hover .prod-card__image--primary {
+    opacity: 0;
+}
+
+.range .prod-card--simple:hover .prod-card__image--secondary {
+    opacity: 1;
+}
+
+/* Fallback if no secondary image - keep primary visible */
+.range .prod-card__image-wrapper--simple:not(:has(.prod-card__image--secondary)) .prod-card__image--primary {
+    opacity: 1;
+}
+
+.range .prod-card--simple:hover .prod-card__image-wrapper--simple:not(:has(.prod-card__image--secondary)) .prod-card__image--primary {
+    opacity: 1;
 }

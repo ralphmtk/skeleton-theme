@@ -186,7 +186,8 @@
           {%- endunless -%}
         {%- endform -%}
 
-        <!-- Shipping & Returns Info -->
+        <!-- Shipping & Returns Info (non-range products) -->
+        {%- unless is_range_product -%}
         <div class="product-page__shipping-returns">
           <div class="product-page__shipping-returns-item">
             <div class="product-page__shipping-returns-icon">
@@ -212,6 +213,37 @@
             </div>
           </div>
         </div>
+        {%- endunless -%}
+
+        <!-- Product Features (range products only) -->
+        {%- if is_range_product -%}
+        <div class="product-page__features">
+          <div class="product-page__features-item">
+            <div class="product-page__features-icon">
+              <img src="{{ 'icon_refillable.png' | asset_url }}" alt="Refillable" width="40" height="40">
+            </div>
+            <span class="product-page__features-label">Refillable</span>
+          </div>
+          <div class="product-page__features-item">
+            <div class="product-page__features-icon">
+              <img src="{{ 'icon_windproof.png' | asset_url }}" alt="Windproof" width="40" height="40">
+            </div>
+            <span class="product-page__features-label">Windproof</span>
+          </div>
+          <div class="product-page__features-item">
+            <div class="product-page__features-icon">
+              <img src="{{ 'icon_sustainable.png' | asset_url }}" alt="Sustainable" width="40" height="40">
+            </div>
+            <span class="product-page__features-label">Sustainable</span>
+          </div>
+          <div class="product-page__features-item">
+            <div class="product-page__features-icon">
+              <img src="{{ 'icon_warranty.png' | asset_url }}" alt="1-Year Warranty" width="40" height="40">
+            </div>
+            <span class="product-page__features-label">1-Yr Warranty</span>
+          </div>
+        </div>
+        {%- endif -%}
 
         <!-- How To Use Link -->
         {%- if section.settings.how_to_use_page != blank -%}
@@ -720,14 +752,15 @@
   .product-page__gallery-thumbnail {
     width: 80px;
     height: 80px;
-    padding: 0;
+    padding: 4px;
     border: 2px solid transparent;
-    background: none;
+    background: #f8f8f8;
     border-radius: 4px;
     overflow: hidden;
     cursor: pointer;
     transition: all 0.2s ease;
     flex-shrink: 0;
+    box-sizing: border-box;
   }
 
   .product-page__gallery-thumbnail:hover {
@@ -740,10 +773,22 @@
     border-color: #000;
   }
 
-  .product-page__gallery-thumbnail-image {
+  .product-page__gallery-thumbnail .image,
+  .product-page__gallery-thumbnail .image.product-page__gallery-thumbnail-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-page__gallery-thumbnail .image > img,
+  .product-page__gallery-thumbnail .image.product-page__gallery-thumbnail-image > img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    max-width: 100%;
+    max-height: 100%;
   }
 
   /* Product Info */
@@ -914,6 +959,55 @@
     font-size: 13px;
     color: #666;
     line-height: 1.4;
+  }
+
+  /* Product Features (Range Products) */
+  .product-page__features {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 24px;
+    padding: 20px;
+    background: #f8f8f8;
+    border-radius: 8px;
+  }
+
+  .product-page__features-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    padding: 12px 8px;
+    cursor: default;
+  }
+
+  .product-page__features-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25s ease;
+  }
+
+  .product-page__features-item:hover .product-page__features-icon {
+    transform: rotate(360deg);
+  }
+
+  .product-page__features-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .product-page__features-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    line-height: 1.3;
   }
 
   /* How To Use Link */
@@ -1357,6 +1451,25 @@
 
     .product-page__shipping-returns {
       grid-template-columns: 1fr;
+    }
+
+    .product-page__features {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      padding: 16px;
+    }
+
+    .product-page__features-item {
+      padding: 10px 6px;
+    }
+
+    .product-page__features-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .product-page__features-label {
+      font-size: 11px;
     }
 
     .product-page__purchase-controls {

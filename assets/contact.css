@@ -648,11 +648,15 @@ body.has-contact-page .footer {
 }
 
 .contact__success-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 1.5rem;
   animation: successPop 0.4s ease-out;
 }
 
 .contact__success-icon svg {
+  display: block;
   filter: drop-shadow(0 4px 12px rgba(76, 175, 80, 0.3));
 }
 

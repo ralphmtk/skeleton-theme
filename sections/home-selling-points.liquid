@@ -1,0 +1,608 @@
+<section class="home-selling-points full-width" aria-label="Selling Points">
+  {%- for block in section.blocks -%}
+    {%- assign text_position = block.settings.text_position | default: 'left' -%}
+    <div class="home-selling-points__panel home-selling-points__panel--{{ forloop.index }}{% if text_position == 'right' %} home-selling-points__panel--text-right{% endif %}" {{ block.shopify_attributes }}>
+      <div class="home-selling-points__container">
+        <!-- Text content -->
+        <div class="home-selling-points__content">
+          <div class="home-selling-points__text-box">
+            <div class="home-selling-points__text-box-inner">
+              <h2 class="home-selling-points__heading">
+                {%- if block.settings.heading_line2 != blank -%}
+                  <span class="home-selling-points__heading-line1">{{ block.settings.heading }}</span>
+                  <span class="home-selling-points__heading-line2">{{ block.settings.heading_line2 }}</span>
+                {%- else -%}
+                  {{ block.settings.heading }}
+                {%- endif -%}
+              </h2>
+              
+              {%- if block.settings.subheading != blank -%}
+                <p class="home-selling-points__subheading">{{ block.settings.subheading }}</p>
+              {%- endif -%}
+              
+              {%- if block.settings.description != blank -%}
+                <p class="home-selling-points__description">{{ block.settings.description }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Video -->
+        {%- if block.settings.video != blank -%}
+          <div class="home-selling-points__video-wrapper">
+            <video
+              class="home-selling-points__video"
+              muted
+              playsinline
+              preload="auto"
+              aria-hidden="true"
+              data-video-panel="{{ forloop.index }}"
+            >
+              {%- assign video_file = block.settings.video -%}
+              <source src="{{ video_file | asset_url }}" type="video/webm">
+            </video>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endfor -%}
+</section>
+
+{% stylesheet %}
+.home-selling-points {
+  width: 100%;
+  position: relative;
+}
+
+.home-selling-points__panel {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Different backgrounds for debugging */
+.home-selling-points__panel--1 {
+  background: #ffebee;
+}
+
+.home-selling-points__panel--2 {
+  background: #e8f5e9;
+}
+
+.home-selling-points__panel--3 {
+  background: #e3f2fd;
+}
+
+.home-selling-points__container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.home-selling-points__panel--text-right .home-selling-points__container {
+  direction: rtl;
+}
+
+.home-selling-points__panel--text-right .home-selling-points__content,
+.home-selling-points__panel--text-right .home-selling-points__video-wrapper {
+  direction: ltr;
+}
+
+.home-selling-points__content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.home-selling-points__text-box {
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.home-selling-points__text-box-inner {
+  background: #E8D5FF;
+  border-radius: 24px;
+  padding: 48px 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transform: translateY(100px) rotate(-2deg);
+  opacity: 0;
+}
+
+.home-selling-points__heading {
+  font-size: 64px;
+  font-weight: 900;
+  line-height: 1.1;
+  color: #000000;
+  margin: 0 0 24px;
+  font-family: var(--font-secondary--family, sans-serif);
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  text-align: center;
+  display: block;
+}
+
+.home-selling-points__heading-line1 {
+  display: block;
+}
+
+.home-selling-points__heading-line2 {
+  display: block;
+  font-size: 1.2em;
+  margin-top: -0.1em;
+}
+
+.home-selling-points__subheading {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0 0 8px;
+  font-family: var(--font-primary--family, sans-serif);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.home-selling-points__description {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000000;
+  margin: 0;
+  font-family: var(--font-primary--family, sans-serif);
+  line-height: 1.5;
+  text-align: center;
+}
+
+.home-selling-points__video-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 24px;
+}
+
+.home-selling-points__video {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  opacity: 0;
+}
+
+/* Responsive */
+@media (max-width: 1023px) {
+  .home-selling-points__container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 0 24px;
+  }
+
+  .home-selling-points__text-box {
+    max-width: 100%;
+  }
+
+  .home-selling-points__text-box-inner {
+    padding: 36px 32px;
+  }
+
+  .home-selling-points__heading {
+    font-size: 48px;
+  }
+
+  .home-selling-points__video-wrapper {
+    height: 40vh;
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 767px) {
+  .home-selling-points__container {
+    padding: 0 20px;
+    gap: 32px;
+  }
+
+  .home-selling-points__text-box-inner {
+    padding: 28px 24px;
+    border-radius: 20px;
+  }
+
+  .home-selling-points__heading {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+
+  .home-selling-points__subheading {
+    font-size: 18px;
+  }
+
+  .home-selling-points__description {
+    font-size: 14px;
+  }
+
+  .home-selling-points__video-wrapper {
+    height: 35vh;
+    min-height: 250px;
+  }
+}
+{% endstylesheet %}
+
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+(function() {
+  function initSellingPoints() {
+    // Wait for GSAP to load
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initSellingPoints, 50);
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    var section = document.querySelector('section.home-selling-points');
+    if (!section) return;
+
+    var panels = section.querySelectorAll('.home-selling-points__panel');
+    if (panels.length === 0) return;
+
+    // Store video durations (in seconds) - adjust these to control pin duration
+    var videoDurations = [];
+    var scrollTriggers = [];
+    var videoPlaybackStates = {}; // Track which videos have finished playing
+    var scrollLocked = false;
+    var lockedScrollPosition = 0;
+
+    // Function to lock scrolling
+    function lockScroll(position) {
+      scrollLocked = true;
+      lockedScrollPosition = position;
+      window.scrollTo(0, position);
+    }
+
+    // Function to unlock scrolling
+    function unlockScroll() {
+      scrollLocked = false;
+    }
+
+    // Global scroll listener to enforce lock
+    var scrollHandler = function(e) {
+      if (scrollLocked) {
+        e.preventDefault();
+        window.scrollTo(0, lockedScrollPosition);
+      }
+    };
+
+    window.addEventListener('scroll', scrollHandler, { passive: false });
+    window.addEventListener('wheel', scrollHandler, { passive: false });
+    window.addEventListener('touchmove', scrollHandler, { passive: false });
+
+    // Preload all videos
+    var videos = section.querySelectorAll('.home-selling-points__video');
+    videos.forEach(function(video) {
+      video.load();
+    });
+
+    // Function to play video reliably
+    function playVideoSafely(video) {
+      return new Promise(function(resolve, reject) {
+        if (!video) {
+          resolve();
+          return;
+        }
+
+        // Reset video
+        video.currentTime = 0;
+
+        // Check if video is ready
+        var attemptPlay = function() {
+          if (video.readyState >= 3) { // HAVE_FUTURE_DATA or greater
+            var playPromise = video.play();
+
+            if (playPromise !== undefined) {
+              playPromise
+                .then(function() {
+                  resolve();
+                })
+                .catch(function(error) {
+                  console.warn('Video play failed:', error);
+                  reject(error);
+                });
+            } else {
+              resolve();
+            }
+          } else {
+            // Wait for video to be ready
+            video.addEventListener('canplay', function onCanPlay() {
+              video.removeEventListener('canplay', onCanPlay);
+              var playPromise = video.play();
+
+              if (playPromise !== undefined) {
+                playPromise
+                  .then(function() {
+                    resolve();
+                  })
+                  .catch(function(error) {
+                    console.warn('Video play failed:', error);
+                    reject(error);
+                  });
+              } else {
+                resolve();
+              }
+            }, { once: true });
+
+            // Force load
+            video.load();
+          }
+        };
+
+        attemptPlay();
+      });
+    }
+
+    // Function to setup panel animations
+    function setupPanel(panel, panelIndex) {
+      var textBox = panel.querySelector('.home-selling-points__text-box-inner');
+      var video = panel.querySelector('.home-selling-points__video');
+      var videoHasEnded = false;
+      var hasPlayedOnce = false; // Track if video has been played at least once
+
+      // Calculate pin duration based on video duration or default
+      var pinDuration = window.innerHeight * 2; // Default: 2 viewports of scroll
+
+      if (video) {
+        // Try to get video duration (may not be available immediately)
+        var estimatedDuration = 5; // Default 5 seconds
+        if (video.duration && !isNaN(video.duration)) {
+          estimatedDuration = video.duration;
+        }
+        videoDurations[panelIndex] = estimatedDuration;
+        // Convert video duration to scroll distance (roughly 100px per second of video)
+        pinDuration = Math.max(window.innerHeight, estimatedDuration * 100);
+
+        // Track when video ends
+        video.addEventListener('ended', function() {
+          videoHasEnded = true;
+          videoPlaybackStates[panelIndex] = true;
+          unlockScroll(); // Unlock scroll when video ends
+        });
+      }
+
+      // Reset initial states
+      if (textBox) {
+        gsap.set(textBox, { y: 100, opacity: 0, rotation: -2 });
+      }
+      if (video) {
+        gsap.set(video, { opacity: 0 });
+        video.currentTime = 0;
+        video.pause();
+      }
+
+      // Create timeline for animations
+      var tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: panel,
+          start: 'top top',
+          end: '+=' + pinDuration,
+          pin: true,
+          pinSpacing: true,
+          scrub: false,
+          anticipatePin: 1,
+          onUpdate: function(self) {
+            // Only prevent scrolling forward if video hasn't ended AND hasn't played before
+            if (video && !videoHasEnded && hasPlayedOnce && self.direction === 1 && self.progress > 0.5) {
+              // Lock scroll at current position when video is playing
+              if (!scrollLocked) {
+                lockScroll(window.scrollY);
+              }
+            }
+          },
+          onEnter: function() {
+            panel.classList.add('is-active');
+
+            // Only animate and play video on first entry
+            if (!hasPlayedOnce) {
+              // Animate text box in
+              if (textBox) {
+                gsap.to(textBox, {
+                  y: 0,
+                  opacity: 1,
+                  rotation: 0,
+                  duration: 0.8,
+                  ease: 'power2.out'
+                });
+              }
+
+              // Start video immediately (before fade-in)
+              if (video) {
+                hasPlayedOnce = true;
+
+                // Lock scroll after a short delay to allow panel to settle
+                setTimeout(function() {
+                  if (!videoHasEnded) {
+                    lockScroll(window.scrollY);
+                  }
+                }, 1000);
+
+                playVideoSafely(video).catch(function(error) {
+                  console.error('Failed to play video:', error);
+                  unlockScroll(); // Unlock if video fails
+                });
+
+                // Fade in video 0.5s after it starts playing
+                gsap.to(video, {
+                  opacity: 1,
+                  duration: 0.6,
+                  ease: 'power2.out',
+                  delay: 0.5
+                });
+              }
+            }
+          },
+          onLeave: function() {
+            panel.classList.remove('is-active');
+            // Don't pause video - let it continue playing
+            // Unlock scroll when leaving (in case user scrolled up)
+            unlockScroll();
+          },
+          onEnterBack: function() {
+            panel.classList.add('is-active');
+            // Don't re-animate or restart video - keep everything as is
+          },
+          onLeaveBack: function() {
+            panel.classList.remove('is-active');
+            // Don't animate out or reset - keep everything as is
+          }
+        }
+      });
+
+      scrollTriggers.push(tl.scrollTrigger);
+
+      // Update pin duration when video metadata loads
+      if (video) {
+        video.addEventListener('loadedmetadata', function() {
+          if (video.duration && !isNaN(video.duration)) {
+            // Set pin duration to ensure panel stays until video completes
+            // Add extra time to account for video playback
+            var newPinDuration = Math.max(window.innerHeight * 3, video.duration * 150);
+            if (tl.scrollTrigger) {
+              tl.scrollTrigger.vars.end = '+=' + newPinDuration;
+              ScrollTrigger.refresh();
+            }
+          }
+        }, { once: true });
+      }
+
+      return tl;
+    }
+
+    // Setup all panels
+    panels.forEach(function(panel, index) {
+      setupPanel(panel, index);
+    });
+
+    // Handle resize
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        ScrollTrigger.refresh();
+      }, 250);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSellingPoints);
+  } else {
+    initSellingPoints();
+  }
+})();
+
+// Global ScrollTrigger coordination for all homepage sections
+(function() {
+  if (typeof ScrollTrigger === 'undefined') return;
+
+  // Wait for all sections to initialize, then do a final refresh
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.refresh();
+      }
+    }, 500);
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Home Selling Points",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "selling_point",
+      "name": "Selling Point",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "GLOBAL LEADER"
+        },
+        {
+          "type": "text",
+          "id": "heading_line2",
+          "label": "Heading Line 2",
+          "info": "Optional second line for heading (e.g., 'ASSURED' for 'QUALITY ASSURED')"
+        },
+        {
+          "type": "select",
+          "id": "text_position",
+          "label": "Text Position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading",
+          "default": "MILLIONS SOLD"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "IN 70+ COUNTRIES SINCE 2012"
+        },
+        {
+          "type": "text",
+          "id": "video",
+          "label": "Video filename",
+          "info": "Enter the video filename from assets folder (e.g., video_global_leader.webm)",
+          "default": "video_global_leader.webm"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home Selling Points",
+      "blocks": [
+        {
+          "type": "selling_point",
+          "settings": {
+            "heading": "GLOBAL LEADER",
+            "subheading": "MILLIONS SOLD",
+            "description": "IN 70+ COUNTRIES SINCE 2012",
+            "video": "video_global_leader.webm"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

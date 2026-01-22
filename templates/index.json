@@ -8,15 +8,172 @@
  * ------------------------------------------------------------
  */
 {
-    "sections": {
-        "hero-video": {
-            "type": "hero-video",
-            "settings": {}
-        },
-        "home-slider": {
-            "type": "home-slider",
-            "settings": {}
-        }
+  "sections": {
+    "hero-video": {
+      "type": "hero-video",
+      "settings": {}
     },
-    "order": ["hero-video", "home-slider"]
+    "home-slider": {
+      "type": "home-slider",
+      "settings": {}
+    },
+    "home-selling-points": {
+      "type": "home-selling-points",
+      "blocks": {
+        "selling_point_global_leader": {
+          "type": "selling_point",
+          "settings": {
+            "heading": "GLOBAL LEADER",
+            "subheading": "MILLIONS SOLD",
+            "description": "IN 70+ COUNTRIES SINCE 2012",
+            "video": "video_global_leader.webm",
+            "text_position": "left"
+          }
+        },
+        "selling_point_quality_assured": {
+          "type": "selling_point",
+          "settings": {
+            "heading": "QUALITY",
+            "heading_line2": "ASSURED",
+            "subheading": "2 YEARS WARRANTY",
+            "description": "& GLOBALLY CERTIFIED",
+            "video": "video_quality_assured.webm",
+            "text_position": "right"
+          }
+        }
+      },
+      "block_order": [
+        "selling_point_global_leader",
+        "selling_point_quality_assured"
+      ],
+      "settings": {}
+    },
+    "home-bestsellers": {
+      "type": "home-bestsellers",
+      "settings": {
+        "collection": ""
+      }
+    },
+    "home-community": {
+      "type": "home-community",
+      "settings": {}
+    },
+    "home-testimonials": {
+      "type": "home-testimonials",
+      "blocks": {
+        "testimonial_RDE6bg": {
+          "type": "testimonial",
+          "settings": {
+            "stars": 5,
+            "quote": "I find them absolutely amazing. I’ve had the same one in my pocket for almost 4 years now, and it still works like a charm. I don’t really use it that often but I’m still surprised at how long it keeps fuel.",
+            "name": "@ThatTallpal"
+          }
+        },
+        "testimonial_A93QRJ": {
+          "type": "testimonial",
+          "settings": {
+            "stars": 5,
+            "quote": "I have had this lighter for a year and was curious about the reviews of it. the fact that I have it and used it for a year (go to a lot of parties and festivals) says it all! top lighter!",
+            "name": "@Content-Junket7208"
+          }
+        },
+        "testimonial_hCQ4P6": {
+          "type": "testimonial",
+          "settings": {
+            "stars": 5,
+            "quote": "ZENGAZ lighters are seriously the best! The jet flame is super reliable, even in windy conditions when I’m hiking lol 🤣. I’ve used mine for months, and it’s never let me down.",
+            "name": "@JuanGarcia"
+          }
+        },
+        "testimonial_gFXHzz": {
+          "type": "testimonial",
+          "settings": {
+            "stars": 5,
+            "quote": "Hands DOWN the BEST of the BEST. I love ZENGAZ. I live in one of the windiest cities ZENGAZ is the ONLY lighter | can be used in the wind directly. All love ❤️",
+            "name": "@DamnDemi"
+          }
+        },
+        "testimonial_JTgexG": {
+          "type": "testimonial",
+          "settings": {
+            "stars": 5,
+            "quote": "ZENGAZ is a brand that I highly recommend, to date it has never given me any problems and my daily life is a mess, hahaha",
+            "name": "@Anonymous221"
+          }
+        },
+        "testimonial_x6YQjr": {
+          "type": "testimonial",
+          "settings": {
+            "stars": 5,
+            "quote": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.",
+            "name": "John Smith"
+          }
+        },
+        "testimonial_gqM8L3": {
+          "type": "testimonial",
+          "settings": {
+            "stars": 5,
+            "quote": "Very cool, for those who camp, it helps a lot when lighting a fire, for example.",
+            "name": "Joe Walker"
+          }
+        },
+        "testimonial_t8bMtP": {
+          "type": "testimonial",
+          "settings": {
+            "stars": 5,
+            "quote": "Love that it’s refillable and has so many nice designs ! Where have you been all my life?",
+            "name": "Shelley Janack Knudtson"
+          }
+        },
+        "testimonial_KY8TDE": {
+          "type": "testimonial",
+          "settings": {
+            "stars": 5,
+            "quote": "Great product SUPER cool designs and a huge variety of different types of lighters.  They last for YEARS if taken care of properly. My oldest is years old. My favorite is the 'Glow in the dark ' range right now. I have ALL types🔥🙌❤❤💛💚",
+            "name": "Tracey H.S. Williams"
+          }
+        },
+        "testimonial_37yyAC": {
+          "type": "testimonial",
+          "settings": {
+            "stars": 5,
+            "quote": "These lighters are by far my favorite!!  I’ve been outside and being able to still light up whenever is so convenient!  Not to mention the little community ZENGAZ brings as you can share & connect the designs with friends all over!",
+            "name": "@creativeandhigh"
+          }
+        },
+        "testimonial_MxV7Hg": {
+          "type": "testimonial",
+          "settings": {
+            "stars": 5,
+            "quote": "I love them!! I love ZENGAZ lighters, in fact I’m no longer buying gas ones because I refill these ones and they are much more convenient, so in fact I’m trying to make my own ZENGAZ collection because I love their designs so much.",
+            "name": "@DaniPaz"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_RDE6bg",
+        "testimonial_A93QRJ",
+        "testimonial_hCQ4P6",
+        "testimonial_gFXHzz",
+        "testimonial_JTgexG",
+        "testimonial_x6YQjr",
+        "testimonial_gqM8L3",
+        "testimonial_t8bMtP",
+        "testimonial_KY8TDE",
+        "testimonial_37yyAC",
+        "testimonial_MxV7Hg"
+      ],
+      "settings": {
+        "heading": "TESTIMONIALS"
+      }
+    }
+  },
+  "order": [
+    "hero-video",
+    "home-slider",
+    "home-selling-points",
+    "home-bestsellers",
+    "home-community",
+    "home-testimonials"
+  ]
 }

@@ -44,7 +44,11 @@
             {% if mobile_title == 'Jet Torches' %}{% assign mobile_title = 'Torches' %}{% endif %}
             {% if mobile_title == 'Gas Refills' %}{% assign mobile_title = 'Gas' %}{% endif %}
             <button class="shop__category-filter{% if first %} is-active{% endif %}" data-target="{{ col.handle }}" type="button">
-              <img class="shop__category-icon" src="{{ 'flame-icon.png' | asset_url }}" alt="" width="16" height="16" loading="lazy">
+              {% if block.settings.category_icon != blank %}
+                <img class="shop__category-icon" src="{{ block.settings.category_icon | image_url: width: 32 }}" alt="" width="16" height="16" loading="lazy">
+              {% else %}
+                <img class="shop__category-icon" src="{{ 'flame-icon.png' | asset_url }}" alt="" width="16" height="16" loading="lazy">
+              {% endif %}
               <span class="shop__category-text">{{ col.title }}</span>
               <span class="shop__category-text--mobile">{{ mobile_title }}</span>
             </button>
@@ -564,7 +568,8 @@
       "type": "category",
       "name": "Category",
       "settings": [
-        { "type": "collection", "id": "collection", "label": "Collection" }
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "image_picker", "id": "category_icon", "label": "Category Icon", "info": "Upload a custom icon for this category. If not provided, the default flame icon will be used." }
       ]
     },
     {

@@ -6,12 +6,37 @@
   - is_unavailable: {Boolean} Whether the product is unavailable in the user's country
   - user_country_code: {String} The user's country code (optional, mostly for debugging)
   - localization: {Object} Localization object for country name
+  - collection_handle: {String} The handle of the collection this product belongs to
 {% endcomment %}
 
 {%- assign custom_style = product.metafields.custom.custom_style | strip | downcase -%}
 
-<a class="prod-card{% if is_unavailable %} prod-card--unavailable{% endif %}{% if custom_style != blank %} prod-card--custom prod-card--style-{{ custom_style }}{% endif %}" href="{{ product.url }}"{% if custom_style != blank %} data-custom-style="{{ custom_style }}"{% endif %}>
-  {%- if custom_style != blank -%}
+{%- comment -%} Only lighter collections use cap/body/flame animations. Everything else uses simple image swap. {%- endcomment -%}
+{%- assign use_simple_image = true -%}
+{%- if collection_handle contains 'lighter' -%}
+  {%- assign use_simple_image = false -%}
+{%- endif -%}
+
+{%- comment -%} Override: ZL5 Slider uses simple image swap even though it's a lighter {%- endcomment -%}
+{%- if custom_style == 'zl5' or product.handle contains 'zl-5' or product.handle contains 'zl5' -%}
+  {%- assign use_simple_image = true -%}
+{%- endif -%}
+
+<a class="prod-card{% if is_unavailable %} prod-card--unavailable{% endif %}{% if use_simple_image %} prod-card--simple{% endif %}{% if custom_style != blank and use_simple_image == false %} prod-card--custom prod-card--style-{{ custom_style }}{% endif %}" href="{{ product.url }}"{% if custom_style != blank and use_simple_image == false %} data-custom-style="{{ custom_style }}"{% endif %}>
+  {%- if use_simple_image -%}
+    {%- comment -%} Simple image swap for non-lighter collections {%- endcomment -%}
+    <div class="prod-card__image-wrapper prod-card__image-wrapper--simple">
+      {% if is_unavailable %}
+        <div class="prod-card__unavailable-label">Not available in {{ localization.country.name }}</div>
+      {% endif %}
+      {%- if product.featured_image -%}
+        {% render 'image', class: 'prod-card__image prod-card__image--primary', image: product.featured_image, width: 600, height: 600, crop: 'center' %}
+      {%- endif -%}
+      {%- if product.images[1] -%}
+        {% render 'image', class: 'prod-card__image prod-card__image--secondary', image: product.images[1], width: 600, height: 600, crop: 'center' %}
+      {%- endif -%}
+    </div>
+  {%- elsif custom_style != blank -%}
     {%- comment -%} Custom style: blank state with offset metafields support {%- endcomment -%}
     {% if product.metafields.custom.animation_body and product.metafields.custom.animation_cap %}
       {%- assign cap_y_offset = product.metafields.custom.animation_cap_y_offset | default: '65.5' -%}
@@ -51,7 +76,7 @@
       </div>
     {% endif %}
   {%- else -%}
-    {%- comment -%} Default animations and styling {%- endcomment -%}
+    {%- comment -%} Default animations and styling for lighters {%- endcomment -%}
     {% if product.metafields.custom.animation_body and product.metafields.custom.animation_cap %}
       {%- assign cap_y_offset = product.metafields.custom.animation_cap_y_offset | default: '65.5' -%}
       {%- assign cap_x_offset = product.metafields.custom.animation_cap_x_offset | default: '0' -%}

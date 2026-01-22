@@ -1,0 +1,700 @@
+<section class="home-bestsellers full-width" aria-label="Best Sellers">
+  <div class="home-bestsellers__inner">
+    <div class="home-bestsellers__header">
+      <h2 class="home-bestsellers__title">BEST SELLERS</h2>
+    </div>
+    
+    <div class="home-bestsellers__scroll-wrapper">
+      <div class="home-bestsellers__track">
+        {%- comment -%} Varied vertical offsets for slides {%- endcomment -%}
+        {% assign y_offsets = '-35|45|-70|25|-15|55|5|-45|35|-25|60|15|-55|40|-5|50' | split: '|' %}
+        {%- comment -%} Varied horizontal offsets for images within cards {%- endcomment -%}
+        {% assign x_offsets = '-8|12|-5|15|-12|8|-15|10|5|-10|14|-6|11|-14|7|-9' | split: '|' %}
+        {%- comment -%} Varied vertical offsets for images within cards {%- endcomment -%}
+        {% assign img_y_offsets = '-10|8|-5|12|-8|6|-12|10|4|-6|9|-4|7|-11|5|-7' | split: '|' %}
+        {%- comment -%} Random gap multipliers (1.5x to 2x) {%- endcomment -%}
+        {% assign gap_multipliers = '1.5|1.8|2.0|1.6|1.9|1.7|2.0|1.5|1.8|1.6|1.9|1.7|2.0|1.5|1.8|1.6' | split: '|' %}
+        {% assign bg_colors = 'hsla(200,60%,92%,1)|hsla(340,50%,92%,1)|hsla(45,60%,92%,1)|hsla(160,50%,92%,1)|hsla(270,40%,92%,1)|hsla(20,60%,92%,1)|hsla(280,45%,90%,1)|hsla(100,50%,90%,1)' | split: '|' %}
+        
+        {%- comment -%} Get products - from selected collection or all products, excluding range_only {%- endcomment -%}
+        {% if section.settings.collection != blank %}
+          {% assign products_source = section.settings.collection.products %}
+        {% else %}
+          {% assign products_source = collections.all.products %}
+        {% endif %}
+        {% assign product_count = 0 %}
+        {% assign display_index = 0 %}
+        
+        {% for product in products_source %}
+          {%- comment -%} Skip range-only products (using correct metafield name) {%- endcomment -%}
+          {% assign is_range_product = false %}
+          {% if product.metafields.custom.range_product_only == 1 %}
+            {% assign is_range_product = true %}
+          {% endif %}
+          {% if is_range_product %}
+            {% continue %}
+          {% endif %}
+          
+          {% if product_count >= 10 %}
+            {% break %}
+          {% endif %}
+          
+          {% assign y_index = display_index | modulo: 16 %}
+          {% assign x_index = display_index | plus: 7 | modulo: 16 %}
+          {% assign img_y_index = display_index | plus: 3 | modulo: 16 %}
+          {% assign gap_index = display_index | plus: 5 | modulo: 16 %}
+          {% assign y_offset = y_offsets[y_index] %}
+          {% assign x_offset = x_offsets[x_index] %}
+          {% assign img_y_offset = img_y_offsets[img_y_index] %}
+          {% assign gap_mult = gap_multipliers[gap_index] %}
+          {% assign color_index = display_index | modulo: 8 %}
+          {% assign bg_color = bg_colors[color_index] %}
+          
+          <div class="home-bestsellers__slide" data-index="{{ display_index }}" style="--y-offset: {{ y_offset }}px; --img-x-offset: {{ x_offset }}%; --img-y-offset: {{ img_y_offset }}%; --gap-mult: {{ gap_mult }};">
+            <a href="{{ product.url }}" class="home-bestsellers__card" style="--card-bg: {{ bg_color }};">
+              <div class="home-bestsellers__image-wrapper">
+                {%- assign custom_style = product.metafields.custom.custom_style | strip | downcase -%}
+                {%- assign product_collections = product.collections | map: 'handle' | join: ' ' -%}
+                
+                {%- assign use_simple_image = true -%}
+                {%- if product_collections contains 'lighter' -%}
+                  {%- assign use_simple_image = false -%}
+                {%- endif -%}
+                {%- if custom_style == 'zl5' or product.handle contains 'zl-5' or product.handle contains 'zl5' -%}
+                  {%- assign use_simple_image = true -%}
+                {%- endif -%}
+                
+                {%- if use_simple_image -%}
+                  <div class="home-bestsellers__image-simple">
+                    {%- if product.featured_image -%}
+                      <img class="home-bestsellers__img" src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title }}" width="400" height="400" loading="lazy">
+                    {%- endif -%}
+                  </div>
+                {%- elsif product.metafields.custom.animation_body and product.metafields.custom.animation_cap -%}
+                  {%- assign cap_y_offset = product.metafields.custom.animation_cap_y_offset | default: '65.5' -%}
+                  {%- assign cap_x_offset = product.metafields.custom.animation_cap_x_offset | default: '0' -%}
+                  {%- assign flame_y_offset = product.metafields.custom.animation_flame_y_offset | default: '100' -%}
+                  {%- assign flame_x_offset = product.metafields.custom.animation_flame_x_offset | default: '0' -%}
+                  {%- assign body_x_offset = product.metafields.custom.animation_body_x_offset | default: '0' -%}
+                  {%- assign body_y_offset = product.metafields.custom.animation_body_y_offset | default: '0' -%}
+                  {%- assign flame_count = product.metafields.custom.number_of_flames | default: 1 -%}
+                  {%- assign flame_count_value = flame_count | plus: 0 -%}
+                  {%- if custom_style == 'zl17' -%}
+                    {%- assign flame_asset = 'zl17_flame.png' -%}
+                  {%- elsif custom_style == 'zl19' -%}
+                    {%- assign flame_asset = 'zl19_flame.png' -%}
+                  {%- else -%}
+                    {%- assign flame_asset = 'flame.png' -%}
+                    {%- if flame_count != blank and flame_count_value >= 2 -%}
+                      {%- assign flame_asset = 'double_flame.png' -%}
+                    {%- endif -%}
+                  {%- endif -%}
+                  <div class="home-bestsellers__image-parts">
+                    <img class="home-bestsellers__body" src="{{ product.metafields.custom.animation_body | file_url }}" alt="{{ product.title }}" width="300" height="300" loading="lazy" style="transform: translate({{ body_x_offset }}px, {{ body_y_offset }}px);">
+                    <img class="home-bestsellers__cap" src="{{ product.metafields.custom.animation_cap | file_url }}" alt="" width="300" height="300" loading="lazy" style="bottom: {{ cap_y_offset }}%; left: calc(50% + {{ cap_x_offset }}px);">
+                    <img class="home-bestsellers__flame" src="{{ flame_asset | asset_url }}" alt="" width="300" height="300" loading="lazy" style="bottom: calc(50% + {{ flame_y_offset }}px); left: calc(48.5% + {{ flame_x_offset }}px);">
+                  </div>
+                {%- else -%}
+                  <div class="home-bestsellers__image-simple">
+                    {%- if product.featured_image -%}
+                      <img class="home-bestsellers__img" src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title }}" width="400" height="400" loading="lazy">
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
+              </div>
+              <div class="home-bestsellers__product-name">{{ product.title }}</div>
+            </a>
+          </div>
+          {% assign product_count = product_count | plus: 1 %}
+          {% assign display_index = display_index | plus: 1 %}
+        {% endfor %}
+        
+        {%- comment -%} Fallback placeholders if no products {%- endcomment -%}
+        {% if product_count == 0 %}
+          {% for i in (1..10) %}
+            {% assign y_index = forloop.index0 | modulo: 16 %}
+            {% assign x_index = forloop.index0 | plus: 7 | modulo: 16 %}
+            {% assign img_y_index = forloop.index0 | plus: 3 | modulo: 16 %}
+            {% assign y_offset = y_offsets[y_index] %}
+            {% assign x_offset = x_offsets[x_index] %}
+            {% assign img_y_offset = img_y_offsets[img_y_index] %}
+            {% assign color_index = forloop.index0 | modulo: 8 %}
+            {% assign bg_color = bg_colors[color_index] %}
+            
+            <div class="home-bestsellers__slide" data-index="{{ forloop.index0 }}" style="--y-offset: {{ y_offset }}px; --img-x-offset: {{ x_offset }}%; --img-y-offset: {{ img_y_offset }}%;">
+              <div class="home-bestsellers__card home-bestsellers__card--placeholder" style="--card-bg: {{ bg_color }};">
+                <div class="home-bestsellers__image-wrapper">
+                  <div class="home-bestsellers__placeholder-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <rect x="3" y="3" width="18" height="18" rx="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <path d="m21 15-5-5L5 21"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="home-bestsellers__product-name">Product {{ i }}</div>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .home-bestsellers {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    /* Full screen to match selling-points panels */
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: #fff;
+    overflow: clip; /* Clips overflow but doesn't affect scrollWidth calculation */
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  
+  /* Ensure Shopify section wrapper doesn't constrain the section */
+  .shopify-section:has(.home-bestsellers) {
+    overflow: visible;
+  }
+  
+  .home-bestsellers__inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .home-bestsellers__header {
+    padding: clamp(2.5rem, 5vh, 4rem) clamp(2rem, 5vw, 4rem) clamp(1rem, 2vh, 2rem);
+    flex-shrink: 0;
+  }
+  
+  .home-bestsellers__title {
+    font-family: 'Gobold', 'Arial Black', sans-serif;
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #111;
+    margin: 0;
+  }
+  
+  .home-bestsellers__scroll-wrapper {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    overflow: visible; /* Allow track to extend beyond viewport */
+    display: flex;
+    align-items: flex-start; /* Align to top */
+    margin-top: -2rem; /* Pull images up */
+    min-height: 0;
+  }
+  
+  .home-bestsellers__track {
+    display: flex;
+    gap: 0; /* Using per-slide margins instead */
+    padding-left: 65vw; /* Start with first product far right */
+    padding-right: 50vw;
+    width: fit-content;
+    min-width: max-content;
+    align-items: center;
+    height: 100%;
+    will-change: transform;
+    flex-shrink: 0;
+  }
+  
+  .home-bestsellers__slide {
+    flex: 0 0 auto;
+    width: clamp(180px, 14vw, 240px);
+    transform: translateY(var(--y-offset, 0));
+    /* Random margin based on gap multiplier (base gap ~10rem) */
+    margin-right: calc(10rem * var(--gap-mult, 1.5));
+    will-change: transform, filter, opacity;
+  }
+  
+  .home-bestsellers__slide:last-child {
+    margin-right: 0;
+  }
+  
+  /* Card scales smoothly via JS - these are base styles */
+  .home-bestsellers__card {
+    transform: scale(var(--card-scale, 1));
+    transition: transform 0.1s ease-out;
+  }
+  
+  .home-bestsellers__image-wrapper {
+    transition: transform 0.1s ease-out;
+  }
+  
+  /* Active slide styling */
+  .home-bestsellers__slide.is-active {
+    z-index: 10;
+  }
+  
+  .home-bestsellers__slide.is-active .home-bestsellers__card::before {
+    box-shadow: 
+      0 0 0 2px rgba(0, 0, 0, 0.03),
+      0 20px 40px -10px rgba(0, 0, 0, 0.15),
+      0 30px 60px -20px var(--card-bg);
+  }
+  
+  .home-bestsellers__slide.is-active .home-bestsellers__img {
+    filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.2));
+  }
+  
+  .home-bestsellers__slide.is-active .home-bestsellers__product-name {
+    transform: scale(1.05);
+  }
+  
+  /* Lighter animation for active state */
+  .home-bestsellers__slide.is-active .home-bestsellers__cap {
+    animation: capOpen 0.4s ease-out forwards;
+  }
+  
+  .home-bestsellers__slide.is-active .home-bestsellers__flame {
+    animation: flameAppear 0.4s ease-out 0.15s forwards;
+  }
+  
+  .home-bestsellers__slide.is-active .home-bestsellers__body {
+    filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.2));
+  }
+  
+  @keyframes capOpen {
+    0% { transform: translate(-50%, 0) rotate(0deg); }
+    100% { transform: translate(-50%, -35px) rotate(-25deg); }
+  }
+  
+  @keyframes flameAppear {
+    0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+    100% { opacity: 1; transform: translateX(-50%) scale(1); }
+  }
+  
+  .home-bestsellers__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding-top: clamp(3rem, 6vw, 5rem);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  /* Background color block - decorative only */
+  .home-bestsellers__card::before {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: 0;
+    right: 0;
+    bottom: 25%;
+    background: var(--card-bg, hsla(200, 60%, 92%, 1));
+    z-index: 0;
+  }
+  
+  .home-bestsellers__card:hover {
+    transform: translateY(-8px);
+  }
+  
+  .home-bestsellers__slide.is-active .home-bestsellers__card:hover {
+    transform: scale(1.08) translateY(-8px);
+  }
+  
+  .home-bestsellers__card--placeholder {
+    pointer-events: none;
+  }
+  
+  .home-bestsellers__image-wrapper {
+    position: relative;
+    width: 140%;
+    margin-left: -20%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 1;
+    transform: translate(var(--img-x-offset, 0), var(--img-y-offset, 0));
+  }
+  
+  .home-bestsellers__image-simple {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .home-bestsellers__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease;
+  }
+  
+  /* Lighter parts styling */
+  .home-bestsellers__image-parts {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .home-bestsellers__body {
+    position: absolute;
+    width: 80%;
+    height: auto;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+  }
+  
+  .home-bestsellers__cap {
+    position: absolute;
+    width: 40%;
+    height: auto;
+    transform: translateX(-50%);
+    object-fit: contain;
+    transform-origin: bottom center;
+    transition: transform 0.4s ease;
+  }
+  
+  .home-bestsellers__flame {
+    position: absolute;
+    width: 30%;
+    height: auto;
+    transform: translateX(-50%);
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .home-bestsellers__placeholder-icon {
+    color: rgba(0, 0, 0, 0.2);
+    z-index: 1;
+  }
+  
+  .home-bestsellers__product-name {
+    position: relative;
+    z-index: 1;
+    font-family: 'Gobold', 'Arial Black', sans-serif;
+    font-size: clamp(1rem, 1.5vw, 1.25rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+    color: #111;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  
+  /* GSAP ScrollTrigger handles pinning */
+  .home-bestsellers.is-pinned {
+    /* ScrollTrigger adds inline styles for pinning */
+  }
+  
+  /* Pinned state - full screen like selling-points */
+  .home-bestsellers.is-pinned {
+    top: 0 !important;
+  }
+  
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    .home-bestsellers {
+      height: 100vh;
+      height: 100dvh;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+    
+    .home-bestsellers__header {
+      padding: 1.5rem 1.5rem 0.75rem;
+    }
+    
+    .home-bestsellers__title {
+      font-size: 1rem;
+    }
+    
+    .home-bestsellers__scroll-wrapper {
+      margin-top: -1rem;
+    }
+    
+    .home-bestsellers__track {
+      padding-left: 55vw;
+      padding-right: 50vw;
+    }
+    
+    .home-bestsellers__slide {
+      width: 140px;
+      margin-right: calc(6rem * var(--gap-mult, 1.5));
+    }
+    
+    .home-bestsellers__card::before {
+      top: 20%;
+      bottom: 30%;
+    }
+    
+    .home-bestsellers__image-wrapper {
+      width: 130%;
+      margin-left: -15%;
+    }
+    
+    /* Scale handled by JS on mobile too */
+    
+    .home-bestsellers__product-name {
+      font-size: 0.85rem;
+      margin-top: 1rem;
+    }
+  }
+  
+  /* Extra small screens */
+  @media (max-width: 480px) {
+    .home-bestsellers__header {
+      padding: 1.25rem 1rem 0.5rem;
+    }
+    
+    .home-bestsellers__title {
+      font-size: 0.9rem;
+    }
+    
+    .home-bestsellers__scroll-wrapper {
+      margin-top: -0.5rem;
+    }
+    
+    .home-bestsellers__slide {
+      width: 120px;
+      margin-right: calc(4rem * var(--gap-mult, 1.5));
+    }
+    
+    .home-bestsellers__track {
+      padding-left: 50vw;
+    }
+  }
+{% endstylesheet %}
+
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+(function() {
+  // Wait for GSAP to load
+  function initGSAP() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initGSAP, 50);
+      return;
+    }
+    
+    gsap.registerPlugin(ScrollTrigger);
+    
+    var section = document.querySelector('section.home-bestsellers');
+    if (!section) return;
+    
+    var track = section.querySelector('.home-bestsellers__track');
+    var slides = Array.prototype.slice.call(section.querySelectorAll('.home-bestsellers__slide'));
+    
+    if (!track || slides.length === 0) return;
+    
+    // Get header height and set CSS variable
+    function updateHeaderHeight() {
+      var header = document.querySelector('header');
+      var headerHeight = header ? header.offsetHeight : 80;
+      document.documentElement.style.setProperty('--header-height', headerHeight + 'px');
+      return headerHeight;
+    }
+    
+    var headerHeight = updateHeaderHeight();
+    
+    // Calculate the scroll distance (how far the track needs to move)
+    function getScrollDistance() {
+      var viewportWidth = window.innerWidth;
+      var lastSlide = slides[slides.length - 1];
+      
+      if (!lastSlide) return 2000;
+      
+      // We want the last slide to end up ~100px from the right edge of the screen
+      var rightPadding = 300;
+      var lastSlideRect = lastSlide.getBoundingClientRect();
+      var trackRect = track.getBoundingClientRect();
+      
+      // Current position of last slide's right edge relative to track start
+      var lastSlideRightInTrack = (lastSlideRect.right - trackRect.left);
+      
+      // Where we want it to end up (viewport width minus padding)
+      var targetPosition = viewportWidth - rightPadding;
+      
+      // How much we need to scroll = current position - target position
+      // But we need to account for current track transform
+      var currentTransform = gsap.getProperty(track, 'x') || 0;
+      var distance = lastSlideRightInTrack + currentTransform - targetPosition;
+      
+      // Ensure minimum scroll for smooth experience
+      return Math.max(distance, 1500);
+    }
+    
+    // Update slides with smooth scaling based on distance from center
+    function updateActiveSlide() {
+      var centerX = window.innerWidth / 2;
+      var closestSlide = null;
+      var closestDistance = Infinity;
+      
+      var minScale = 1;
+      var maxScale = 1.35;
+      var scaleRange = window.innerWidth * 0.4;
+      
+      slides.forEach(function(slide) {
+        var rect = slide.getBoundingClientRect();
+        var slideCenter = rect.left + rect.width / 2;
+        var distance = Math.abs(slideCenter - centerX);
+        
+        var normalizedDistance = Math.min(distance / scaleRange, 1);
+        var scale = maxScale - (normalizedDistance * (maxScale - minScale));
+        scale = Math.max(minScale, Math.min(maxScale, scale));
+        
+        var opacity = 1 - (normalizedDistance * 0.4);
+        var saturation = 1.1 - (normalizedDistance * 0.3);
+        
+        var card = slide.querySelector('.home-bestsellers__card');
+        var imageWrapper = slide.querySelector('.home-bestsellers__image-wrapper');
+        
+        if (card) {
+          card.style.transform = 'scale(' + scale.toFixed(3) + ')';
+        }
+        
+        if (imageWrapper) {
+          var imgScale = 1 + ((scale - 1) * 0.5);
+          var xOffset = slide.style.getPropertyValue('--img-x-offset') || '0%';
+          var yOffset = slide.style.getPropertyValue('--img-y-offset') || '0%';
+          imageWrapper.style.transform = 'translate(' + xOffset + ', ' + yOffset + ') scale(' + imgScale.toFixed(3) + ')';
+        }
+        
+        slide.style.filter = 'saturate(' + saturation.toFixed(2) + ')';
+        slide.style.opacity = opacity.toFixed(2);
+        
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestSlide = slide;
+        }
+        
+        slide.classList.remove('is-active');
+      });
+      
+      if (closestSlide && closestDistance < closestSlide.offsetWidth * 2) {
+        closestSlide.classList.add('is-active');
+      }
+    }
+    
+    var scrollTriggerInstance = null;
+    var currentScrollDistance = 0;
+    
+    function createScrollTrigger() {
+      if (scrollTriggerInstance) {
+        scrollTriggerInstance.kill();
+        scrollTriggerInstance = null;
+      }
+      
+      currentScrollDistance = getScrollDistance();
+      
+      scrollTriggerInstance = ScrollTrigger.create({
+        trigger: section,
+        start: 'top top',
+        end: '+=' + currentScrollDistance,
+        pin: true,
+        pinSpacing: true,
+        scrub: 0.8,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: function(self) {
+          gsap.set(track, { x: -currentScrollDistance * self.progress });
+          updateActiveSlide();
+        },
+        onEnter: function() {
+          section.classList.add('is-pinned');
+        },
+        onLeave: function() {
+          section.classList.remove('is-pinned');
+        },
+        onEnterBack: function() {
+          section.classList.add('is-pinned');
+        },
+        onLeaveBack: function() {
+          section.classList.remove('is-pinned');
+        }
+      });
+      
+      // Store reference for coordination
+      window.__bestsellersScrollTrigger = scrollTriggerInstance;
+    }
+    
+    // Initialize immediately
+    createScrollTrigger();
+    updateActiveSlide();
+
+    // Handle resize
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        updateHeaderHeight();
+        createScrollTrigger();
+        updateActiveSlide();
+        ScrollTrigger.refresh();
+      }, 250);
+    });
+
+    // Refresh after images load
+    var images = track.querySelectorAll('img');
+    var loadedCount = 0;
+    var totalImages = images.length;
+
+    function onImageLoad() {
+      loadedCount++;
+      if (loadedCount >= totalImages) {
+        ScrollTrigger.refresh();
+      }
+    }
+
+    images.forEach(function(img) {
+      if (img.complete) {
+        loadedCount++;
+      } else {
+        img.addEventListener('load', onImageLoad);
+        img.addEventListener('error', onImageLoad);
+      }
+    });
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGSAP);
+  } else {
+    initGSAP();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Home Bestsellers",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection (optional)",
+      "info": "Select a specific collection, or leave empty to use all products"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home Bestsellers"
+    }
+  ]
+}
+{% endschema %}
+

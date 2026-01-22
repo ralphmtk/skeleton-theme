@@ -15,25 +15,29 @@
         "category_VAhAMY": {
           "type": "category",
           "settings": {
-            "collection": "jet-lighters"
+            "collection": "jet-lighters",
+            "category_icon": "shopify://shop_images/Jet_Lighter_Icon_4e355dc6-9616-46f3-997d-de8188dffdec.png"
           }
         },
         "category_EB7ixY": {
           "type": "category",
           "settings": {
-            "collection": "jet-torches"
+            "collection": "jet-torches",
+            "category_icon": "shopify://shop_images/Jet_Torch_Icon_b1aee7e3-4617-4935-960c-40db78d8f8f9.png"
           }
         },
         "category_EMceMG": {
           "type": "category",
           "settings": {
-            "collection": "gas-refills"
+            "collection": "gas-refills",
+            "category_icon": "shopify://shop_images/Gas_Can_Icon_be79fd73-b861-4c84-87bb-c8100c0eea2a.png"
           }
         },
         "category_FMr3hC": {
           "type": "category",
           "settings": {
-            "collection": "displays"
+            "collection": "displays",
+            "category_icon": "shopify://shop_images/Display_Icon_b83f3459-f1d7-4000-a5d0-207d600c895e.png"
           }
         }
       },

@@ -1,0 +1,348 @@
+<section class="home-testimonials full-width" aria-label="Testimonials">
+  <div class="home-testimonials__inner">
+    <h2 class="home-testimonials__title">TESTIMONIALS</h2>
+
+    <div class="home-testimonials__viewport">
+      <div class="home-testimonials__track">
+        {% for block in section.blocks %}
+          {% if block.type == 'testimonial' %}
+            <article class="home-testimonials__item" {{ block.shopify_attributes }}>
+              <div class="home-testimonials__pill">
+                <div class="home-testimonials__stars" aria-hidden="true">
+                  {% assign max_stars = 5 %}
+                  {% for i in (1..max_stars) %}
+                    <span class="home-testimonials__star{% if i <= block.settings.stars %} is-filled{% endif %}">★</span>
+                  {% endfor %}
+                </div>
+                <p class="home-testimonials__quote">
+                  {% if block.settings.quote != blank %}
+                    "{{ block.settings.quote }}"
+                  {% else %}
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet."
+                  {% endif %}
+                </p>
+                {% if block.settings.name != blank %}
+                  <p class="home-testimonials__name">— {{ block.settings.name }}</p>
+                {% else %}
+                  <p class="home-testimonials__name">— Jane Doe</p>
+                {% endif %}
+              </div>
+            </article>
+          {% endif %}
+        {% endfor %}
+
+        {% if section.blocks.size == 0 %}
+          <article class="home-testimonials__item home-testimonials__item--placeholder">
+            <div class="home-testimonials__pill">
+              <div class="home-testimonials__stars" aria-hidden="true">
+                <span class="home-testimonials__star is-filled">★</span>
+                <span class="home-testimonials__star is-filled">★</span>
+                <span class="home-testimonials__star is-filled">★</span>
+                <span class="home-testimonials__star is-filled">★</span>
+                <span class="home-testimonials__star is-filled">★</span>
+              </div>
+              <p class="home-testimonials__quote">
+                "Add testimonial blocks in the theme editor to replace this placeholder content."
+              </p>
+              <p class="home-testimonials__name">— Your Happy Customer</p>
+            </div>
+          </article>
+        {% endif %}
+      </div>
+
+      <div class="home-testimonials__fade home-testimonials__fade--top" aria-hidden="true"></div>
+      <div class="home-testimonials__fade home-testimonials__fade--bottom" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  {% stylesheet %}
+    .home-testimonials {
+      position: relative;
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+      margin-top: 100px;
+      padding: 5rem 0 6rem;
+      background: linear-gradient(180deg, #f0f7ff 0%, #ffffff 50%, #f0f7ff 100%);
+      overflow: hidden;
+    }
+
+    .home-testimonials__inner {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    .home-testimonials__title {
+      font-family: 'Gobold', 'Arial Black', sans-serif;
+      font-size: clamp(1.25rem, 2.4vw, 1.8rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-align: center;
+      margin: 0 0 3rem;
+      color: #111;
+    }
+
+    .home-testimonials__viewport {
+      position: relative;
+      width: 100%;
+      margin-inline: auto;
+      overflow: visible;
+    }
+
+    .home-testimonials__track {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 80px;
+      padding: 60px 20px;
+    }
+
+    .home-testimonials__item {
+      width: min(820px, 90%);
+      will-change: transform, opacity;
+      transform-origin: center center;
+      transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                  opacity 0.35s ease-out;
+    }
+
+    .home-testimonials__pill {
+      border-radius: 60px;
+      background: linear-gradient(135deg, #5bc0f8 0%, #0099e5 35%, #0077cc 100%);
+      color: #ffffff;
+      padding: 2.5rem clamp(2.5rem, 8vw, 4rem);
+      box-shadow: 
+        0 4px 20px rgba(0, 120, 200, 0.15),
+        0 20px 50px rgba(0, 100, 180, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-sizing: border-box;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .home-testimonials__item--placeholder .home-testimonials__pill {
+      background: linear-gradient(135deg, #e8eef5 0%, #d1dbe8 50%, #c4d4e8 100%);
+      color: #2c4a6e;
+      box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.08),
+        0 20px 50px rgba(0, 0, 0, 0.12);
+    }
+
+    .home-testimonials__stars {
+      display: inline-flex;
+      gap: 6px;
+      margin-bottom: 1.25rem;
+      font-size: 1.35rem;
+    }
+
+    .home-testimonials__star {
+      color: rgba(255, 255, 255, 0.35);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s ease;
+    }
+
+    .home-testimonials__star.is-filled {
+      color: #ffd639;
+      text-shadow: 0 2px 8px rgba(255, 200, 0, 0.4);
+    }
+
+    .home-testimonials__quote {
+      font-family: 'Gobold', var(--font-primary--family, system-ui, sans-serif);
+      font-size: clamp(1rem, 1.6vw, 1.25rem);
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      max-width: 38rem;
+      margin: 0 0 1.25rem;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .home-testimonials__name {
+      font-family: var(--font-secondary--family, system-ui, sans-serif);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      opacity: 0.85;
+      margin: 0;
+    }
+
+    .home-testimonials__fade {
+      position: absolute;
+      left: 0;
+      right: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .home-testimonials__fade--top {
+      top: 0;
+      height: 120px;
+      background: linear-gradient(to bottom,
+        rgba(240, 247, 255, 1) 0%,
+        rgba(240, 247, 255, 0.6) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+    }
+
+    .home-testimonials__fade--bottom {
+      bottom: 0;
+      height: 120px;
+      background: linear-gradient(to top,
+        rgba(240, 247, 255, 1) 0%,
+        rgba(240, 247, 255, 0.6) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+    }
+
+    @media (max-width: 768px) {
+      .home-testimonials {
+        padding: 4rem 0 5rem;
+      }
+
+      .home-testimonials__track {
+        gap: 60px;
+        padding: 50px 16px;
+      }
+
+      .home-testimonials__pill {
+        padding: 2rem 1.75rem;
+        border-radius: 32px;
+      }
+
+      .home-testimonials__stars {
+        font-size: 1.1rem;
+        gap: 4px;
+        margin-bottom: 1rem;
+      }
+
+      .home-testimonials__quote {
+        font-size: 0.95rem;
+      }
+
+      .home-testimonials__fade--top,
+      .home-testimonials__fade--bottom {
+        height: 80px;
+      }
+    }
+  {% endstylesheet %}
+
+  <script>
+    (function() {
+      var section = document.currentScript && document.currentScript.closest('section.home-testimonials');
+      if (!section) section = document.querySelector('section.home-testimonials');
+      if (!section) return;
+
+      var items = Array.prototype.slice.call(section.querySelectorAll('.home-testimonials__item'));
+      if (!items.length) return;
+
+      function updateScales() {
+        var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        var centerY = viewportHeight / 2;
+        // Tighter range for more dramatic effect
+        var maxDistance = viewportHeight * 0.4;
+
+        items.forEach(function(item) {
+          var rect = item.getBoundingClientRect();
+          var itemCenter = rect.top + rect.height / 2;
+          var distance = Math.abs(centerY - itemCenter);
+          var t = Math.min(distance / maxDistance, 1); // 0 at center, 1 when far
+
+          // Much more dramatic scaling: 1.25 at center -> 0.7 at edges
+          var scale = 0.7 + (0.55 * (1 - t));
+          // Stronger opacity change: 1 at center -> 0.25 at edges
+          var opacity = 0.25 + (0.75 * (1 - t));
+          var zIndex = 10 + Math.round((1 - t) * 10);
+          
+          // Add slight blur for far items
+          var blur = t * 2;
+
+          item.style.transform = 'scale(' + scale.toFixed(3) + ') translateZ(0)';
+          item.style.opacity = opacity.toFixed(3);
+          item.style.zIndex = zIndex;
+          item.style.filter = blur > 0.5 ? 'blur(' + blur.toFixed(1) + 'px)' : 'none';
+        });
+      }
+
+      var ticking = false;
+      function onScroll() {
+        if (!ticking) {
+          window.requestAnimationFrame(function() {
+            updateScales();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+
+      document.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', updateScales);
+
+      // Initial update
+      setTimeout(updateScales, 100);
+    })();
+  </script>
+
+  {% schema %}
+  {
+    "name": "Home testimonials",
+    "settings": [
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "TESTIMONIALS"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "testimonial",
+        "name": "Testimonial",
+        "settings": [
+          {
+            "type": "range",
+            "id": "stars",
+            "label": "Star rating",
+            "min": 1,
+            "max": 5,
+            "step": 1,
+            "default": 5
+          },
+          {
+            "type": "textarea",
+            "id": "quote",
+            "label": "Quote",
+            "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor."
+          },
+          {
+            "type": "text",
+            "id": "name",
+            "label": "Name",
+            "default": "John Smith"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Home testimonials",
+        "blocks": [
+          {
+            "type": "testimonial"
+          },
+          {
+            "type": "testimonial"
+          },
+          {
+            "type": "testimonial"
+          }
+        ]
+      }
+    ]
+  }
+  {% endschema %}
+</section>
