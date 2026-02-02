@@ -1,0 +1,385 @@
+<section class="wholesale-intro full-width" aria-label="What is Zengaz">
+  <div class="wholesale-intro__container">
+    <!-- Left Content -->
+    <div class="wholesale-intro__content">
+      <h2 class="wholesale-intro__title">WHAT IS ZENGAZ?</h2>
+
+      <div class="wholesale-intro__text-wrapper">
+        <p class="wholesale-intro__text">
+          <span class="wholesale-intro__line">A <span class="highlight">globally leading,</span></span>
+          <span class="wholesale-intro__line"><span class="highlight">innovative</span> and</span>
+          <span class="wholesale-intro__line"><span class="highlight">differentiated</span></span>
+          <span class="wholesale-intro__line">jet lighter brand</span>
+        </p>
+        <p class="wholesale-intro__subtitle">Currently available in 70+ countries</p>
+      </div>
+    </div>
+
+    <!-- Right Image -->
+    <div class="wholesale-intro__image-wrapper">
+      <img
+        class="wholesale-intro__image"
+        src="{{ 'wholesale-intro__image.png' | asset_url }}"
+        alt="Zengaz Brand"
+        width="800"
+        height="800"
+        loading="lazy"
+      >
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+/* Ensure no scroll on page load and set wholesale page background */
+body:has(.wholesale-intro) {
+  overflow-x: hidden;
+  background-color: #1a1a3e;
+}
+
+.wholesale-intro {
+  width: 100%;
+  height: 100vh;
+  background: #1a1a3e;
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.wholesale-intro__container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  gap: 0;
+  padding-left: 80px;
+  padding-right: 0;
+  height: 100%;
+}
+
+.wholesale-intro__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  max-width: 600px;
+  padding: 0;
+  height: 100%;
+  position: relative;
+}
+
+.wholesale-intro__title {
+  font-size: 36px;
+  font-weight: 500;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  padding-top: 50px;
+}
+
+.wholesale-intro__text-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: absolute;
+  bottom: calc(15vh + 50px);
+  left: 0;
+  right: 0;
+}
+
+.wholesale-intro__text {
+  font-size: 36px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'Exo', sans-serif;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.wholesale-intro__line {
+  display: block;
+  line-height: 1.75;
+}
+
+/* Pink highlight styling */
+.wholesale-intro .highlight {
+  background: #e91e63;
+  color: #ffffff;
+  padding: 4px 12px;
+  display: inline;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.wholesale-intro__subtitle {
+  font-size: 22px;
+  font-weight: 400;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'Exo', sans-serif;
+  line-height: 1.4;
+}
+
+.wholesale-intro__image-wrapper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  height: 100%;
+  position: relative;
+  padding-top: 0;
+  overflow: hidden;
+}
+
+.wholesale-intro__image {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100vh;
+  object-fit: contain;
+  object-position: right top;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 1023px) {
+  .wholesale-intro {
+    height: auto;
+    min-height: 100vh;
+    padding: 40px 0;
+  }
+
+  .wholesale-intro__container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 0 40px;
+    height: auto;
+  }
+
+  .wholesale-intro__content {
+    gap: 40px;
+    height: auto;
+    position: static;
+  }
+
+  .wholesale-intro__title {
+    font-size: 36px;
+  }
+
+  .wholesale-intro__text {
+    font-size: 42px;
+  }
+
+  .wholesale-intro__subtitle {
+    font-size: 22px;
+  }
+
+  .wholesale-intro__text-wrapper {
+    position: static;
+    margin-bottom: 0;
+  }
+
+  .wholesale-intro__image-wrapper {
+    justify-content: center;
+    height: auto;
+  }
+
+  .wholesale-intro__image {
+    max-width: 500px;
+    height: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .wholesale-intro {
+    padding: 40px 0;
+    height: 100vh;
+    min-height: 600px;
+  }
+
+  .wholesale-intro__container {
+    padding: 0 20px;
+    gap: 0;
+    height: 100%;
+    grid-template-columns: 1fr;
+    position: relative;
+  }
+
+  .wholesale-intro__content {
+    gap: 20px;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+    max-width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .wholesale-intro__title {
+    font-size: 20px;
+    padding-top: 20px;
+  }
+
+  .wholesale-intro__line {
+  line-height: 2;
+}
+
+  .wholesale-intro__text {
+    font-size: 24px;
+  }
+
+  .wholesale-intro__subtitle {
+    font-size: 14px;
+  }
+
+  .wholesale-intro__text-wrapper {
+    position: static;
+    margin-bottom: 200px;
+  }
+
+  .wholesale-intro__image-wrapper {
+    position: absolute;
+    right: -30%;
+    top: 40%;
+    transform: translateY(-40%);
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .wholesale-intro__image {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+  }
+}
+{% endstylesheet %}
+
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+(function() {
+  // Ensure page starts at top on load - run immediately
+  window.scrollTo(0, 0);
+  if (history.scrollRestoration) {
+    history.scrollRestoration = 'manual';
+  }
+
+  // Force scroll to top again after a brief delay
+  setTimeout(function() {
+    window.scrollTo(0, 0);
+  }, 0);
+
+  function initWholesaleIntro() {
+    // Wait for GSAP to load
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initWholesaleIntro, 50);
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    var section = document.querySelector('.wholesale-intro');
+    if (!section) return;
+
+    var title = section.querySelector('.wholesale-intro__title');
+    var textLines = section.querySelectorAll('.wholesale-intro__line');
+    var subtitle = section.querySelector('.wholesale-intro__subtitle');
+    var image = section.querySelector('.wholesale-intro__image');
+
+    // Set initial states
+    gsap.set(title, { opacity: 0, y: 40 });
+    gsap.set(textLines, { opacity: 0, y: 30 });
+    gsap.set(subtitle, { opacity: 0, y: 20 });
+    gsap.set(image, { opacity: 0, x: 100 });
+
+    // Create animation timeline
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 70%',
+        end: 'bottom 30%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    // Animate elements in sequence
+    tl.to(title, {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: 'power2.out'
+    })
+    .to(textLines, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      stagger: 0.15,
+      ease: 'power2.out'
+    }, '-=0.4')
+    .to(subtitle, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: 'power2.out'
+    }, '-=0.3')
+    .to(image, {
+      opacity: 1,
+      x: 0,
+      duration: 1,
+      ease: 'power2.out'
+    }, '-=0.8');
+
+    // Handle resize
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        ScrollTrigger.refresh();
+      }, 250);
+    });
+  }
+
+  // Prevent scroll restoration
+  window.addEventListener('beforeunload', function() {
+    window.scrollTo(0, 0);
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      window.scrollTo(0, 0);
+      initWholesaleIntro();
+    });
+  } else {
+    window.scrollTo(0, 0);
+    initWholesaleIntro();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Wholesale Intro",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Wholesale Intro"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .wholesale-intro * {
+    font-family: 'Exo', sans-serif !important;
+  }
+</style>

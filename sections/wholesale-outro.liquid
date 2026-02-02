@@ -1,0 +1,433 @@
+<section class="wholesale-outro full-width" aria-label="Wholesale Outro">
+  <div class="wholesale-outro__container">
+    <!-- Title -->
+    <h2 class="wholesale-outro__title">JOIN OUR TEAM!</h2>
+
+    <!-- Team Images -->
+    <div class="wholesale-outro__images">
+      {%- for i in (1..4) -%}
+        <div class="wholesale-outro__image-item">
+          <img
+            src="{{ 'wholesale_outro' | append: i | append: '.png' | asset_url }}"
+            alt="Team {{ i }}"
+            loading="lazy"
+          >
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <!-- Call to Action -->
+    <div class="wholesale-outro__cta">
+      <h3 class="wholesale-outro__cta-text">
+        BECOME A <span class="highlight">ZENGAZ AUTHORIZED RESELLER</span> TODAY!
+      </h3>
+    </div>
+
+    <!-- Bottom Section -->
+    <div class="wholesale-outro__bottom">
+      <!-- Offices Text -->
+      <div class="wholesale-outro__offices">
+        <p class="wholesale-outro__offices-title">Offices in:</p>
+        <p class="wholesale-outro__offices-list">
+          USA - Netherlands - Lebanon - UAE - China - Hong Kong
+        </p>
+      </div>
+
+      <!-- Contact Button -->
+      <div class="wholesale-outro__contact">
+        <a href="/pages/contact" class="wholesale-outro__contact-button">
+          CONTACT US
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.wholesale-outro {
+  width: 100%;
+  min-height: 100vh;
+  background: #1a1a3e;
+  padding: 80px 40px 100px;
+  box-sizing: border-box;
+  margin: 100px 0 0 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.wholesale-outro__container {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* Title */
+.wholesale-outro__title {
+  font-size: 64px;
+  font-weight: 900;
+  color: #ffffff;
+  text-align: center;
+  margin: 0 0 60px 0;
+  font-family: 'Exo', sans-serif;
+  letter-spacing: 2px;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* Team Images Grid */
+.wholesale-outro__images {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  margin-bottom: 80px;
+}
+
+.wholesale-outro__image-item {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(50px) scale(0.95);
+  transition: transform 0.5s ease;
+}
+
+.wholesale-outro__image-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  aspect-ratio: 4/3;
+  filter: brightness(0.9);
+  transition: all 0.5s ease;
+}
+
+.wholesale-outro__image-item:hover {
+  transform: translateY(-10px) scale(1);
+  z-index: 10;
+}
+
+.wholesale-outro__image-item:hover img {
+  filter: brightness(1.1);
+}
+
+/* Call to Action */
+.wholesale-outro__cta {
+  text-align: center;
+  margin-bottom: 80px;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.wholesale-outro__cta-text {
+  font-size: 48px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'Exo', sans-serif;
+  letter-spacing: 1px;
+  line-height: 1.3;
+}
+
+.wholesale-outro .highlight {
+  background: #e91e63;
+  color: #ffffff;
+  padding: 8px 16px;
+  display: inline;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Bottom Section */
+.wholesale-outro__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  position: relative;
+  padding-top: 40px;
+}
+
+/* Offices */
+.wholesale-outro__offices {
+  flex: 1;
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+.wholesale-outro__offices-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 12px 0;
+  font-family: 'Exo', sans-serif;
+}
+
+.wholesale-outro__offices-list {
+  font-size: 24px;
+  font-weight: 400;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'Exo', sans-serif;
+  line-height: 1.5;
+}
+
+/* Contact Button */
+.wholesale-outro__contact {
+  opacity: 0;
+  transform: translateX(50px);
+  position: relative;
+  z-index: 3;
+}
+
+.wholesale-outro__contact-button {
+  display: inline-block;
+  padding: 20px 50px;
+  background: #e91e63;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 800;
+  font-family: 'Exo', sans-serif;
+  text-decoration: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+  box-shadow: 0 10px 30px rgba(233, 30, 99, 0.3);
+}
+
+.wholesale-outro__contact-button:hover {
+  background: #d81558;
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(233, 30, 99, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .wholesale-outro__title {
+    font-size: 56px;
+  }
+
+  .wholesale-outro__images {
+    gap: 24px;
+  }
+
+  .wholesale-outro__cta-text {
+    font-size: 42px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .wholesale-outro {
+    padding: 60px 24px 80px;
+  }
+
+  .wholesale-outro__title {
+    font-size: 48px;
+    margin-bottom: 50px;
+  }
+
+  .wholesale-outro__images {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 60px;
+  }
+
+  .wholesale-outro__cta {
+    margin-bottom: 60px;
+  }
+
+  .wholesale-outro__cta-text {
+    font-size: 36px;
+  }
+
+  .wholesale-outro__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+  }
+
+  .wholesale-outro__offices {
+    transform: translateX(0);
+  }
+
+  .wholesale-outro__contact {
+    transform: translateX(0);
+  }
+
+  .wholesale-outro__contact-button {
+    padding: 18px 40px;
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 767px) {
+  .wholesale-outro {
+    padding: 50px 20px 60px;
+  }
+
+  .wholesale-outro__title {
+    font-size: 36px;
+    margin-bottom: 40px;
+  }
+
+  .wholesale-outro__images {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 50px;
+  }
+
+  .wholesale-outro__cta {
+    margin-bottom: 50px;
+  }
+
+  .wholesale-outro__cta-text {
+    font-size: 28px;
+    line-height: 1.4;
+  }
+
+  .wholesale-outro__bottom {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    text-align: center;
+  }
+
+  .wholesale-outro__offices-title {
+    font-size: 24px;
+  }
+
+  .wholesale-outro__offices-list {
+    font-size: 18px;
+  }
+
+  .wholesale-outro__contact {
+    transform: translateX(0);
+  }
+
+  .wholesale-outro__contact-button {
+    padding: 16px 35px;
+    font-size: 20px;
+  }
+}
+{% endstylesheet %}
+
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+(function() {
+  function initWholesaleOutro() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initWholesaleOutro, 50);
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    var section = document.querySelector('.wholesale-outro');
+    if (!section) return;
+
+    var title = section.querySelector('.wholesale-outro__title');
+    var images = section.querySelectorAll('.wholesale-outro__image-item');
+    var cta = section.querySelector('.wholesale-outro__cta');
+    var offices = section.querySelector('.wholesale-outro__offices');
+    var contact = section.querySelector('.wholesale-outro__contact');
+
+    // Main timeline
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 60%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    // Animate title
+    if (title) {
+      tl.to(title, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      });
+    }
+
+    // Animate images with stagger
+    if (images.length > 0) {
+      images.forEach(function(image, index) {
+        tl.to(image, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.6,
+          ease: 'back.out(1.2)'
+        }, '-=' + (index === 0 ? 0.3 : 0.5));
+      });
+    }
+
+    // Animate CTA
+    if (cta) {
+      tl.to(cta, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, '-=0.3');
+    }
+
+    // Animate offices from left
+    if (offices) {
+      tl.to(offices, {
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, '-=0.4');
+    }
+
+    // Animate contact button from right
+    if (contact) {
+      tl.to(contact, {
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, '-=0.6');
+    }
+
+    // Handle resize
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        ScrollTrigger.refresh();
+      }, 250);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWholesaleOutro);
+  } else {
+    initWholesaleOutro();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Wholesale Outro",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Wholesale Outro"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .wholesale-outro * {
+    font-family: 'Exo', sans-serif !important;
+  }
+</style>

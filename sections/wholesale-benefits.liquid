@@ -1,0 +1,311 @@
+<section class="wholesale-benefits full-width" aria-label="Wholesale Benefits">
+  <!-- Top Right Image -->
+  <div class="wholesale-benefits__image-top-right">
+    <img
+      src="{{ 'wholesale-benefits__top-right.png' | asset_url }}"
+      alt="Decorative"
+      loading="lazy"
+    >
+  </div>
+
+  <!-- Bottom Left Image -->
+  <div class="wholesale-benefits__image-bottom-left">
+    <img
+      src="{{ 'wholesale-benefits__bottom-left.png' | asset_url }}"
+      alt="Decorative"
+      loading="lazy"
+    >
+  </div>
+
+  <!-- Bottom Right Blob Image -->
+  <div class="wholesale-benefits__image-blob">
+    <img
+      src="{{ 'wholesale-benefits__blob.png' | asset_url }}"
+      alt="Decorative"
+      loading="lazy"
+    >
+  </div>
+
+  <div class="wholesale-benefits__container">
+    <h2 class="wholesale-benefits__title">
+      THAT'S WHY ZENGAZ IS DESIGNED NOT JUST AS A <span class="highlight">GREAT PRODUCT,</span> BUT ALSO AS A <span class="highlight">GREAT PARTNER,</span> MAKING YOUR BUSINESS <span class="highlight">EASIER</span> AND <span class="highlight">MORE PROFITABLE</span>
+    </h2>
+  </div>
+</section>
+
+{% stylesheet %}
+/* Prevent horizontal scroll from decorative images */
+body:has(.wholesale-benefits) {
+  overflow-x: hidden;
+}
+
+.wholesale-benefits {
+  width: 100%;
+  min-height: 100vh;
+  background: #1a1a3e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 40px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: visible;
+  margin: 0;
+}
+
+.wholesale-benefits__container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.wholesale-benefits__title {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.6;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'Exo', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.wholesale-benefits__line {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.wholesale-benefits .highlight {
+  background: #e91e63;
+  color: #ffffff;
+  padding: 4px 12px;
+  display: inline;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Decorative Images */
+.wholesale-benefits__image-top-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 175px;
+  height: auto;
+  z-index: 1;
+  opacity: 0;
+}
+
+.wholesale-benefits__image-top-right img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.wholesale-benefits__image-bottom-left {
+  position: absolute;
+  bottom: -20px;
+  left: -35px;
+  width: 300px;
+  height: auto;
+  z-index: 1;
+  opacity: 0;
+}
+
+.wholesale-benefits__image-bottom-left img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.wholesale-benefits__image-blob {
+  position: absolute;
+  bottom: -150px;
+  right: -25px;
+  width: 450px;
+  height: auto;
+  z-index: 1;
+  opacity: 0;
+}
+
+.wholesale-benefits__image-blob img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 1023px) {
+  .wholesale-benefits {
+    padding: 60px 24px;
+  }
+
+  .wholesale-benefits__title {
+    font-size: 32px;
+  }
+
+  .wholesale-benefits__image-top-right {
+    width: 150px;
+  }
+
+  .wholesale-benefits__image-bottom-left {
+    width: 200px;
+  }
+
+  .wholesale-benefits__image-blob {
+    width: 540px;
+    bottom: 40px;
+    right: -162px;
+  }
+}
+
+@media (max-width: 767px) {
+  .wholesale-benefits {
+    padding: 80px 20px;
+    min-height: 75vh;
+  }
+
+  .wholesale-benefits__title {
+    font-size: 22px;
+    line-height: 1.5;
+  }
+
+  .wholesale-benefits__line {
+    margin-bottom: 8px;
+  }
+
+  .wholesale-benefits__image-top-right {
+    width: 150px;
+    top: 0px;
+    right: 10px;
+  }
+
+  .wholesale-benefits__image-bottom-left {
+    width: 200px;
+    bottom: 0px;
+    left: -20px;
+  }
+
+  .wholesale-benefits__image-blob {
+    width: 220px;
+    bottom: 0px;
+    right: -80px;
+  }
+}
+{% endstylesheet %}
+
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+(function() {
+  function initWholesaleBenefits() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initWholesaleBenefits, 50);
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    var section = document.querySelector('.wholesale-benefits');
+    if (!section) return;
+
+    var title = section.querySelector('.wholesale-benefits__title');
+    var topRight = section.querySelector('.wholesale-benefits__image-top-right');
+    var bottomLeft = section.querySelector('.wholesale-benefits__image-bottom-left');
+    var blob = section.querySelector('.wholesale-benefits__image-blob');
+
+    // Create animation timeline
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 70%',
+        end: 'bottom 30%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    // Animate images first
+    if (topRight) {
+      tl.to(topRight, {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, 0);
+      gsap.set(topRight, { x: 50, y: -50 });
+    }
+
+    if (bottomLeft) {
+      tl.to(bottomLeft, {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, 0.1);
+      gsap.set(bottomLeft, { x: -50, y: 50 });
+    }
+
+    if (blob) {
+      tl.to(blob, {
+        opacity: 1,
+        scale: 1,
+        rotation: 0,
+        duration: 1,
+        ease: 'back.out(1.2)'
+      }, 0.3);
+      gsap.set(blob, { scale: 0.5, rotation: -45 });
+    }
+
+    // Animate title last
+    if (title) {
+      tl.to(title, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: 'power2.out'
+      }, 0.4);
+    }
+
+    // Handle resize
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        ScrollTrigger.refresh();
+      }, 250);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWholesaleBenefits);
+  } else {
+    initWholesaleBenefits();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Wholesale Benefits",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Wholesale Benefits"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .wholesale-benefits * {
+    font-family: 'Exo', sans-serif !important;
+  }
+</style>

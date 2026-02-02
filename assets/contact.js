@@ -296,32 +296,16 @@
     if (distributorForm) {
       distributorForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         // Validate step 2 (though it has no required fields)
         var step2 = this.querySelector('.contact__form-step--2');
         if (step2) {
           var isValid = true;
           // No required fields in step 2, so just proceed
-          
+
           if (isValid) {
             // Collect form data
-            var formData = new FormData(this);
-            var data = { type: 'distributor' };
-            for (var pair of formData.entries()) {
-              var key = pair[0];
-              var value = pair[1];
-              if (data[key]) {
-                // Handle multiple checkboxes
-                if (Array.isArray(data[key])) {
-                  data[key].push(value);
-                } else {
-                  data[key] = [data[key], value];
-                }
-              } else {
-                data[key] = value;
-              }
-            }
-            
+            var data = collectFormData(this, 'distributor');
             submitForm(data, this);
           }
         }
@@ -333,32 +317,16 @@
     if (retailerForm) {
       retailerForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         // Validate step 2 (though it has no required fields)
         var step2 = this.querySelector('.contact__form-step--2');
         if (step2) {
           var isValid = true;
           // No required fields in step 2, so just proceed
-          
+
           if (isValid) {
             // Collect form data
-            var formData = new FormData(this);
-            var data = { type: 'retailer' };
-            for (var pair of formData.entries()) {
-              var key = pair[0];
-              var value = pair[1];
-              if (data[key]) {
-                // Handle multiple checkboxes
-                if (Array.isArray(data[key])) {
-                  data[key].push(value);
-                } else {
-                  data[key] = [data[key], value];
-                }
-              } else {
-                data[key] = value;
-              }
-            }
-            
+            var data = collectFormData(this, 'retailer');
             submitForm(data, this);
           }
         }
@@ -415,14 +383,9 @@
             }
             return;
           }
-          
+
           // Collect form data
-          var formData = new FormData(this);
-          var data = { type: 'consumer' };
-          for (var pair of formData.entries()) {
-            data[pair[0]] = pair[1];
-          }
-          
+          var data = collectFormData(this, 'consumer');
           submitForm(data, this);
         }
       });
@@ -433,7 +396,7 @@
     if (otherForm) {
       otherForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         // Validate the form
         var step1 = this.querySelector('.contact__form-step--1');
         if (step1) {
@@ -446,17 +409,52 @@
             }
             return;
           }
-          
+
           // Collect form data
-          var formData = new FormData(this);
-          var data = { type: 'other' };
-          for (var pair of formData.entries()) {
-            data[pair[0]] = pair[1];
-          }
-          
+          var data = collectFormData(this, 'other');
           submitForm(data, this);
         }
       });
+    }
+
+    function collectFormData(form, userType) {
+      var inputs = form.querySelectorAll('input, select, textarea');
+      var data = { type: userType };
+
+      inputs.forEach(function(input) {
+        // Skip disabled inputs or inputs without names
+        if (input.disabled || !input.name) return;
+
+        if (input.type === 'checkbox') {
+          // Handle checkboxes - create array
+          if (!data[input.name]) {
+            data[input.name] = [];
+          }
+          if (input.checked) {
+            data[input.name].push(input.value);
+          }
+        } else if (input.type === 'radio') {
+          // Handle radio buttons - only if checked
+          if (input.checked) {
+            data[input.name] = input.value;
+          }
+        } else {
+          // Handle regular inputs
+          data[input.name] = input.value;
+        }
+      });
+
+      // Convert checkbox arrays to semicolon-separated strings (as expected by backend)
+      Object.keys(data).forEach(function(key) {
+        if (Array.isArray(data[key]) && data[key].length > 0) {
+          data[key] = data[key].join('; ');
+        } else if (Array.isArray(data[key]) && data[key].length === 0) {
+          // Remove empty arrays
+          delete data[key];
+        }
+      });
+
+      return data;
     }
 
     function submitForm(data, form) {
@@ -475,12 +473,18 @@
         return;
       }
 
+      // Add brand parameter to match backend expectations
+      var payload = {
+        brand: 'zengaz',
+        ...data
+      };
+
       fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(payload)
       })
       .then(function(response) { return response.json(); })
       .then(function(result) {

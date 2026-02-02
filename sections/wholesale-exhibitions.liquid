@@ -1,0 +1,329 @@
+<section class="wholesale-exhibitions full-width" aria-label="Wholesale Exhibitions">
+  <div class="wholesale-exhibitions__container">
+    <!-- Header -->
+    <div class="wholesale-exhibitions__header">
+      {% render 'wholesale-section-header',
+        crossed_text: section.settings.crossed_text,
+        title: section.settings.title,
+        title_color: '#e91e63'
+      %}
+    </div>
+
+    <!-- Exhibition Images Grid -->
+    <div class="wholesale-exhibitions__images">
+      {%- for i in (1..6) -%}
+        <div class="wholesale-exhibitions__image-item">
+          <img
+            src="{{ 'wholesale_exhibit' | append: i | append: '.png' | asset_url }}"
+            alt="Exhibition {{ i }}"
+            loading="lazy"
+          >
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <!-- Logo Strip -->
+    <div class="wholesale-exhibitions__logo-strip">
+      <div class="wholesale-exhibitions__logos">
+        {%- for i in (1..6) -%}
+          <div class="wholesale-exhibitions__logo-item">
+            <img
+              src="{{ 'wholesale_exhibit_logo' | append: i | append: '.png' | asset_url }}"
+              alt="Exhibition Logo {{ i }}"
+              loading="lazy"
+            >
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.wholesale-exhibitions {
+  width: 100%;
+  min-height: 100vh;
+  background: #1a1a3e;
+  padding: 80px 40px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.wholesale-exhibitions__container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.wholesale-exhibitions__header {
+  opacity: 0;
+  transform: translateY(30px);
+  margin-bottom: 60px;
+}
+
+/* Exhibition Images Grid */
+.wholesale-exhibitions__images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-bottom: 80px;
+}
+
+.wholesale-exhibitions__image-item {
+  aspect-ratio: 4/3;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+}
+
+.wholesale-exhibitions__image-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.wholesale-exhibitions__image-item:hover img {
+  transform: scale(1.05);
+}
+
+/* Logo Strip */
+.wholesale-exhibitions__logo-strip {
+  width: calc(100% + 80px);
+  margin-left: -40px;
+  background: rgba(135, 206, 235, 0.15);
+  padding: 30px 0;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.wholesale-exhibitions__logos {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 24px;
+  align-items: center;
+}
+
+.wholesale-exhibitions__logo-item {
+  aspect-ratio: 3/2;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.wholesale-exhibitions__logo-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(135, 206, 235, 0.4);
+  transform: scale(1.05);
+}
+
+.wholesale-exhibitions__logo-item img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 1023px) {
+  .wholesale-exhibitions {
+    padding: 60px 24px;
+  }
+
+  .wholesale-exhibitions__images {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 60px;
+  }
+
+  .wholesale-exhibitions__logo-strip {
+    width: calc(100% + 48px);
+    margin-left: -24px;
+  }
+
+  .wholesale-exhibitions__logos {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding: 0 24px;
+  }
+}
+
+@media (max-width: 767px) {
+  .wholesale-exhibitions {
+    padding: 50px 20px;
+    min-height: auto;
+  }
+
+  .wholesale-exhibitions__header {
+    margin-bottom: 40px;
+  }
+
+  .wholesale-exhibitions__images {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 50px;
+  }
+
+  .wholesale-exhibitions__logo-strip {
+    width: calc(100% + 40px);
+    margin-left: -20px;
+    padding: 30px 0;
+  }
+
+  .wholesale-exhibitions__logos {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: 0 20px;
+  }
+
+  .wholesale-exhibitions__logo-item {
+    border-radius: 8px;
+    padding: 10px;
+  }
+}
+{% endstylesheet %}
+
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+(function() {
+  function initWholesaleExhibitions() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initWholesaleExhibitions, 50);
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    var section = document.querySelector('.wholesale-exhibitions');
+    if (!section) return;
+
+    var header = section.querySelector('.wholesale-exhibitions__header');
+    var images = section.querySelectorAll('.wholesale-exhibitions__image-item');
+    var logoStrip = section.querySelector('.wholesale-exhibitions__logo-strip');
+    var logos = section.querySelectorAll('.wholesale-exhibitions__logo-item');
+
+    // Main timeline for section entrance
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 60%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    // Animate header
+    if (header) {
+      tl.to(header, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      });
+    }
+
+    // Animate exhibition images with stagger
+    if (images.length > 0) {
+      tl.to(images, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.8,
+        ease: 'power2.out',
+        stagger: {
+          amount: 0.6,
+          grid: [2, 3],
+          from: 'start'
+        }
+      }, '-=0.4');
+    }
+
+    // Animate logo strip
+    if (logoStrip) {
+      tl.to(logoStrip, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, '-=0.3');
+    }
+
+    // Animate logos with stagger
+    if (logos.length > 0) {
+      tl.to(logos, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.5,
+        ease: 'back.out(1.3)',
+        stagger: {
+          amount: 0.5,
+          from: 'start'
+        }
+      }, '-=0.5');
+    }
+
+    // Handle resize
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        ScrollTrigger.refresh();
+      }, 250);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWholesaleExhibitions);
+  } else {
+    initWholesaleExhibitions();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Wholesale Exhibitions",
+  "settings": [
+    {
+      "type": "text",
+      "id": "crossed_text",
+      "label": "Crossed Out Text",
+      "default": "Lack of Brand Recognition"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Global Brand Recognition"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wholesale Exhibitions"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .wholesale-exhibitions * {
+    font-family: 'Exo', sans-serif !important;
+  }
+</style>

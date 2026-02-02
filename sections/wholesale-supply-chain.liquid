@@ -1,0 +1,389 @@
+<section class="wholesale-supply-chain full-width" aria-label="Wholesale Supply Chain">
+  <!-- Bottom Right Blob Image -->
+  <div class="wholesale-supply-chain__image-blob">
+    <img
+      src="{{ 'wholesale_supply_chain_blob.png' | asset_url }}"
+      alt="Decorative"
+      loading="lazy"
+    >
+  </div>
+
+  <div class="wholesale-supply-chain__container">
+    <!-- Header -->
+    <div class="wholesale-supply-chain__header">
+      {% render 'wholesale-section-header',
+        crossed_text: section.settings.crossed_text,
+        title: section.settings.title,
+        title_color: '#e91e63'
+      %}
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="wholesale-supply-chain__content">
+      <!-- Left Column: Text -->
+      <div class="wholesale-supply-chain__text">
+        <div class="wholesale-supply-chain__text-block">
+          <p class="wholesale-supply-chain__main-text">
+            <span class="highlight">Pre-produced stock</span> so you can get started quickly & cost effectively.
+          </p>
+          <p class="wholesale-supply-chain__sub-text">
+            (we believe in long-term partnerships)
+          </p>
+        </div>
+
+        <div class="wholesale-supply-chain__text-block">
+          <p class="wholesale-supply-chain__main-text">
+            <span class="highlight">13+ years handling logistics</span> all around the world.
+          </p>
+          <p class="wholesale-supply-chain__sub-text">
+            (including difficult cases like "hot season")
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Column: Image -->
+      <div class="wholesale-supply-chain__image">
+        <img
+          src="{{ 'wholesale_supply_chain.png' | asset_url }}"
+          alt="Supply Chain"
+          loading="lazy"
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+/* Prevent horizontal scroll from decorative images */
+body:has(.wholesale-supply-chain) {
+  overflow-x: hidden;
+}
+
+.wholesale-supply-chain {
+  width: 100%;
+  min-height: 100vh;
+  background: #1a1a3e;
+  padding: 80px 40px 120px;
+  box-sizing: border-box;
+  margin: 0;
+  position: relative;
+  overflow: visible;
+}
+
+.wholesale-supply-chain__container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.wholesale-supply-chain__header {
+  opacity: 0;
+  transform: translateY(30px);
+  margin-bottom: 80px;
+}
+
+/* Two Column Layout */
+.wholesale-supply-chain__content {
+  display: flex;
+  gap: 80px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Left Column: Text */
+.wholesale-supply-chain__text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+.wholesale-supply-chain__text-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wholesale-supply-chain__main-text {
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'Exo', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.wholesale-supply-chain__sub-text {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  font-family: 'Exo', sans-serif;
+  font-style: italic;
+}
+
+.wholesale-supply-chain .highlight {
+  background: #e91e63;
+  color: #ffffff;
+  padding: 4px 12px;
+  display: inline;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Right Column: Image */
+.wholesale-supply-chain__image {
+  flex: 1;
+  max-width: 420px;
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+.wholesale-supply-chain__image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.4));
+  transition: all 0.5s ease;
+}
+
+.wholesale-supply-chain__image:hover img {
+  transform: translateY(-10px);
+  filter: drop-shadow(0 30px 80px rgba(233, 30, 99, 0.3));
+}
+
+/* Bottom Right Blob Image */
+.wholesale-supply-chain__image-blob {
+  position: absolute;
+  bottom: -100px;
+  right: -100px;
+  width: 500px;
+  height: auto;
+  z-index: 1;
+  opacity: 0;
+}
+
+.wholesale-supply-chain__image-blob img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .wholesale-supply-chain__content {
+    gap: 60px;
+  }
+
+  .wholesale-supply-chain__image {
+    max-width: 380px;
+  }
+
+  .wholesale-supply-chain__image-blob {
+    width: 450px;
+    bottom: -80px;
+    right: -80px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .wholesale-supply-chain {
+    padding: 60px 24px 80px;
+  }
+
+  .wholesale-supply-chain__header {
+    margin-bottom: 60px;
+  }
+
+  .wholesale-supply-chain__content {
+    flex-direction: column;
+    gap: 50px;
+  }
+
+  .wholesale-supply-chain__text {
+    gap: 40px;
+    transform: translateX(0);
+  }
+
+  .wholesale-supply-chain__image {
+    max-width: 100%;
+    transform: translateX(0);
+  }
+
+  .wholesale-supply-chain__main-text {
+    font-size: 28px;
+  }
+
+  .wholesale-supply-chain__sub-text {
+    font-size: 16px;
+  }
+
+  .wholesale-supply-chain__image-blob {
+    width: 380px;
+    bottom: -60px;
+    right: -60px;
+  }
+}
+
+@media (max-width: 767px) {
+  .wholesale-supply-chain {
+    padding: 50px 20px 60px;
+    min-height: auto;
+  }
+
+  .wholesale-supply-chain__header {
+    margin-bottom: 40px;
+  }
+
+  .wholesale-supply-chain__content {
+    gap: 40px;
+  }
+
+  .wholesale-supply-chain__text {
+    gap: 35px;
+  }
+
+  .wholesale-supply-chain__main-text {
+    font-size: 22px;
+    line-height: 1.5;
+  }
+
+  .wholesale-supply-chain__sub-text {
+    font-size: 15px;
+  }
+
+  .wholesale-supply-chain__image-blob {
+    width: 280px;
+    bottom: -40px;
+    right: -80px;
+  }
+}
+{% endstylesheet %}
+
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+(function() {
+  function initWholesaleSupplyChain() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initWholesaleSupplyChain, 50);
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    var section = document.querySelector('.wholesale-supply-chain');
+    if (!section) return;
+
+    var header = section.querySelector('.wholesale-supply-chain__header');
+    var textColumn = section.querySelector('.wholesale-supply-chain__text');
+    var imageColumn = section.querySelector('.wholesale-supply-chain__image');
+    var blob = section.querySelector('.wholesale-supply-chain__image-blob');
+
+    // Main timeline
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 60%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    // Animate header
+    if (header) {
+      tl.to(header, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      });
+    }
+
+    // Animate text column from left
+    if (textColumn) {
+      tl.to(textColumn, {
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, '-=0.4');
+    }
+
+    // Animate image column from right
+    if (imageColumn) {
+      tl.to(imageColumn, {
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, '-=0.6');
+    }
+
+    // Animate blob with rotation
+    if (blob) {
+      tl.to(blob, {
+        opacity: 1,
+        scale: 1,
+        rotation: 0,
+        duration: 1,
+        ease: 'back.out(1.2)'
+      }, '-=0.4');
+      gsap.set(blob, { scale: 0.5, rotation: -45 });
+    }
+
+    // Handle resize
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        ScrollTrigger.refresh();
+      }, 250);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWholesaleSupplyChain);
+  } else {
+    initWholesaleSupplyChain();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Wholesale Supply Chain",
+  "settings": [
+    {
+      "type": "text",
+      "id": "crossed_text",
+      "label": "Crossed Out Text",
+      "default": "High MOQ & Unreliable Supply Chain"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Facilitators, with Expert Knowledge"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wholesale Supply Chain"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .wholesale-supply-chain * {
+    font-family: 'Exo', sans-serif !important;
+  }
+</style>

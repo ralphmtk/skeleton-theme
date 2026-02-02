@@ -1,0 +1,28 @@
+{%- comment -%}
+  Wholesale Section Header
+  A reusable header component with crossed-out text and title.
+
+  Usage:
+  {% render 'wholesale-section-header',
+    crossed_text: 'Lack of Brand Recognition',
+    title: 'Global Brand Recognition',
+    title_color: '#e91e63'
+  %}
+{%- endcomment -%}
+
+{%- assign header_title_color = title_color | default: '#e91e63' -%}
+
+<div class="wholesale-section-header">
+  {%- if crossed_text != blank -%}
+    <span class="wholesale-section-header__crossed">{{ crossed_text }}</span>
+  {%- endif -%}
+  {%- if title != blank -%}
+    <h2 class="wholesale-section-header__title" style="color: {{ header_title_color }};">{{ title }}</h2>
+  {%- endif -%}
+</div>
+
+<style>
+  .wholesale-section-header * {
+    font-family: 'Exo', sans-serif !important;
+  }
+</style>

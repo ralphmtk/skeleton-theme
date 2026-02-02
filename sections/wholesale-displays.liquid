@@ -1,0 +1,396 @@
+<section class="wholesale-displays full-width" aria-label="Wholesale Displays">
+  <div class="wholesale-displays__container">
+    <!-- Header -->
+    <div class="wholesale-displays__header">
+      {% render 'wholesale-section-header',
+        crossed_text: section.settings.crossed_text,
+        title: section.settings.title,
+        title_color: '#e91e63'
+      %}
+    </div>
+
+    <!-- Logos -->
+    <div class="wholesale-displays__logos">
+      <div class="wholesale-displays__logo-item">
+        <img
+          src="{{ 'wholesale_displays_logo1.png' | asset_url }}"
+          alt="Display Logo 1"
+          loading="lazy"
+        >
+      </div>
+      <div class="wholesale-displays__logo-item">
+        <img
+          src="{{ 'wholesale_displays_logo2.png' | asset_url }}"
+          alt="Display Logo 2"
+          loading="lazy"
+        >
+      </div>
+    </div>
+
+    <!-- Displays Grid -->
+    <div class="wholesale-displays__grid">
+      {%- for i in (1..15) -%}
+        <div class="wholesale-displays__display-item">
+          <img
+            src="{{ 'wholesale_displays_' | append: i | append: '.png' | asset_url }}"
+            alt="Display {{ i }}"
+            loading="lazy"
+          >
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.wholesale-displays {
+  width: 100%;
+  min-height: 100vh;
+  background: #1a1a3e;
+  padding: 80px 40px 120px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.wholesale-displays__container {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.wholesale-displays__header {
+  opacity: 0;
+  transform: translateY(30px);
+  margin-bottom: 60px;
+}
+
+/* Logos Section */
+.wholesale-displays__logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 80px;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.wholesale-displays__logo-item {
+  max-width: 200px;
+  opacity: 1;
+}
+
+.wholesale-displays__logo-item img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+}
+
+/* Displays Grid with Lines */
+.wholesale-displays__grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  position: relative;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.wholesale-displays__display-item {
+  position: relative;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.3s ease;
+}
+
+/* Remove right border on last column items */
+.wholesale-displays__display-item:nth-child(6n) {
+  border-right: none;
+}
+
+/* Remove bottom border on last row items */
+.wholesale-displays__display-item:nth-child(n+13) {
+  border-bottom: none;
+}
+
+.wholesale-displays__display-item img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.4s ease;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+}
+
+.wholesale-displays__display-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+  transform: scale(1.02);
+  z-index: 10;
+}
+
+.wholesale-displays__display-item:hover img {
+  transform: scale(1.1);
+  filter: drop-shadow(0 15px 40px rgba(233, 30, 99, 0.4));
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .wholesale-displays__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .wholesale-displays__display-item:nth-child(6n) {
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .wholesale-displays__display-item:nth-child(4n) {
+    border-right: none;
+  }
+
+  .wholesale-displays__display-item:nth-child(n+13) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .wholesale-displays__display-item:nth-child(n+13):nth-child(4n) {
+    border-right: none;
+  }
+
+  .wholesale-displays__display-item:nth-last-child(-n+4) {
+    border-bottom: none;
+  }
+}
+
+@media (max-width: 1023px) {
+  .wholesale-displays {
+    padding: 60px 24px 80px;
+  }
+
+  .wholesale-displays__header {
+    margin-bottom: 40px;
+  }
+
+  .wholesale-displays__logos {
+    gap: 24px;
+    margin-bottom: 60px;
+  }
+
+  .wholesale-displays__logo-item {
+    max-width: 150px;
+  }
+
+  .wholesale-displays__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .wholesale-displays__display-item {
+    padding: 20px;
+    min-height: 220px;
+  }
+
+  .wholesale-displays__display-item:nth-child(4n) {
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .wholesale-displays__display-item:nth-child(3n) {
+    border-right: none;
+  }
+
+  .wholesale-displays__display-item:nth-last-child(-n+4) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .wholesale-displays__display-item:nth-last-child(-n+3) {
+    border-bottom: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .wholesale-displays {
+    padding: 50px 20px 60px;
+    min-height: auto;
+  }
+
+  .wholesale-displays__header {
+    margin-bottom: 30px;
+  }
+
+  .wholesale-displays__logos {
+    flex-direction: row;
+    gap: 30px;
+    margin-bottom: 40px;
+  }
+
+  .wholesale-displays__logo-item {
+    max-width: 100px;
+  }
+
+  .wholesale-displays__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .wholesale-displays__display-item {
+    padding: 16px;
+    min-height: 180px;
+  }
+
+  .wholesale-displays__display-item:nth-child(3n) {
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .wholesale-displays__display-item:nth-child(2n) {
+    border-right: none;
+  }
+
+  .wholesale-displays__display-item:nth-last-child(-n+3) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .wholesale-displays__display-item:nth-last-child(-n+2) {
+    border-bottom: none;
+  }
+}
+{% endstylesheet %}
+
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+(function() {
+  function initWholesaleDisplays() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initWholesaleDisplays, 50);
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    var section = document.querySelector('.wholesale-displays');
+    if (!section) return;
+
+    var header = section.querySelector('.wholesale-displays__header');
+    var logos = section.querySelector('.wholesale-displays__logos');
+    var grid = section.querySelector('.wholesale-displays__grid');
+    var displayItems = section.querySelectorAll('.wholesale-displays__display-item');
+
+    // Main timeline for section entrance
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 60%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    // Animate header
+    if (header) {
+      tl.to(header, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      });
+    }
+
+    // Animate logos
+    if (logos) {
+      tl.to(logos, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, '-=0.4');
+    }
+
+    // Animate grid container
+    if (grid) {
+      tl.to(grid, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, '-=0.4');
+    }
+
+    // Animate individual display items with stagger
+    if (displayItems.length > 0) {
+      gsap.fromTo(displayItems,
+        {
+          opacity: 0,
+          scale: 0.8
+        },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.5,
+          ease: 'back.out(1.2)',
+          stagger: {
+            amount: 1.2,
+            grid: [3, 6],
+            from: 'start'
+          },
+          scrollTrigger: {
+            trigger: grid,
+            start: 'top 70%',
+            toggleActions: 'play none none reverse'
+          }
+        }
+      );
+    }
+
+    // Handle resize
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        ScrollTrigger.refresh();
+      }, 250);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWholesaleDisplays);
+  } else {
+    initWholesaleDisplays();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Wholesale Displays",
+  "settings": [
+    {
+      "type": "text",
+      "id": "crossed_text",
+      "label": "Crossed Out Text",
+      "default": "Difficulty in Expanding Product Lines"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Large Assortment with Ongoing Innovation"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wholesale Displays"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .wholesale-displays * {
+    font-family: 'Exo', sans-serif !important;
+  }
+</style>

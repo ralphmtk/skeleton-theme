@@ -1,0 +1,427 @@
+<section class="wholesale-global full-width" aria-label="Global Brand Recognition">
+  <div class="wholesale-global__container">
+    <!-- Header -->
+    <div class="wholesale-global__header">
+      {% render 'wholesale-section-header',
+        crossed_text: section.settings.crossed_text,
+        title: section.settings.title,
+        title_color: '#e91e63'
+      %}
+    </div>
+
+    <!-- Image Grid -->
+    <div class="wholesale-global__grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'country_image' -%}
+          <div class="wholesale-global__grid-item" {{ block.shopify_attributes }}>
+            {%- assign country_name = block.settings.country_name | default: 'Country' -%}
+            {%- assign image_filename = 'wholesale-global__' | append: country_name | append: '.png' -%}
+            <img
+              class="wholesale-global__image"
+              src="{{ image_filename | asset_url }}"
+              alt="{{ country_name }}"
+              loading="lazy"
+            >
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    <!-- Bottom Stats -->
+    <div class="wholesale-global__stats">
+      <p class="wholesale-global__stats-text">
+        <span class="highlight">{{ section.settings.continents_number | default: '6' }}</span> continents, <span class="highlight">{{ section.settings.countries_number | default: '70+' }}</span> countries
+      </p>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+/* Reusable Header Styles */
+.wholesale-section-header {
+  margin-bottom: 40px;
+}
+
+.wholesale-section-header__crossed {
+  display: block;
+  font-size: 20px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Exo', sans-serif;
+  text-decoration: line-through;
+  text-decoration-color: #e91e63;
+  text-decoration-thickness: 2px;
+  margin-bottom: 8px;
+}
+
+.wholesale-section-header__title {
+  font-size: 38px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0;
+  font-family: 'Exo', sans-serif;
+  text-transform: none;
+}
+
+/* Global Recognition Section */
+.wholesale-global {
+  width: 100%;
+  min-height: 100vh;
+  background: #1a1a3e;
+  padding: 80px 40px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.wholesale-global__container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.wholesale-global__header {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.wholesale-global__grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 20px;
+  margin-bottom: 50px;
+}
+
+.wholesale-global__grid-item {
+  aspect-ratio: 1/1;
+  border-radius: 16px;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+/* Center the last 2 items */
+.wholesale-global__grid-item:nth-last-child(-n+2) {
+  grid-column: span 1;
+}
+
+.wholesale-global__grid-item:nth-last-child(2) {
+  grid-column: 4 / 5;
+}
+
+.wholesale-global__grid-item:last-child {
+  grid-column: 5 / 6;
+}
+
+.wholesale-global__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  transition: transform 0.3s ease;
+}
+
+.wholesale-global__grid-item:hover .wholesale-global__image {
+  transform: scale(1.05);
+}
+
+.wholesale-global__placeholder {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wholesale-global__placeholder span {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-family: 'Exo', sans-serif;
+  
+  letter-spacing: 1px;
+}
+
+.wholesale-global__stats {
+  text-align: center;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.wholesale-global__stats-text {
+  font-size: 32px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'Exo', sans-serif;
+  
+  letter-spacing: 1px;
+  white-space: nowrap;
+  word-break: keep-all;
+  overflow: hidden;
+}
+
+.wholesale-global__stats-text .highlight {
+  color: #e91e63;
+  background: transparent;
+  padding: 0;
+  display: inline;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .wholesale-global__grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  /* Center last 6 items for 18 total (3 rows of 6) */
+  .wholesale-global__grid-item:nth-last-child(-n+2) {
+    grid-column: span 1;
+  }
+
+  .wholesale-global__grid-item:nth-last-child(2) {
+    grid-column: auto;
+  }
+
+  .wholesale-global__grid-item:last-child {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 1023px) {
+  .wholesale-global {
+    padding: 60px 24px;
+  }
+
+  .wholesale-global__grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  /* Reset centering for 4 columns */
+  .wholesale-global__grid-item:nth-last-child(-n+2) {
+    grid-column: span 1;
+  }
+
+  .wholesale-global__grid-item:nth-last-child(2) {
+    grid-column: 2 / 3;
+  }
+
+  .wholesale-global__grid-item:last-child {
+    grid-column: 3 / 4;
+  }
+
+  .wholesale-section-header__crossed {
+    font-size: 16px;
+  }
+
+  .wholesale-section-header__title {
+    font-size: 28px;
+  }
+
+  .wholesale-global__stats-text {
+    font-size: 24px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 767px) {
+  .wholesale-global {
+    padding: 50px 20px;
+    min-height: auto;
+  }
+
+  .wholesale-global__grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  /* Center last 2 items when they're alone in the row */
+  .wholesale-global__grid-item:nth-last-child(2):nth-child(4n+1) {
+    grid-column: 2 / 3;
+  }
+
+  .wholesale-global__grid-item:last-child:nth-child(4n+2) {
+    grid-column: 3 / 4;
+  }
+
+  .wholesale-section-header__crossed {
+    font-size: 14px;
+  }
+
+  .wholesale-section-header__title {
+    font-size: 24px;
+  }
+
+  .wholesale-global__stats-text {
+    font-size: 18px;
+    white-space: nowrap;
+    word-break: keep-all;
+  }
+
+  .wholesale-global__grid-item {
+    border-radius: 12px;
+  }
+
+  .wholesale-global__image {
+    border-radius: 12px;
+  }
+}
+{% endstylesheet %}
+
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+(function() {
+  function initGlobalRecognition() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initGlobalRecognition, 50);
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    var section = document.querySelector('.wholesale-global');
+    if (!section) return;
+
+    var header = section.querySelector('.wholesale-global__header');
+    var gridItems = section.querySelectorAll('.wholesale-global__grid-item');
+    var stats = section.querySelector('.wholesale-global__stats');
+
+    // Create main timeline for header and grid
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 60%',
+        toggleActions: 'play none none none'
+      }
+    });
+
+    // Animate header
+    if (header) {
+      tl.to(header, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      });
+    }
+
+    // Animate grid items with stagger - wave effect from top-left
+    if (gridItems.length > 0) {
+      tl.to(gridItems, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.5,
+        ease: 'back.out(1.2)',
+        stagger: {
+          amount: 1,
+          grid: 'auto',
+          from: 'start'
+        }
+      }, '-=0.4');
+    }
+
+    // Animate stats only when it comes into viewport
+    if (stats) {
+      gsap.to(stats, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: stats,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        }
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGlobalRecognition);
+  } else {
+    initGlobalRecognition();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Global Recognition",
+  "settings": [
+    {
+      "type": "text",
+      "id": "crossed_text",
+      "label": "Crossed Out Text",
+      "default": "Lack of Brand Recognition"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Global Brand Recognition"
+    },
+    {
+      "type": "text",
+      "id": "continents_number",
+      "label": "Number of Continents",
+      "default": "6"
+    },
+    {
+      "type": "text",
+      "id": "countries_number",
+      "label": "Number of Countries",
+      "default": "70+"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "country_image",
+      "name": "Country Image",
+      "settings": [
+        {
+          "type": "text",
+          "id": "country_name",
+          "label": "Country Name",
+          "info": "Must match the asset filename (e.g., 'USA', 'Canada', 'FRANCE', 'South_Africa')"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Global Recognition",
+      "blocks": [
+        { "type": "country_image", "settings": { "country_name": "USA" } },
+        { "type": "country_image", "settings": { "country_name": "Canada" } },
+        { "type": "country_image", "settings": { "country_name": "Brazil" } },
+        { "type": "country_image", "settings": { "country_name": "Chile" } },
+        { "type": "country_image", "settings": { "country_name": "UK" } },
+        { "type": "country_image", "settings": { "country_name": "FRANCE" } },
+        { "type": "country_image", "settings": { "country_name": "Spain" } },
+        { "type": "country_image", "settings": { "country_name": "Germany" } },
+        { "type": "country_image", "settings": { "country_name": "Portugal" } },
+        { "type": "country_image", "settings": { "country_name": "China" } },
+        { "type": "country_image", "settings": { "country_name": "Kuwait" } },
+        { "type": "country_image", "settings": { "country_name": "UAE" } },
+        { "type": "country_image", "settings": { "country_name": "Bahrain" } },
+        { "type": "country_image", "settings": { "country_name": "Qatar" } },
+        { "type": "country_image", "settings": { "country_name": "Jordan" } },
+        { "type": "country_image", "settings": { "country_name": "Lebanon" } },
+        { "type": "country_image", "settings": { "country_name": "Morocco" } },
+        { "type": "country_image", "settings": { "country_name": "South_Africa" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .wholesale-global * {
+    font-family: 'Exo', sans-serif !important;
+  }
+</style>

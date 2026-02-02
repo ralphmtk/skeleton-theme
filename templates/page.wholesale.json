@@ -1,0 +1,115 @@
+{
+    "sections": {
+        "wholesale-intro": {
+            "type": "wholesale-intro",
+            "settings": {}
+        },
+        "wholesale-challenges": {
+            "type": "wholesale-challenges",
+            "settings": {}
+        },
+        "wholesale-benefits": {
+            "type": "wholesale-benefits",
+            "settings": {}
+        },
+        "wholesale-global": {
+            "type": "wholesale-global",
+            "settings": {
+                "crossed_text": "Lack of Brand Recognition",
+                "title": "Global Brand Recognition",
+                "continents_number": "6",
+                "countries_number": "70+"
+            },
+            "blocks": {
+                "country_usa": { "type": "country_image", "settings": { "country_name": "USA" } },
+                "country_canada": { "type": "country_image", "settings": { "country_name": "Canada" } },
+                "country_brazil": { "type": "country_image", "settings": { "country_name": "Brazil" } },
+                "country_chile": { "type": "country_image", "settings": { "country_name": "Chile" } },
+                "country_uk": { "type": "country_image", "settings": { "country_name": "UK" } },
+                "country_france": { "type": "country_image", "settings": { "country_name": "FRANCE" } },
+                "country_spain": { "type": "country_image", "settings": { "country_name": "Spain" } },
+                "country_germany": { "type": "country_image", "settings": { "country_name": "Germany" } },
+                "country_portugal": { "type": "country_image", "settings": { "country_name": "Portugal" } },
+                "country_china": { "type": "country_image", "settings": { "country_name": "China" } },
+                "country_kuwait": { "type": "country_image", "settings": { "country_name": "Kuwait" } },
+                "country_uae": { "type": "country_image", "settings": { "country_name": "UAE" } },
+                "country_bahrain": { "type": "country_image", "settings": { "country_name": "Bahrain" } },
+                "country_qatar": { "type": "country_image", "settings": { "country_name": "Qatar" } },
+                "country_jordan": { "type": "country_image", "settings": { "country_name": "Jordan" } },
+                "country_lebanon": { "type": "country_image", "settings": { "country_name": "Lebanon" } },
+                "country_morocco": { "type": "country_image", "settings": { "country_name": "Morocco" } },
+                "country_south_africa": { "type": "country_image", "settings": { "country_name": "South_Africa" } }
+            },
+            "block_order": ["country_usa", "country_canada", "country_brazil", "country_chile", "country_uk", "country_france", "country_spain", "country_germany", "country_portugal", "country_china", "country_kuwait", "country_uae", "country_bahrain", "country_qatar", "country_jordan", "country_lebanon", "country_morocco", "country_south_africa"]
+        },
+        "wholesale-partners": {
+            "type": "wholesale-partners",
+            "settings": {
+                "crossed_text": "Lack of Brand Recognition",
+                "title": "Global Brand Recognition"
+            },
+            "blocks": {}
+        },
+        "wholesale-exhibitions": {
+            "type": "wholesale-exhibitions",
+            "settings": {
+                "crossed_text": "Lack of Brand Recognition",
+                "title": "Global Brand Recognition"
+            }
+        },
+        "wholesale-quality": {
+            "type": "wholesale-quality",
+            "settings": {
+                "crossed_text": "High Return Rates or Quality Issues",
+                "title": "Peace of Mind"
+            }
+        },
+        "wholesale-assortment": {
+            "type": "wholesale-assortment",
+            "settings": {
+                "crossed_text": "Difficulty in Expanding Product Lines",
+                "title": "Large Assortment with Ongoing Innovation"
+            }
+        },
+        "wholesale-displays": {
+            "type": "wholesale-displays",
+            "settings": {
+                "crossed_text": "Difficulty in Expanding Product Lines",
+                "title": "Large Assortment with Ongoing Innovation"
+            }
+        },
+        "wholesale-table": {
+            "type": "wholesale-table",
+            "settings": {
+                "crossed_text": "Low Profit Margins",
+                "title": "Affordable to Consumers, High Margin for Resellers"
+            }
+        },
+        "wholesale-testimonials": {
+            "type": "wholesale-testimonials",
+            "settings": {
+                "crossed_text": "Slow Moving Products",
+                "title": "Fast Moving, Proven Demand"
+            }
+        },
+        "wholesale-supply-chain": {
+            "type": "wholesale-supply-chain",
+            "settings": {
+                "crossed_text": "High MOQ & Unreliable Supply Chain",
+                "title": "Facilitators, with Expert Knowledge"
+            }
+        },
+        "wholesale-exclusivity": {
+            "type": "wholesale-exclusivity",
+            "settings": {
+                "crossed_text": "Price Wars and Competition",
+                "title": "Protecting Our Partners"
+            }
+        },
+        "wholesale-outro": {
+            "type": "wholesale-outro",
+            "settings": {}
+        }
+    },
+    "order": ["wholesale-intro", "wholesale-challenges", "wholesale-benefits", "wholesale-global", "wholesale-partners", "wholesale-exhibitions", "wholesale-quality", "wholesale-assortment", "wholesale-displays", "wholesale-table", "wholesale-testimonials", "wholesale-supply-chain", "wholesale-exclusivity", "wholesale-outro"]
+}

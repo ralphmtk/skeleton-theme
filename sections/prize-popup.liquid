@@ -1,0 +1,241 @@
+{% comment %}
+  Prize Popup Section
+  Shows a popup to collect user information and offer prizes/discounts
+{% endcomment %}
+
+{{ 'prize-popup.css' | asset_url | stylesheet_tag }}
+
+<div
+  id="zengaz-popup-overlay"
+  class="popup-overlay"
+  data-section-type="prize-popup"
+  data-delay-seconds="{{ section.settings.delay_seconds }}"
+  data-show-once="{{ section.settings.show_once }}"
+>
+  <div class="popup-container">
+    <button id="zengaz-popup-close" class="popup-close" aria-label="Close popup">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <!-- View 1: User Type Selection -->
+    <div id="zengaz-popup-user-type-view" class="popup-view">
+      <div class="popup-header">
+        <h2 class="popup-title">{{ section.settings.title }}</h2>
+        <p class="popup-subtitle">{{ section.settings.subtitle }}</p>
+      </div>
+
+      <div class="popup-body">
+        <p class="popup-question">I AM A:</p>
+        <div class="user-type-options">
+          <label class="user-type-option">
+            <input type="radio" name="user_type" value="Consumer" />
+            <span class="user-type-card">
+              <svg class="user-type-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="user-type-label">Consumer</span>
+            </span>
+          </label>
+
+          <label class="user-type-option">
+            <input type="radio" name="user_type" value="Distributor/Wholesaler" />
+            <span class="user-type-card">
+              <svg class="user-type-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="user-type-label">Distributor/<br>Wholesaler</span>
+            </span>
+          </label>
+
+          <label class="user-type-option">
+            <input type="radio" name="user_type" value="Shop/Retailer" />
+            <span class="user-type-card">
+              <svg class="user-type-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 22V12h6v10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="user-type-label">Shop/<br>Retailer</span>
+            </span>
+          </label>
+        </div>
+
+        <p id="zengaz-user-type-error" class="popup-error" style="display: none;">
+          Please select a user type
+        </p>
+      </div>
+    </div>
+
+    <!-- View 2: Form -->
+    <div id="zengaz-popup-form-view" class="popup-view" style="display: none;">
+      <div class="popup-header">
+        <h2 class="popup-title">Enter Your Details</h2>
+        <p id="zengaz-popup-form-text-consumer" class="popup-subtitle" style="display: none;">
+          {{ section.settings.consumer_text }}
+        </p>
+        <p id="zengaz-popup-form-text-business" class="popup-subtitle" style="display: none;">
+          {{ section.settings.business_text }}
+        </p>
+      </div>
+
+      <div class="popup-body">
+        <form id="zengaz-popup-form" class="popup-form" novalidate>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="popupFirstName" class="form-label">First Name *</label>
+              <input type="text" id="popupFirstName" name="firstName" class="form-input" required />
+            </div>
+            <div class="form-field">
+              <label for="popupLastName" class="form-label">Last Name *</label>
+              <input type="text" id="popupLastName" name="lastName" class="form-input" required />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="popupEmail" class="form-label">Email *</label>
+            <input type="email" id="popupEmail" name="email" class="form-input" required />
+          </div>
+
+          <div class="form-field">
+            <label for="popupPhone" class="form-label">Phone *</label>
+            <input type="tel" id="popupPhone" name="phone" class="form-input" required />
+          </div>
+
+          <div class="form-field">
+            <label for="popupCountry" class="form-label">Country *</label>
+            <select id="popupCountry" name="country" class="form-select" required>
+              <option value="" disabled selected>Select your country</option>
+            </select>
+          </div>
+
+          <p id="zengaz-popup-error" class="popup-error" style="display: none;"></p>
+
+          <div class="form-actions">
+            <button type="button" id="zengaz-popup-back-btn" class="btn btn-secondary">Back</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- View 3: Consumer Success (with discount code) -->
+    <div id="zengaz-popup-success-view" class="popup-view" style="display: none;">
+      <div class="popup-header">
+        <div class="success-icon">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="32" fill="#4CAF50"/>
+            <path d="M20 32L28 40L44 24" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2 class="popup-title">Congratulations!</h2>
+        <p class="popup-subtitle">{{ section.settings.success_message }}</p>
+      </div>
+
+      <div class="popup-body">
+        <div class="coupon-container">
+          <p class="coupon-label">Your Discount Code:</p>
+          <div class="coupon-code" id="zengaz-coupon-code-display"></div>
+          <p class="coupon-info">Copy this code and use it at checkout!</p>
+        </div>
+
+        <a href="{{ section.settings.shop_url }}" class="btn btn-primary btn-block">
+          Shop Now
+        </a>
+      </div>
+    </div>
+
+    <!-- View 4: Business Success -->
+    <div id="zengaz-popup-business-success-view" class="popup-view" style="display: none;">
+      <div class="popup-header">
+        <div class="success-icon">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="32" fill="#4CAF50"/>
+            <path d="M20 32L28 40L44 24" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2 class="popup-title">Thank You!</h2>
+        <p class="popup-subtitle">{{ section.settings.business_success_message }}</p>
+      </div>
+
+      <div class="popup-body">
+        <button type="button" id="zengaz-business-success-close-btn" class="btn btn-primary btn-block">
+          Continue Browsing
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ 'prize-popup.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Prize Popup",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Popup Title",
+      "default": "Win Exclusive Prizes!"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Popup Subtitle",
+      "default": "Enter for a chance to win amazing prizes and get special offers!"
+    },
+    {
+      "type": "textarea",
+      "id": "consumer_text",
+      "label": "Consumer Form Text",
+      "default": "Get an exclusive discount code just for you!"
+    },
+    {
+      "type": "textarea",
+      "id": "business_text",
+      "label": "Business Form Text",
+      "default": "Thank you for your interest! Our team will contact you shortly with special B2B offers."
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Consumer Success Message",
+      "default": "You've won an exclusive discount!"
+    },
+    {
+      "type": "textarea",
+      "id": "business_success_message",
+      "label": "Business Success Message",
+      "default": "Your information has been submitted successfully. A member of our team will reach out to you shortly with exclusive B2B pricing and opportunities."
+    },
+    {
+      "type": "text",
+      "id": "shop_url",
+      "label": "Shop URL",
+      "default": "https://www.zengaz.shop"
+    },
+    {
+      "type": "range",
+      "id": "delay_seconds",
+      "label": "Popup Delay (seconds)",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "checkbox",
+      "id": "show_once",
+      "label": "Show popup only once per session",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Prize Popup"
+    }
+  ]
+}
+{% endschema %}

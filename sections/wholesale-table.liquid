@@ -1,0 +1,216 @@
+<section class="wholesale-table full-width" aria-label="Wholesale Table">
+  <div class="wholesale-table__container">
+    <!-- Header -->
+    <div class="wholesale-table__header">
+      {% render 'wholesale-section-header',
+        crossed_text: section.settings.crossed_text,
+        title: section.settings.title,
+        title_color: '#e91e63'
+      %}
+    </div>
+
+    <!-- Table Image -->
+    <div class="wholesale-table__content">
+      <div class="wholesale-table__image-wrapper">
+        <img
+          src="{{ 'wholesale_table.png' | asset_url }}"
+          alt="{{ section.settings.title }}"
+          loading="lazy"
+          class="wholesale-table__image"
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.wholesale-table {
+  width: 100%;
+  min-height: 100vh;
+  background: #1a1a3e;
+  padding: 80px 40px 120px;
+  box-sizing: border-box;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wholesale-table__container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.wholesale-table__header {
+  opacity: 0;
+  transform: translateY(30px);
+  margin-bottom: 80px;
+}
+
+.wholesale-table__content {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wholesale-table__image-wrapper {
+  max-width: 1080px;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(50px) scale(0.95);
+  transition: transform 0.5s ease;
+}
+
+.wholesale-table__image {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.4));
+  transition: all 0.5s ease;
+}
+
+.wholesale-table__image-wrapper:hover {
+  transform: translateY(-10px) scale(1);
+}
+
+.wholesale-table__image-wrapper:hover .wholesale-table__image {
+  filter: drop-shadow(0 30px 80px rgba(233, 30, 99, 0.3));
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .wholesale-table__image-wrapper {
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .wholesale-table {
+    padding: 60px 24px 80px;
+  }
+
+  .wholesale-table__header {
+    margin-bottom: 60px;
+  }
+
+  .wholesale-table__image-wrapper {
+    max-width: 480px;
+  }
+}
+
+@media (max-width: 767px) {
+  .wholesale-table {
+    padding: 50px 20px 60px;
+    min-height: auto;
+  }
+
+  .wholesale-table__header {
+    margin-bottom: 40px;
+  }
+
+  .wholesale-table__image-wrapper {
+    max-width: 100%;
+  }
+}
+{% endstylesheet %}
+
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+(function() {
+  function initWholesaleTable() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initWholesaleTable, 50);
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    var section = document.querySelector('.wholesale-table');
+    if (!section) return;
+
+    var header = section.querySelector('.wholesale-table__header');
+    var imageWrapper = section.querySelector('.wholesale-table__image-wrapper');
+
+    // Main timeline
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 60%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    // Animate header
+    if (header) {
+      tl.to(header, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      });
+    }
+
+    // Animate table image with bounce effect
+    if (imageWrapper) {
+      tl.to(imageWrapper, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 1,
+        ease: 'back.out(1.2)'
+      }, '-=0.3');
+    }
+
+    // Handle resize
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        ScrollTrigger.refresh();
+      }, 250);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWholesaleTable);
+  } else {
+    initWholesaleTable();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Wholesale Table",
+  "settings": [
+    {
+      "type": "text",
+      "id": "crossed_text",
+      "label": "Crossed Out Text",
+      "default": "Low Profit Margins"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Affordable to Consumers, High Margin for Resellers"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wholesale Table"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .wholesale-table * {
+    font-family: 'Exo', sans-serif !important;
+  }
+</style>

@@ -1,0 +1,600 @@
+<section class="wholesale-assortment full-width" aria-label="Wholesale Assortment">
+  <div class="wholesale-assortment__container">
+    <!-- Header -->
+    <div class="wholesale-assortment__header">
+      {% render 'wholesale-section-header',
+        crossed_text: section.settings.crossed_text,
+        title: section.settings.title,
+        title_color: '#e91e63'
+      %}
+    </div>
+
+    <!-- Product Categories Grid -->
+    <div class="wholesale-assortment__grid">
+      {%- assign categories = 'essentials,premium,alternative,adventure,home,limited' | split: ',' -%}
+      {%- assign category_names = 'Essentials,Premium,Alternative,Adventure,Home Essentials,Limited Edition' | split: ',' -%}
+      {%- assign image_counts = '3,4,3,2,5,6' | split: ',' -%}
+
+      {%- for category in categories -%}
+        {%- assign index = forloop.index0 -%}
+        {%- assign count = image_counts[index] | plus: 0 -%}
+        <div class="wholesale-assortment__column">
+          <h3 class="wholesale-assortment__category-title">
+            {{ category_names[index] }}
+          </h3>
+
+          <div class="wholesale-assortment__products">
+            {%- for i in (1..count) -%}
+              <div class="wholesale-assortment__product-item wholesale-assortment__product-item--{{ i }}">
+                <img
+                  src="{{ 'wholesale_' | append: category | append: '_' | append: i | append: '.png' | asset_url }}"
+                  alt="{{ category_names[index] }} Product {{ i }}"
+                  loading="lazy"
+                >
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.wholesale-assortment {
+  width: 100%;
+  min-height: 100vh;
+  background: #1a1a3e;
+  padding: 80px 40px 120px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.wholesale-assortment__container {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.wholesale-assortment__header {
+  opacity: 0;
+  transform: translateY(30px);
+  margin-bottom: 80px;
+}
+
+/* Grid Layout */
+.wholesale-assortment__grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 60px;
+  position: relative;
+}
+
+/* Column Divider Lines */
+.wholesale-assortment__column:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -30px;
+  top: 80px;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.15) 10%, rgba(255, 255, 255, 0.15) 90%, transparent);
+}
+
+/* Column Styling */
+.wholesale-assortment__column {
+  opacity: 0;
+  transform: translateY(50px);
+  position: relative;
+}
+
+.wholesale-assortment__category-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  text-align: center;
+  margin: 0 0 40px 0;
+  font-family: 'Exo', sans-serif;
+  letter-spacing: 1px;
+  line-height: 1.3;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Products Container with Varied Layout */
+.wholesale-assortment__products {
+  position: relative;
+  min-height: 600px;
+  font-size: 0; /* Remove whitespace between inline-block elements */
+}
+
+/* Product Items - No Borders, Varied Sizes & Positions */
+.wholesale-assortment__product-item {
+  position: relative;
+  transition: all 0.4s ease;
+  opacity: 0;
+  transform: scale(0.9) translateY(20px);
+}
+
+/* Column 1 (Essentials - 3 images): 1 alone, 2-3 inline */
+.wholesale-assortment__column:nth-child(1) .wholesale-assortment__product-item--1 {
+  width: 37.5%;
+  margin: 0 auto 20px;
+  z-index: 3;
+}
+
+.wholesale-assortment__column:nth-child(1) .wholesale-assortment__product-item--2 {
+  width: 48%;
+  margin: 0 2% 0 0;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 2;
+}
+
+.wholesale-assortment__column:nth-child(1) .wholesale-assortment__product-item--3 {
+  width: 48%;
+  margin: 0;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 1;
+}
+
+/* Column 2 (Premium - 4 images): 1-2 inline, 3-4 inline */
+.wholesale-assortment__column:nth-child(2) .wholesale-assortment__product-item--1 {
+  width: 48%;
+  margin: 0 2% 20px 0;
+  opacity: 0;
+  transform: scale(0.76) translateY(20px);
+  display: inline-block;
+  vertical-align: top;
+  z-index: 4;
+}
+
+.wholesale-assortment__column:nth-child(2) .wholesale-assortment__product-item--2 {
+  width: 48%;
+  margin: 0 0 20px 0;
+  opacity: 0;
+  transform: scale(0.76) translateY(20px);
+  display: inline-block;
+  vertical-align: top;
+  z-index: 3;
+}
+
+.wholesale-assortment__column:nth-child(2) .wholesale-assortment__product-item--3 {
+  width: 48%;
+  margin: 0 2% 0 0;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 2;
+}
+
+.wholesale-assortment__column:nth-child(2) .wholesale-assortment__product-item--4 {
+  width: 48%;
+  margin: 0;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 1;
+}
+
+/* Column 3 (Alternative - 3 images): 1 alone, 2-3 inline */
+.wholesale-assortment__column:nth-child(3) .wholesale-assortment__product-item--1 {
+  width: 55%;
+  margin: 0 auto 25px;
+  z-index: 3;
+}
+
+.wholesale-assortment__column:nth-child(3) .wholesale-assortment__product-item--2 {
+  width: 48%;
+  margin: 0 2% 0 0;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 2;
+}
+
+.wholesale-assortment__column:nth-child(3) .wholesale-assortment__product-item--3 {
+  width: 48%;
+  margin: 0;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 1;
+}
+
+/* Column 4 (Adventure - 2 images): both centered */
+.wholesale-assortment__column:nth-child(4) .wholesale-assortment__product-item--1 {
+  width: 60%;
+  margin: 0 auto 30px;
+  z-index: 2;
+}
+
+.wholesale-assortment__column:nth-child(4) .wholesale-assortment__product-item--2 {
+  width: 60%;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+/* Column 5 (Home Essentials - 5 images): 1-2 inline, 3-4 inline, 5 alone */
+.wholesale-assortment__column:nth-child(5) .wholesale-assortment__product-item--1 {
+  width: 48%;
+  margin: 0 2% 15px 0;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 5;
+}
+
+.wholesale-assortment__column:nth-child(5) .wholesale-assortment__product-item--2 {
+  width: 48%;
+  margin: 0 0 15px 0;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 4;
+}
+
+.wholesale-assortment__column:nth-child(5) .wholesale-assortment__product-item--3 {
+  width: 48%;
+  margin: 0 2% 15px 0;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 3;
+}
+
+.wholesale-assortment__column:nth-child(5) .wholesale-assortment__product-item--4 {
+  width: 48%;
+  margin: 0 0 15px 0;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 2;
+}
+
+
+.wholesale-assortment__column:nth-child(5) .wholesale-assortment__product-item--5 {
+  width: 100%;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+/* Column 6 (Limited Edition - 6 images): pairs inline (1-2, 3-4, 5-6) */
+.wholesale-assortment__column:nth-child(6) .wholesale-assortment__product-item--1 {
+  width: 48%;
+  margin: 0 2% 15px 0;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 6;
+}
+
+.wholesale-assortment__column:nth-child(6) .wholesale-assortment__product-item--2 {
+  width: 48%;
+  margin: 0 0 15px 0;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 5;
+}
+
+.wholesale-assortment__column:nth-child(6) .wholesale-assortment__product-item--3 {
+  width: 48%;
+  margin: 0 2% 15px 0;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 4;
+}
+
+.wholesale-assortment__column:nth-child(6) .wholesale-assortment__product-item--4 {
+  width: 36%;
+  margin: 0 0 15px 0;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 3;
+}
+
+.wholesale-assortment__column:nth-child(6) .wholesale-assortment__product-item--5 {
+  width: 48%;
+  margin: 0 2% 0 0;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 2;
+}
+
+.wholesale-assortment__column:nth-child(6) .wholesale-assortment__product-item--6 {
+  width: 48%;
+  margin: 0;
+  display: inline-block;
+  vertical-align: top;
+  z-index: 1;
+}
+
+.wholesale-assortment__product-item img {
+  width: 100%;
+  min-width: 80px;
+  max-height: 400px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.5s ease;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+}
+
+.wholesale-assortment__product-item:hover {
+  transform: scale(1.08) translateY(-15px);
+  z-index: 10;
+}
+
+/* Premium 1-2 hover (account for initial scale of 0.76) */
+.wholesale-assortment__column:nth-child(2) .wholesale-assortment__product-item--1:hover {
+  transform: scale(0.93) translateY(5px);
+}
+
+.wholesale-assortment__column:nth-child(2) .wholesale-assortment__product-item--2:hover {
+  transform: scale(0.93) translateY(5px);
+}
+
+/* Premium 3-4 hover (normal scale) */
+.wholesale-assortment__column:nth-child(2) .wholesale-assortment__product-item--3:hover {
+  transform: scale(1.08) translateY(-15px);
+}
+
+.wholesale-assortment__column:nth-child(2) .wholesale-assortment__product-item--4:hover {
+  transform: scale(1.08) translateY(-15px);
+}
+
+.wholesale-assortment__product-item:hover img {
+  transform: scale(1.05);
+  filter: drop-shadow(0 20px 50px rgba(233, 30, 99, 0.4));
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .wholesale-assortment__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+
+  .wholesale-assortment__column:nth-child(3n)::after {
+    display: none;
+  }
+
+  .wholesale-assortment__column::after {
+    right: -20px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .wholesale-assortment {
+    padding: 60px 24px 80px;
+  }
+
+  .wholesale-assortment__header {
+    margin-bottom: 60px;
+  }
+
+  .wholesale-assortment__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+  }
+
+  .wholesale-assortment__column:nth-child(2n)::after {
+    display: none;
+  }
+
+  .wholesale-assortment__column::after {
+    right: -20px;
+  }
+
+  .wholesale-assortment__category-title {
+    font-size: 18px;
+    min-height: 45px;
+  }
+
+  .wholesale-assortment__products {
+    min-height: 450px;
+  }
+}
+
+@media (max-width: 767px) {
+  .wholesale-assortment {
+    padding: 50px 20px 60px;
+    min-height: auto;
+  }
+
+  .wholesale-assortment__header {
+    margin-bottom: 40px;
+  }
+
+  .wholesale-assortment__grid {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+
+  .wholesale-assortment__column::after {
+    display: none;
+  }
+
+  .wholesale-assortment__category-title {
+    font-size: 22px;
+    margin-bottom: 24px;
+    min-height: auto;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .wholesale-assortment__products {
+    min-height: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    font-size: initial;
+  }
+
+  /* Override all column-specific styles for mobile - use grid */
+  .wholesale-assortment__product-item {
+    width: 100% !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 16px !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    min-height: 200px;
+    transform: scale(1) translateY(0) !important;
+    opacity: 1 !important;
+    vertical-align: initial !important;
+  }
+
+  .wholesale-assortment__product-item:nth-child(3n) {
+    border-right: none;
+  }
+
+  /* Remove bottom border from last row */
+  .wholesale-assortment__column:nth-child(1) .wholesale-assortment__product-item:nth-child(n+1),
+  .wholesale-assortment__column:nth-child(2) .wholesale-assortment__product-item:nth-child(n+4),
+  .wholesale-assortment__column:nth-child(3) .wholesale-assortment__product-item:nth-child(n+1),
+  .wholesale-assortment__column:nth-child(4) .wholesale-assortment__product-item:nth-child(n+1),
+  .wholesale-assortment__column:nth-child(5) .wholesale-assortment__product-item:nth-child(n+4),
+  .wholesale-assortment__column:nth-child(6) .wholesale-assortment__product-item:nth-child(n+4) {
+    border-bottom: none;
+  }
+
+  .wholesale-assortment__product-item img {
+    max-width: 100%;
+    max-height: 190px;
+    min-width: 60px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+}
+{% endstylesheet %}
+
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+(function() {
+  function initWholesaleAssortment() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initWholesaleAssortment, 50);
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    var section = document.querySelector('.wholesale-assortment');
+    if (!section) return;
+
+    var header = section.querySelector('.wholesale-assortment__header');
+    var columns = section.querySelectorAll('.wholesale-assortment__column');
+
+    // Main timeline for header
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 60%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    // Animate header
+    if (header) {
+      tl.to(header, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      });
+    }
+
+    // Animate columns with stagger
+    if (columns.length > 0) {
+      columns.forEach(function(column, index) {
+        var products = column.querySelectorAll('.wholesale-assortment__product-item');
+
+        var columnTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: column,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+          }
+        });
+
+        // Animate column container
+        columnTl.to(column, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power2.out'
+        });
+
+        // Animate products in cascade
+        if (products.length > 0) {
+          products.forEach(function(product, pIndex) {
+            var xOffset = '0%';
+            var targetScale = 1;
+
+            // Premium (column 2): items 1-2 are scaled to 85%
+            if (index === 1 && (pIndex === 0 || pIndex === 1)) {
+              targetScale = 0.85;
+            }
+
+            columnTl.to(product, {
+              opacity: 1,
+              scale: targetScale,
+              y: 0,
+              x: xOffset,
+              duration: 0.5,
+              ease: 'back.out(1.2)'
+            }, '-=' + (pIndex === 0 ? 0.3 : 0.4));
+          });
+        }
+      });
+    }
+
+    // Handle resize
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        ScrollTrigger.refresh();
+      }, 250);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWholesaleAssortment);
+  } else {
+    initWholesaleAssortment();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Wholesale Assortment",
+  "settings": [
+    {
+      "type": "text",
+      "id": "crossed_text",
+      "label": "Crossed Out Text",
+      "default": "Difficulty in Expanding Product Lines"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Large Assortment with Ongoing Innovation"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wholesale Assortment"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .wholesale-assortment * {
+    font-family: 'Exo', sans-serif !important;
+  }
+</style>

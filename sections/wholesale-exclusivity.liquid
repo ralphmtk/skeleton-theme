@@ -1,0 +1,355 @@
+<section class="wholesale-exclusivity full-width" aria-label="Wholesale Exclusivity">
+  <div class="wholesale-exclusivity__container">
+    <!-- Header -->
+    <div class="wholesale-exclusivity__header">
+      {% render 'wholesale-section-header',
+        crossed_text: section.settings.crossed_text,
+        title: section.settings.title,
+        title_color: '#e91e63'
+      %}
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="wholesale-exclusivity__content">
+      <!-- Left Column: Text -->
+      <div class="wholesale-exclusivity__text">
+        <p class="wholesale-exclusivity__main-text">
+          Potential for <span class="highlight">exclusivity,</span> ensuring you remain the <span class="highlight">sole player</span> in the market
+        </p>
+
+        <p class="wholesale-exclusivity__main-text">
+          All inquiries are <span class="highlight">redirected</span> to you!
+        </p>
+      </div>
+
+      <!-- Right Column: Image with Blob -->
+      <div class="wholesale-exclusivity__image-container">
+        <!-- Bottom Right Blob Image -->
+        <div class="wholesale-exclusivity__image-blob">
+          <img
+            src="{{ 'wholesale_exclusivity_blob.png' | asset_url }}"
+            alt="Decorative"
+            loading="lazy"
+          >
+        </div>
+
+        <!-- Main Image -->
+        <div class="wholesale-exclusivity__image">
+          <img
+            src="{{ 'wholesale_exclusivity.png' | asset_url }}"
+            alt="Exclusivity"
+            loading="lazy"
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.wholesale-exclusivity {
+  width: 100%;
+  min-height: 100vh;
+  background: #1a1a3e;
+  padding: 80px 40px 120px;
+  box-sizing: border-box;
+  margin: 0;
+  position: relative;
+}
+
+.wholesale-exclusivity__container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.wholesale-exclusivity__header {
+  opacity: 0;
+  transform: translateY(30px);
+  margin-bottom: 80px;
+}
+
+/* Two Column Layout */
+.wholesale-exclusivity__content {
+  display: flex;
+  gap: 80px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Left Column: Text */
+.wholesale-exclusivity__text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+.wholesale-exclusivity__main-text {
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'Exo', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.wholesale-exclusivity .highlight {
+  background: #e91e63;
+  color: #ffffff;
+  padding: 4px 12px;
+  display: inline;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Right Column: Image Container */
+.wholesale-exclusivity__image-container {
+  flex: 1;
+  max-width: 450px;
+  position: relative;
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+.wholesale-exclusivity__image {
+  position: relative;
+  z-index: 2;
+}
+
+.wholesale-exclusivity__image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.4));
+  transition: all 0.5s ease;
+}
+
+.wholesale-exclusivity__image:hover img {
+  transform: translateY(-10px);
+  filter: drop-shadow(0 30px 80px rgba(233, 30, 99, 0.3));
+}
+
+/* Blob Image - positioned to overlap bottom right of main image */
+.wholesale-exclusivity__image-blob {
+  position: absolute;
+  bottom: -250px;
+  right: -90px;
+  width: 600px;
+  height: auto;
+  z-index: 3;
+}
+
+.wholesale-exclusivity__image-blob img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .wholesale-exclusivity__content {
+    gap: 60px;
+  }
+
+  .wholesale-exclusivity__image-container {
+    max-width: 400px;
+  }
+
+  .wholesale-exclusivity__image-blob {
+    width: 250px;
+    bottom: -50px;
+    right: -50px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .wholesale-exclusivity {
+    padding: 60px 24px 80px;
+  }
+
+  .wholesale-exclusivity__header {
+    margin-bottom: 60px;
+  }
+
+  .wholesale-exclusivity__content {
+    flex-direction: column;
+    gap: 50px;
+  }
+
+  .wholesale-exclusivity__text {
+    gap: 40px;
+    transform: translateX(0);
+  }
+
+  .wholesale-exclusivity__image-container {
+    max-width: 100%;
+    transform: translateX(0);
+  }
+
+  .wholesale-exclusivity__main-text {
+    font-size: 28px;
+  }
+
+  .wholesale-exclusivity__image-blob {
+    width: 220px;
+    bottom: -40px;
+    right: -40px;
+  }
+}
+
+@media (max-width: 767px) {
+  .wholesale-exclusivity {
+    padding: 50px 20px 60px;
+    min-height: auto;
+  }
+
+  .wholesale-exclusivity__header {
+    margin-bottom: 40px;
+  }
+
+  .wholesale-exclusivity__content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .wholesale-exclusivity__text {
+    gap: 35px;
+  }
+
+  .wholesale-exclusivity__main-text {
+    font-size: 22px;
+    line-height: 1.5;
+  }
+
+  .wholesale-exclusivity__image-blob {
+    display: none;
+  }
+}
+{% endstylesheet %}
+
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+(function() {
+  function initWholesaleExclusivity() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initWholesaleExclusivity, 50);
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    var section = document.querySelector('.wholesale-exclusivity');
+    if (!section) return;
+
+    var header = section.querySelector('.wholesale-exclusivity__header');
+    var textColumn = section.querySelector('.wholesale-exclusivity__text');
+    var imageContainer = section.querySelector('.wholesale-exclusivity__image-container');
+    var blob = section.querySelector('.wholesale-exclusivity__image-blob');
+
+    // Main timeline
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 60%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    // Animate header
+    if (header) {
+      tl.to(header, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      });
+    }
+
+    // Animate text column from left
+    if (textColumn) {
+      tl.to(textColumn, {
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, '-=0.4');
+    }
+
+    // Animate image container from right
+    if (imageContainer) {
+      tl.to(imageContainer, {
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, '-=0.6');
+    }
+
+    // Animate blob with rotation
+    if (blob) {
+      tl.to(blob, {
+        scale: 1,
+        rotation: 0,
+        duration: 1,
+        ease: 'back.out(1.2)'
+      }, '-=0.4');
+      gsap.set(blob, { scale: 0.5, rotation: 45 });
+    }
+
+    // Handle resize
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        ScrollTrigger.refresh();
+      }, 250);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWholesaleExclusivity);
+  } else {
+    initWholesaleExclusivity();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Wholesale Exclusivity",
+  "settings": [
+    {
+      "type": "text",
+      "id": "crossed_text",
+      "label": "Crossed Out Text",
+      "default": "Price Wars and Competition"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Protecting Our Partners"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wholesale Exclusivity"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .wholesale-exclusivity * {
+    font-family: 'Exo', sans-serif !important;
+  }
+</style>

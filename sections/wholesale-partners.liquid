@@ -1,0 +1,497 @@
+<section class="wholesale-partners full-width" aria-label="Wholesale Partners">
+  <div class="wholesale-partners__container">
+    <!-- Header -->
+    <div class="wholesale-partners__header">
+      {% render 'wholesale-section-header',
+        crossed_text: section.settings.crossed_text,
+        title: section.settings.title,
+        title_color: '#e91e63'
+      %}
+    </div>
+
+    <!-- Content Grid -->
+    <div class="wholesale-partners__content">
+      <!-- Left Side: Text -->
+      <div class="wholesale-partners__text">
+        <h3 class="wholesale-partners__text-content">
+          <span class="wholesale-partners__text-line">Partnering with</span>
+          <span class="wholesale-partners__text-line wholesale-partners__brands-line"><span class="highlight">Global Brands</span></span>
+          <span class="wholesale-partners__text-line">& Available in</span>
+          <span class="wholesale-partners__text-line wholesale-partners__chains-line"><span class="highlight">Global Chains</span></span>
+        </h3>
+      </div>
+
+      <!-- Right Side: Brands and Chains -->
+      <div class="wholesale-partners__logos">
+        <!-- Brands Section -->
+        <div class="wholesale-partners__brands">
+          <div class="wholesale-partners__grid">
+            {%- assign brand_logos = 'wholesale-brands__AlFakher.png,wholesale-brands__Bulldog.png,wholesale-brands__ESSE.png,wholesale-brands__FIFA.png,wholesale-brands__Imperial_Brands.png,wholesale-brands__La_Aurora.png,wholesale-brands__La_Casa.png,wholesale-brands__RipNDip.png,wholesale-brands__Smoking.png' | split: ',' -%}
+            {%- for logo in brand_logos -%}
+              <div class="wholesale-partners__logo-item">
+                <img
+                  src="{{ logo | asset_url }}"
+                  alt="{{ logo | remove: 'wholesale-brands__' | remove: '.png' | replace: '_', ' ' }}"
+                  loading="lazy"
+                >
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+
+        <!-- Chains Section -->
+        <div class="wholesale-partners__chains">
+          <div class="wholesale-partners__grid">
+            {%- assign chain_logos = 'wholesale-chains__7-11.png,wholesale-chains__Amazon.png,wholesale-chains__EPPCO.png,wholesale-chains__Ebay.png,wholesale-chains__K.png,wholesale-chains__Lagardere.png,wholesale-chains__Lawson.png,wholesale-chains__Pick_N_Pay.png,wholesale-chains__SPAR.png,wholesale-chains__Shell.png,wholesale-chains__Shoprite.png,wholesale-chains__Virgin.png,wholesale-chains__Walmart.png' | split: ',' -%}
+            {%- for logo in chain_logos -%}
+              <div class="wholesale-partners__logo-item">
+                <img
+                  src="{{ logo | asset_url }}"
+                  alt="{{ logo | remove: 'wholesale-chains__' | remove: '.png' | replace: '_', ' ' | replace: '-', ' ' }}"
+                  loading="lazy"
+                >
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.wholesale-partners {
+  width: 100%;
+  min-height: 100vh;
+  background: #1a1a3e;
+  padding: 80px 40px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.wholesale-partners__container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.wholesale-partners__header {
+  opacity: 0;
+  transform: translateY(30px);
+  margin-bottom: 60px;
+}
+
+.wholesale-partners__content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: center;
+}
+
+/* Left Side: Text */
+.wholesale-partners__text {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 80px;
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+.wholesale-partners__text-content {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.8;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'Exo', sans-serif;
+  
+  letter-spacing: 1px;
+}
+
+.wholesale-partners__text-line {
+  display: block;
+}
+
+.wholesale-partners__text .highlight {
+  background: #e91e63;
+  color: #ffffff;
+  padding: 4px 12px;
+  display: inline;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Right Side: Logos */
+.wholesale-partners__logos {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.wholesale-partners__brands,
+.wholesale-partners__chains {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.wholesale-partners__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 20px;
+  align-items: center;
+}
+
+.wholesale-partners__logo-item {
+  aspect-ratio: 3/2;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: scale(0.8) rotateY(90deg);
+}
+
+.wholesale-partners__logo-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(233, 30, 99, 0.4);
+  transform: scale(1.05);
+}
+
+.wholesale-partners__logo-item img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.wholesale-partners__logo-item:hover img {
+  filter: brightness(1.4) contrast(1.2);
+}
+
+.wholesale-partners__placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wholesale-partners__placeholder span {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 12px;
+  font-family: 'Exo', sans-serif;
+  
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .wholesale-partners__content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .wholesale-partners__text {
+    padding-left: 0;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .wholesale-partners__text-content {
+    font-size: 32px;
+  }
+
+  .wholesale-partners__grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .wholesale-partners {
+    padding: 60px 24px;
+  }
+
+  .wholesale-partners__text-content {
+    font-size: 28px;
+  }
+
+  .wholesale-partners__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 767px) {
+  .wholesale-partners {
+    padding: 50px 20px;
+    min-height: auto;
+  }
+
+  .wholesale-partners__header {
+    margin-bottom: 40px;
+  }
+
+  .wholesale-partners__content {
+    gap: 50px;
+  }
+
+  .wholesale-partners__text {
+    display: none;
+  }
+
+  .wholesale-partners__text-content {
+    font-size: 24px;
+    line-height: 1.6;
+  }
+
+  .wholesale-partners__logos {
+    gap: 50px;
+  }
+
+  /* Add section titles for mobile */
+  .wholesale-partners__brands,
+  .wholesale-partners__chains {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .wholesale-partners__brands::before {
+    content: 'Partnering with Global Brands';
+    display: block;
+    font-size: 24px;
+    font-weight: 800;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 24px;
+    font-family: 'Exo', sans-serif;
+  }
+
+  .wholesale-partners__chains::before {
+    content: '& Available in Global Chains';
+    display: block;
+    font-size: 24px;
+    font-weight: 800;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 24px;
+    font-family: 'Exo', sans-serif;
+  }
+
+  .wholesale-partners__grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+
+  .wholesale-partners__logo-item {
+    border-radius: 8px;
+    padding: 8px;
+  }
+}
+{% endstylesheet %}
+
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+(function() {
+  function initWholesalePartners() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initWholesalePartners, 50);
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    var section = document.querySelector('.wholesale-partners');
+    if (!section) return;
+
+    var header = section.querySelector('.wholesale-partners__header');
+    var text = section.querySelector('.wholesale-partners__text');
+    var brandsSection = section.querySelector('.wholesale-partners__brands');
+    var chainsSection = section.querySelector('.wholesale-partners__chains');
+    var brandLogos = section.querySelectorAll('.wholesale-partners__brands .wholesale-partners__logo-item');
+    var chainLogos = section.querySelectorAll('.wholesale-partners__chains .wholesale-partners__logo-item');
+
+    // Main timeline for section entrance
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 60%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    // Animate header
+    if (header) {
+      tl.to(header, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      });
+    }
+
+    // Animate left text
+    if (text) {
+      tl.to(text, {
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, '-=0.4');
+    }
+
+    // Check if mobile view (for section animations)
+    var isMobile = window.innerWidth <= 767;
+
+    if (isMobile) {
+      // Animate brands section (with title)
+      if (brandsSection) {
+        tl.to(brandsSection, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power2.out'
+        }, '-=0.4');
+      }
+    }
+
+    // Animate brand logos with 3D flip effect
+    if (brandLogos.length > 0) {
+      tl.to(brandLogos, {
+        opacity: 1,
+        scale: 1,
+        rotateY: 0,
+        duration: 0.6,
+        ease: 'back.out(1.3)',
+        stagger: {
+          amount: 0.6,
+          grid: 'auto',
+          from: 'start'
+        }
+      }, isMobile ? '-=0.4' : '-=0.6');
+    }
+
+    if (isMobile) {
+      // Animate chains section (with title)
+      if (chainsSection) {
+        tl.to(chainsSection, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power2.out'
+        }, '-=0.2');
+      }
+    }
+
+    // Animate chain logos with 3D flip effect
+    if (chainLogos.length > 0) {
+      tl.to(chainLogos, {
+        opacity: 1,
+        scale: 1,
+        rotateY: 0,
+        duration: 0.6,
+        ease: 'back.out(1.3)',
+        stagger: {
+          amount: 0.8,
+          grid: 'auto',
+          from: 'start'
+        }
+      }, isMobile ? '-=0.4' : '-=0.8');
+    }
+
+    // Handle resize
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        ScrollTrigger.refresh();
+      }, 250);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWholesalePartners);
+  } else {
+    initWholesalePartners();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Wholesale Partners",
+  "settings": [
+    {
+      "type": "text",
+      "id": "crossed_text",
+      "label": "Crossed Out Text",
+      "default": "Lack of Brand Recognition"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Global Brand Recognition"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Brand",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Brand Logo"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Brand Name",
+          "info": "Used for alt text and placeholder"
+        }
+      ]
+    },
+    {
+      "type": "chain",
+      "name": "Chain",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Chain Logo"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Chain Name",
+          "info": "Used for alt text and placeholder"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wholesale Partners",
+      "blocks": []
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .wholesale-partners * {
+    font-family: 'Exo', sans-serif !important;
+  }
+</style>

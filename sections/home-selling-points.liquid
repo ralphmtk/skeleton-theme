@@ -1,47 +1,133 @@
 <section class="home-selling-points full-width" aria-label="Selling Points">
   {%- for block in section.blocks -%}
     {%- assign text_position = block.settings.text_position | default: 'left' -%}
-    <div class="home-selling-points__panel home-selling-points__panel--{{ forloop.index }}{% if text_position == 'right' %} home-selling-points__panel--text-right{% endif %}" {{ block.shopify_attributes }}>
+    <div class="home-selling-points__panel home-selling-points__panel--{{ forloop.index }}{% if text_position == 'right' %} home-selling-points__panel--text-right{% elsif text_position == 'center' %} home-selling-points__panel--text-center{% endif %}" {{ block.shopify_attributes }}>
       <div class="home-selling-points__container">
-        <!-- Text content -->
-        <div class="home-selling-points__content">
-          <div class="home-selling-points__text-box">
-            <div class="home-selling-points__text-box-inner">
-              <h2 class="home-selling-points__heading">
-                {%- if block.settings.heading_line2 != blank -%}
-                  <span class="home-selling-points__heading-line1">{{ block.settings.heading }}</span>
-                  <span class="home-selling-points__heading-line2">{{ block.settings.heading_line2 }}</span>
-                {%- else -%}
-                  {{ block.settings.heading }}
+        {%- if text_position == 'center' -%}
+          <!-- Center layout with side videos -->
+          <div class="home-selling-points__content">
+            <div class="home-selling-points__text-box{% if block.settings.tilted_box %} home-selling-points__text-box--tilted{% endif %}">
+              <div class="home-selling-points__text-box-inner{% if block.settings.tilted_box %} home-selling-points__text-box-inner--tilted{% endif %}">
+                <h2 class="home-selling-points__heading">
+                  {%- if block.settings.heading_line2 != blank -%}
+                    <span class="home-selling-points__heading-line1{% if block.settings.heading_line1_small %} home-selling-points__heading-line1--small{% endif %}">{{ block.settings.heading }}</span>
+                    <span class="home-selling-points__heading-line2">{{ block.settings.heading_line2 }}</span>
+                  {%- else -%}
+                    {{ block.settings.heading }}
+                  {%- endif -%}
+                </h2>
+
+                {%- if block.settings.subheading != blank -%}
+                  <p class="home-selling-points__subheading">{{ block.settings.subheading }}</p>
                 {%- endif -%}
-              </h2>
-              
-              {%- if block.settings.subheading != blank -%}
-                <p class="home-selling-points__subheading">{{ block.settings.subheading }}</p>
-              {%- endif -%}
-              
-              {%- if block.settings.description != blank -%}
-                <p class="home-selling-points__description">{{ block.settings.description }}</p>
-              {%- endif -%}
+
+                {%- if block.settings.description != blank -%}
+                  <p class="home-selling-points__description">{{ block.settings.description }}</p>
+                {%- endif -%}
+              </div>
             </div>
           </div>
-        </div>
-        
-        <!-- Video -->
-        {%- if block.settings.video != blank -%}
-          <div class="home-selling-points__video-wrapper">
-            <video
-              class="home-selling-points__video"
-              muted
-              playsinline
-              preload="auto"
-              aria-hidden="true"
-              data-video-panel="{{ forloop.index }}"
-            >
-              {%- assign video_file = block.settings.video -%}
-              <source src="{{ video_file | asset_url }}" type="video/webm">
-            </video>
+
+          <!-- Side videos -->
+          <div class="home-selling-points__side-videos">
+            {%- if block.settings.video_left != blank -%}
+              <video
+                class="home-selling-points__video--left"
+                muted
+                playsinline
+                preload="auto"
+                aria-hidden="true"
+                data-video-panel="{{ forloop.index }}"
+                data-video-position="left"
+              >
+                <source src="{{ block.settings.video_left | asset_url }}" type="video/webm">
+              </video>
+            {%- endif -%}
+
+            {%- if block.settings.video_right != blank -%}
+              <video
+                class="home-selling-points__video--right"
+                muted
+                playsinline
+                preload="auto"
+                aria-hidden="true"
+                data-video-panel="{{ forloop.index }}"
+                data-video-position="right"
+              >
+                <source src="{{ block.settings.video_right | asset_url }}" type="video/webm">
+              </video>
+            {%- endif -%}
+
+            {%- if block.settings.video_top != blank -%}
+              <video
+                class="home-selling-points__video--top"
+                muted
+                playsinline
+                preload="auto"
+                aria-hidden="true"
+                data-video-panel="{{ forloop.index }}"
+                data-video-position="top"
+              >
+                <source src="{{ block.settings.video_top | asset_url }}" type="video/webm">
+              </video>
+            {%- endif -%}
+
+            {%- if block.settings.video_bottom != blank -%}
+              <video
+                class="home-selling-points__video--bottom"
+                muted
+                playsinline
+                preload="auto"
+                aria-hidden="true"
+                data-video-panel="{{ forloop.index }}"
+                data-video-position="bottom"
+              >
+                <source src="{{ block.settings.video_bottom | asset_url }}" type="video/webm">
+              </video>
+            {%- endif -%}
           </div>
+        {%- else -%}
+          <!-- Standard side-by-side layout -->
+          <!-- Text content -->
+          <div class="home-selling-points__content">
+            <div class="home-selling-points__text-box">
+              <div class="home-selling-points__text-box-inner">
+                <h2 class="home-selling-points__heading">
+                  {%- if block.settings.heading_line2 != blank -%}
+                    <span class="home-selling-points__heading-line1{% if block.settings.heading_line1_small %} home-selling-points__heading-line1--small{% endif %}">{{ block.settings.heading }}</span>
+                    <span class="home-selling-points__heading-line2">{{ block.settings.heading_line2 }}</span>
+                  {%- else -%}
+                    {{ block.settings.heading }}
+                  {%- endif -%}
+                </h2>
+
+                {%- if block.settings.subheading != blank -%}
+                  <p class="home-selling-points__subheading">{{ block.settings.subheading }}</p>
+                {%- endif -%}
+
+                {%- if block.settings.description != blank -%}
+                  <p class="home-selling-points__description">{{ block.settings.description }}</p>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+
+          <!-- Video -->
+          {%- if block.settings.video != blank -%}
+            <div class="home-selling-points__video-wrapper">
+              <video
+                class="home-selling-points__video"
+                muted
+                playsinline
+                preload="auto"
+                aria-hidden="true"
+                data-video-panel="{{ forloop.index }}"
+              >
+                {%- assign video_file = block.settings.video -%}
+                <source src="{{ video_file | asset_url }}" type="video/webm">
+              </video>
+            </div>
+          {%- endif -%}
         {%- endif -%}
       </div>
     </div>
@@ -76,6 +162,18 @@
   background: #e3f2fd;
 }
 
+.home-selling-points__panel--4 {
+  background: #fff3e0;
+}
+
+.home-selling-points__panel--5 {
+  background: #f3e5f5;
+}
+
+.home-selling-points__panel--6 {
+  background: #e8f5e9;
+}
+
 .home-selling-points__container {
   width: 100%;
   max-width: 1400px;
@@ -95,6 +193,22 @@
 .home-selling-points__panel--text-right .home-selling-points__content,
 .home-selling-points__panel--text-right .home-selling-points__video-wrapper {
   direction: ltr;
+}
+
+/* Center layout for multi-video panels */
+.home-selling-points__panel--text-center .home-selling-points__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.home-selling-points__panel--text-center .home-selling-points__content {
+  z-index: 2;
+}
+
+.home-selling-points__panel--text-center .home-selling-points__text-box {
+  max-width: 600px;
 }
 
 .home-selling-points__content {
@@ -119,6 +233,8 @@
   opacity: 0;
 }
 
+/* Tilted box - GSAP will handle the transform entirely */
+
 .home-selling-points__heading {
   font-size: 64px;
   font-weight: 900;
@@ -134,6 +250,11 @@
 
 .home-selling-points__heading-line1 {
   display: block;
+}
+
+.home-selling-points__heading-line1--small {
+  display: block;
+  font-size: 0.5em;
 }
 
 .home-selling-points__heading-line2 {
@@ -184,6 +305,115 @@
   opacity: 0;
 }
 
+/* Side videos for center layout */
+.home-selling-points__side-videos {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  max-width: 1400px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.home-selling-points__video--left {
+  position: absolute;
+  right: 58%;
+  top: 50%;
+  transform: translate(0, -50%) scale(1.2);
+  width: 480px;
+  height: auto;
+  max-height: 480px;
+  opacity: 0;
+}
+
+.home-selling-points__video--right {
+  position: absolute;
+  left: 63%;
+  top: 50%;
+  transform: translate(0, -50%);
+  width: 400px;
+  height: auto;
+  max-height: 400px;
+  opacity: 0;
+}
+
+.home-selling-points__video--top {
+  position: absolute;
+  left: 50%;
+  bottom: 31%;
+  transform: translate(-50%, 0);
+  width: 400px;
+  height: auto;
+  max-height: 400px;
+  opacity: 0;
+}
+
+.home-selling-points__video--bottom {
+  position: absolute;
+  left: 50%;
+  top: 33%;
+  transform: translate(-50%, 0);
+  width: 400px;
+  height: auto;
+  max-height: 400px;
+  opacity: 0;
+}
+
+/* Panel 4 (Partnerships) - Independent video positioning */
+.home-selling-points__panel--4 .home-selling-points__video--left {
+  right: 66%;
+  top: 50%;
+  width: 480px;
+  max-height: 480px;
+}
+
+.home-selling-points__panel--4 .home-selling-points__video--right {
+  left: 66%;
+  top: 50%;
+  width: 400px;
+  max-height: 500px;
+}
+
+.home-selling-points__panel--4 .home-selling-points__video--top {
+  left: 50%;
+  bottom: 31%;
+  width: 400px;
+  max-height: 400px;
+}
+
+.home-selling-points__panel--4 .home-selling-points__video--bottom {
+  left: 50%;
+  top: 60%;
+  width: 400px;
+  max-height: 400px;
+}
+
+/* Panel 5 (Relentless Innovation) - Independent video positioning */
+.home-selling-points__panel--5 .home-selling-points__video {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  margin-left: -60% !important;
+  
+}
+
+/* Panel 6 (Sustainability) - Independent video positioning */
+.home-selling-points__panel--6 .home-selling-points__video--bottom {
+  position: absolute !important;
+  left: 50% !important;
+  bottom: 0 !important;
+  transform: translateX(-50%) !important;
+  width: 100vw !important;
+  max-width: none !important;
+  height: 50vh !important;
+  object-fit: contain !important;
+}
+
 /* Responsive */
 @media (max-width: 1023px) {
   .home-selling-points__container {
@@ -207,6 +437,19 @@
   .home-selling-points__video-wrapper {
     height: 40vh;
     min-height: 300px;
+  }
+
+  /* Side videos responsive */
+  .home-selling-points__video--left,
+  .home-selling-points__video--right {
+    width: 250px;
+    max-height: 250px;
+  }
+
+  .home-selling-points__video--top,
+  .home-selling-points__video--bottom {
+    width: 250px;
+    max-height: 250px;
   }
 }
 
@@ -238,6 +481,35 @@
     height: 35vh;
     min-height: 250px;
   }
+
+  /* Side videos mobile */
+  .home-selling-points__video--left,
+  .home-selling-points__video--right {
+    width: 180px;
+    max-height: 180px;
+  }
+
+  .home-selling-points__video--top,
+  .home-selling-points__video--bottom {
+    width: 180px;
+    max-height: 180px;
+  }
+
+  .home-selling-points__video--left {
+    right: 60%;
+  }
+
+  .home-selling-points__video--right {
+    left: 60%;
+  }
+
+  .home-selling-points__video--top {
+    bottom: 60%;
+  }
+
+  .home-selling-points__video--bottom {
+    top: 60%;
+  }
 }
 {% endstylesheet %}
 
@@ -265,36 +537,9 @@
     // Store video durations (in seconds) - adjust these to control pin duration
     var videoDurations = [];
     var scrollTriggers = [];
-    var videoPlaybackStates = {}; // Track which videos have finished playing
-    var scrollLocked = false;
-    var lockedScrollPosition = 0;
 
-    // Function to lock scrolling
-    function lockScroll(position) {
-      scrollLocked = true;
-      lockedScrollPosition = position;
-      window.scrollTo(0, position);
-    }
-
-    // Function to unlock scrolling
-    function unlockScroll() {
-      scrollLocked = false;
-    }
-
-    // Global scroll listener to enforce lock
-    var scrollHandler = function(e) {
-      if (scrollLocked) {
-        e.preventDefault();
-        window.scrollTo(0, lockedScrollPosition);
-      }
-    };
-
-    window.addEventListener('scroll', scrollHandler, { passive: false });
-    window.addEventListener('wheel', scrollHandler, { passive: false });
-    window.addEventListener('touchmove', scrollHandler, { passive: false });
-
-    // Preload all videos
-    var videos = section.querySelectorAll('.home-selling-points__video');
+    // Preload all videos (including side videos)
+    var videos = section.querySelectorAll('.home-selling-points__video, .home-selling-points__video--left, .home-selling-points__video--right, .home-selling-points__video--top, .home-selling-points__video--bottom');
     videos.forEach(function(video) {
       video.load();
     });
@@ -360,38 +605,87 @@
     function setupPanel(panel, panelIndex) {
       var textBox = panel.querySelector('.home-selling-points__text-box-inner');
       var video = panel.querySelector('.home-selling-points__video');
-      var videoHasEnded = false;
+      var isCenterLayout = panel.classList.contains('home-selling-points__panel--text-center');
       var hasPlayedOnce = false; // Track if video has been played at least once
+      var totalSideVideos = 0;
 
-      // Calculate pin duration based on video duration or default
-      var pinDuration = window.innerHeight * 2; // Default: 2 viewports of scroll
+      // Get side videos if center layout
+      var videoLeft = isCenterLayout ? panel.querySelector('.home-selling-points__video--left') : null;
+      var videoRight = isCenterLayout ? panel.querySelector('.home-selling-points__video--right') : null;
+      var videoTop = isCenterLayout ? panel.querySelector('.home-selling-points__video--top') : null;
+      var videoBottom = isCenterLayout ? panel.querySelector('.home-selling-points__video--bottom') : null;
 
-      if (video) {
-        // Try to get video duration (may not be available immediately)
+      // Count total side videos
+      if (videoLeft) totalSideVideos++;
+      if (videoRight) totalSideVideos++;
+      if (videoTop) totalSideVideos++;
+      if (videoBottom) totalSideVideos++;
+
+      // Calculate pin duration - increased for better UX (more scroll distance between panels)
+      var pinDuration = window.innerHeight * 3; // Default: 3 viewports of scroll
+
+      // For center layout, use side videos for duration
+      if (isCenterLayout && totalSideVideos > 0) {
+        var mainVideo = videoLeft || videoRight || videoTop || videoBottom;
+        if (mainVideo && mainVideo.duration && !isNaN(mainVideo.duration)) {
+          var estimatedDuration = mainVideo.duration;
+          videoDurations[panelIndex] = estimatedDuration;
+          pinDuration = Math.max(window.innerHeight * 3, estimatedDuration * 150);
+        }
+      } else if (video) {
+        // Standard layout with single video
         var estimatedDuration = 5; // Default 5 seconds
         if (video.duration && !isNaN(video.duration)) {
           estimatedDuration = video.duration;
         }
         videoDurations[panelIndex] = estimatedDuration;
-        // Convert video duration to scroll distance (roughly 100px per second of video)
-        pinDuration = Math.max(window.innerHeight, estimatedDuration * 100);
-
-        // Track when video ends
-        video.addEventListener('ended', function() {
-          videoHasEnded = true;
-          videoPlaybackStates[panelIndex] = true;
-          unlockScroll(); // Unlock scroll when video ends
-        });
+        pinDuration = Math.max(window.innerHeight * 3, estimatedDuration * 150);
       }
 
       // Reset initial states
+      var isTilted = panel.querySelector('.home-selling-points__text-box--tilted');
+      var initialRotation = isTilted ? -5 : -2;
+      var finalRotation = isTilted ? -5 : 0;
+
       if (textBox) {
-        gsap.set(textBox, { y: 100, opacity: 0, rotation: -2 });
+        gsap.set(textBox, { y: 100, opacity: 0, rotation: initialRotation });
       }
-      if (video) {
+      if (video && !isCenterLayout) {
+        // For standard layout, slide video in from left
+        gsap.set(video, { x: -300, opacity: 0 });
+        video.currentTime = 0;
+        video.pause();
+      } else if (video) {
         gsap.set(video, { opacity: 0 });
         video.currentTime = 0;
         video.pause();
+      }
+
+      // Set initial states for side videos
+      if (videoLeft) {
+        gsap.set(videoLeft, { x: 300, opacity: 0 });
+        videoLeft.currentTime = 0;
+        videoLeft.pause();
+      }
+      if (videoRight) {
+        gsap.set(videoRight, { x: -300, opacity: 0 });
+        videoRight.currentTime = 0;
+        videoRight.pause();
+      }
+      if (videoTop) {
+        gsap.set(videoTop, { y: 150, opacity: 0 });
+        videoTop.currentTime = 0;
+        videoTop.pause();
+      }
+      if (videoBottom) {
+        // Panel 6 (Sustainability) - no transform, just opacity
+        if (panelIndex === 5) {
+          gsap.set(videoBottom, { opacity: 0 });
+        } else {
+          gsap.set(videoBottom, { y: -150, opacity: 0 });
+        }
+        videoBottom.currentTime = 0;
+        videoBottom.pause();
       }
 
       // Create timeline for animations
@@ -404,15 +698,6 @@
           pinSpacing: true,
           scrub: false,
           anticipatePin: 1,
-          onUpdate: function(self) {
-            // Only prevent scrolling forward if video hasn't ended AND hasn't played before
-            if (video && !videoHasEnded && hasPlayedOnce && self.direction === 1 && self.progress > 0.5) {
-              // Lock scroll at current position when video is playing
-              if (!scrollLocked) {
-                lockScroll(window.scrollY);
-              }
-            }
-          },
           onEnter: function() {
             panel.classList.add('is-active');
 
@@ -423,32 +708,100 @@
                 gsap.to(textBox, {
                   y: 0,
                   opacity: 1,
-                  rotation: 0,
+                  rotation: finalRotation,
                   duration: 0.8,
                   ease: 'power2.out'
                 });
               }
 
-              // Start video immediately (before fade-in)
-              if (video) {
+              // Handle center layout with side videos
+              if (isCenterLayout && totalSideVideos > 0) {
                 hasPlayedOnce = true;
 
-                // Lock scroll after a short delay to allow panel to settle
-                setTimeout(function() {
-                  if (!videoHasEnded) {
-                    lockScroll(window.scrollY);
+                // Animate and play left video
+                if (videoLeft) {
+                  playVideoSafely(videoLeft).catch(function(error) {
+                    console.error('Failed to play left video:', error);
+                  });
+
+                  gsap.to(videoLeft, {
+                    x: 0,
+                    opacity: 1,
+                    duration: 1.2,
+                    ease: 'power2.out',
+                    delay: 0.5
+                  });
+                }
+
+                // Animate and play right video
+                if (videoRight) {
+                  playVideoSafely(videoRight).catch(function(error) {
+                    console.error('Failed to play right video:', error);
+                  });
+
+                  gsap.to(videoRight, {
+                    x: 0,
+                    opacity: 1,
+                    duration: 1.2,
+                    ease: 'power2.out',
+                    delay: 0.5
+                  });
+                }
+
+                // Animate and play top video
+                if (videoTop) {
+                  playVideoSafely(videoTop).catch(function(error) {
+                    console.error('Failed to play top video:', error);
+                  });
+
+                  gsap.to(videoTop, {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1.2,
+                    ease: 'power2.out',
+                    delay: 0.5
+                  });
+                }
+
+                // Animate and play bottom video
+                if (videoBottom) {
+                  playVideoSafely(videoBottom).catch(function(error) {
+                    console.error('Failed to play bottom video:', error);
+                  });
+
+                  // Special handling for panel 6 (Sustainability) - simple fade in
+                  if (panelIndex === 5) {
+                    gsap.to(videoBottom, {
+                      opacity: 1,
+                      duration: 0.8,
+                      ease: 'power2.out',
+                      delay: 0.5
+                    });
+                  } else {
+                    // Standard bottom video animation for other panels
+                    gsap.to(videoBottom, {
+                      y: 0,
+                      opacity: 1,
+                      duration: 1.2,
+                      ease: 'power2.out',
+                      delay: 0.5
+                    });
                   }
-                }, 1000);
+                }
+              }
+              // Standard layout with single video
+              else if (video) {
+                hasPlayedOnce = true;
 
                 playVideoSafely(video).catch(function(error) {
                   console.error('Failed to play video:', error);
-                  unlockScroll(); // Unlock if video fails
                 });
 
-                // Fade in video 0.5s after it starts playing
+                // Slide in video from left to right
                 gsap.to(video, {
+                  x: 0,
                   opacity: 1,
-                  duration: 0.6,
+                  duration: 1.2,
                   ease: 'power2.out',
                   delay: 0.5
                 });
@@ -458,8 +811,6 @@
           onLeave: function() {
             panel.classList.remove('is-active');
             // Don't pause video - let it continue playing
-            // Unlock scroll when leaving (in case user scrolled up)
-            unlockScroll();
           },
           onEnterBack: function() {
             panel.classList.add('is-active');
@@ -478,9 +829,8 @@
       if (video) {
         video.addEventListener('loadedmetadata', function() {
           if (video.duration && !isNaN(video.duration)) {
-            // Set pin duration to ensure panel stays until video completes
-            // Add extra time to account for video playback
-            var newPinDuration = Math.max(window.innerHeight * 3, video.duration * 150);
+            // Set pin duration with increased scroll distance
+            var newPinDuration = Math.max(window.innerHeight * 4, video.duration * 200);
             if (tl.scrollTrigger) {
               tl.scrollTrigger.vars.end = '+=' + newPinDuration;
               ScrollTrigger.refresh();
@@ -551,6 +901,13 @@
           "info": "Optional second line for heading (e.g., 'ASSURED' for 'QUALITY ASSURED')"
         },
         {
+          "type": "checkbox",
+          "id": "heading_line1_small",
+          "label": "Make first line small",
+          "info": "Check this to make the first line smaller (e.g., for '1000+' in '1000+ DESIGNS')",
+          "default": false
+        },
+        {
           "type": "select",
           "id": "text_position",
           "label": "Text Position",
@@ -562,6 +919,10 @@
             {
               "value": "right",
               "label": "Right"
+            },
+            {
+              "value": "center",
+              "label": "Center (Multi-video)"
             }
           ],
           "default": "left"
@@ -582,8 +943,39 @@
           "type": "text",
           "id": "video",
           "label": "Video filename",
-          "info": "Enter the video filename from assets folder (e.g., video_global_leader.webm)",
+          "info": "Enter the video filename from assets folder (e.g., video_global_leader.webm). For left/right layouts only.",
           "default": "video_global_leader.webm"
+        },
+        {
+          "type": "text",
+          "id": "video_left",
+          "label": "Left Video filename",
+          "info": "For center layout only. Video that slides out from the left side."
+        },
+        {
+          "type": "text",
+          "id": "video_right",
+          "label": "Right Video filename",
+          "info": "For center layout only. Video that slides out from the right side."
+        },
+        {
+          "type": "text",
+          "id": "video_top",
+          "label": "Top Video filename",
+          "info": "For center layout only. Video that slides out from the top."
+        },
+        {
+          "type": "text",
+          "id": "video_bottom",
+          "label": "Bottom Video filename",
+          "info": "For center layout only. Video that slides out from the bottom."
+        },
+        {
+          "type": "checkbox",
+          "id": "tilted_box",
+          "label": "Tilted Box",
+          "info": "Rotate the text box 15 degrees counterclockwise",
+          "default": false
         }
       ]
     }
@@ -598,7 +990,31 @@
             "heading": "GLOBAL LEADER",
             "subheading": "MILLIONS SOLD",
             "description": "IN 70+ COUNTRIES SINCE 2012",
-            "video": "video_global_leader.webm"
+            "video": "video_global_leader.webm",
+            "text_position": "left"
+          }
+        },
+        {
+          "type": "selling_point",
+          "settings": {
+            "heading": "QUALITY",
+            "heading_line2": "ASSURED",
+            "subheading": "PREMIUM MATERIALS",
+            "description": "TESTED FOR DURABILITY",
+            "video": "video_quality_assured.webm",
+            "text_position": "right"
+          }
+        },
+        {
+          "type": "selling_point",
+          "settings": {
+            "heading": "1000+",
+            "heading_line2": "DESIGNS",
+            "heading_line1_small": true,
+            "subheading": "A UNIVERSE OF OPTIONS",
+            "description": "THAT IS CONSTANTLY REFRESHED.",
+            "video_left": "video_1000designs_left.webm",
+            "text_position": "center"
           }
         }
       ]

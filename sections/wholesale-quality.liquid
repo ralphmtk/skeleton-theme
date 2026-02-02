@@ -1,0 +1,518 @@
+<section class="wholesale-quality full-width" aria-label="Wholesale Quality">
+  <div class="wholesale-quality__container">
+    <!-- Header -->
+    <div class="wholesale-quality__header">
+      {% render 'wholesale-section-header',
+        crossed_text: section.settings.crossed_text,
+        title: section.settings.title,
+        title_color: '#e91e63'
+      %}
+    </div>
+
+    <!-- Quality Images -->
+    <div class="wholesale-quality__images">
+      {%- for i in (1..3) -%}
+        <div class="wholesale-quality__image-item">
+          <img
+            src="{{ 'wholesale_quality' | append: i | append: '.png' | asset_url }}"
+            alt="Quality {{ i }}"
+            loading="lazy"
+          >
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <!-- Standards Section -->
+    <div class="wholesale-quality__standards">
+      <h3 class="wholesale-quality__standards-title">
+        Highest International Safety Norms
+      </h3>
+
+      <div class="wholesale-quality__standards-grid">
+        {%- for i in (1..8) -%}
+          <div class="wholesale-quality__standard-item">
+            <img
+              src="{{ 'wholesale_quality_standard' | append: i | append: '.png' | asset_url }}"
+              alt="Safety Standard {{ i }}"
+              loading="lazy"
+            >
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <!-- Warranty Section -->
+    <div class="wholesale-quality__warranty">
+      <div class="wholesale-quality__warranty-text">
+        <h4 class="wholesale-quality__warranty-title">
+          <span class="highlight">1 Year Warranty</span>
+        </h4>
+        <h4 class="wholesale-quality__warranty-subtitle">
+          We Deal With It, <span class="wholesale-quality__not-you">Not You</span>
+        </h4>
+        <p class="wholesale-quality__warranty-stat">
+          &lt;0.01% global return rate
+        </p>
+      </div>
+
+      <div class="wholesale-quality__warranty-image">
+        <img
+          src="{{ 'wholesale_replacement_form.png' | asset_url }}"
+          alt="Replacement Form"
+          loading="lazy"
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.wholesale-quality {
+  width: 100%;
+  min-height: 100vh;
+  background: #1a1a3e;
+  padding: 80px 40px;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.wholesale-quality__container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.wholesale-quality__header {
+  opacity: 0;
+  transform: translateY(30px);
+  margin-bottom: 60px;
+}
+
+/* Quality Images */
+.wholesale-quality__images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-bottom: 100px;
+}
+
+.wholesale-quality__image-item {
+  aspect-ratio: 4/3;
+  opacity: 0;
+  transform: scale(0.8) rotate(-5deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wholesale-quality__image-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.wholesale-quality__image-item:hover img {
+  transform: scale(1.05);
+}
+
+/* Standards Section */
+.wholesale-quality__standards {
+  margin-bottom: 100px;
+}
+
+.wholesale-quality__standards-title {
+  font-size: 48px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 60px 0;
+  font-family: 'Exo', sans-serif;
+  letter-spacing: 2px;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.wholesale-quality__standards-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 20px;
+}
+
+.wholesale-quality__standard-item {
+  aspect-ratio: 3/2;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: scale(0.5) rotateY(180deg);
+}
+
+.wholesale-quality__standard-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(233, 30, 99, 0.4);
+  transform: scale(1.05) translateY(-5px);
+  box-shadow: 0 10px 30px rgba(233, 30, 99, 0.2);
+}
+
+.wholesale-quality__standard-item img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Warranty Section */
+.wholesale-quality__warranty {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.wholesale-quality__warranty-text {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-left: 60px;
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+.wholesale-quality__warranty-title {
+  font-size: 52px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'Exo', sans-serif;
+  
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+.wholesale-quality__warranty-title .highlight {
+  background: #e91e63;
+  color: #ffffff;
+  padding: 8px 20px;
+  display: inline-block;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.wholesale-quality__warranty-subtitle {
+  font-size: 44px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  font-family: 'Exo', sans-serif;
+  
+  letter-spacing: 1px;
+  line-height: 1.3;
+}
+
+.wholesale-quality__not-you {
+  color: #e91e63;
+  font-style: italic;
+}
+
+.wholesale-quality__warranty-stat {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Exo', sans-serif;
+  font-style: italic;
+  margin: 0;
+}
+
+.wholesale-quality__warranty-image {
+  opacity: 0;
+  transform: translateX(50px) scale(0.95);
+  width: 100%;
+  margin-left: -5%;
+}
+
+.wholesale-quality__warranty-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.wholesale-quality__warranty-image:hover img {
+  transform: scale(1.02);
+}
+
+/* Responsive */
+@media (max-width: 1023px) {
+  .wholesale-quality {
+    padding: 60px 24px;
+  }
+
+  .wholesale-quality__images {
+    gap: 24px;
+    margin-bottom: 80px;
+  }
+
+  .wholesale-quality__standards-title {
+    font-size: 36px;
+    margin-bottom: 40px;
+  }
+
+  .wholesale-quality__standards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .wholesale-quality__warranty {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+
+  .wholesale-quality__warranty-text {
+    padding-left: 20px;
+  }
+
+  .wholesale-quality__warranty-title {
+    font-size: 40px;
+  }
+
+  .wholesale-quality__warranty-subtitle {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 767px) {
+  .wholesale-quality {
+    padding: 50px 20px;
+    min-height: auto;
+  }
+
+  .wholesale-quality__header {
+    margin-bottom: 40px;
+  }
+
+  .wholesale-quality__images {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 60px;
+  }
+
+  .wholesale-quality__standards-title {
+    font-size: 28px;
+    margin-bottom: 30px;
+  }
+
+  .wholesale-quality__standards {
+    margin-bottom: 60px;
+  }
+
+  .wholesale-quality__standards-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .wholesale-quality__standard-item {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .wholesale-quality__warranty {
+    gap: 40px;
+  }
+
+  .wholesale-quality__warranty-text {
+    padding-left: 0;
+    gap: 20px;
+  }
+
+  .wholesale-quality__warranty-title {
+    font-size: 32px;
+  }
+
+  .wholesale-quality__warranty-subtitle {
+    font-size: 26px;
+  }
+
+  .wholesale-quality__warranty-stat {
+    font-size: 18px;
+  }
+}
+{% endstylesheet %}
+
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+(function() {
+  function initWholesaleQuality() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initWholesaleQuality, 50);
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    var section = document.querySelector('.wholesale-quality');
+    if (!section) return;
+
+    var header = section.querySelector('.wholesale-quality__header');
+    var images = section.querySelectorAll('.wholesale-quality__image-item');
+    var standardsTitle = section.querySelector('.wholesale-quality__standards-title');
+    var standards = section.querySelectorAll('.wholesale-quality__standard-item');
+    var warrantyText = section.querySelector('.wholesale-quality__warranty-text');
+    var warrantyImage = section.querySelector('.wholesale-quality__warranty-image');
+
+    // Main timeline for section entrance
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 60%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    // Animate header
+    if (header) {
+      tl.to(header, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      });
+    }
+
+    // Animate quality images with rotation
+    if (images.length > 0) {
+      tl.to(images, {
+        opacity: 1,
+        scale: 1,
+        rotation: 0,
+        duration: 0.8,
+        ease: 'back.out(1.2)',
+        stagger: {
+          amount: 0.4,
+          from: 'start'
+        }
+      }, '-=0.4');
+    }
+
+    // Standards section timeline
+    var standardsTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '.wholesale-quality__standards',
+        start: 'top 70%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    // Animate standards title
+    if (standardsTitle) {
+      standardsTl.to(standardsTitle, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      });
+    }
+
+    // Animate standards with 3D flip
+    if (standards.length > 0) {
+      standardsTl.to(standards, {
+        opacity: 1,
+        scale: 1,
+        rotateY: 0,
+        duration: 0.6,
+        ease: 'back.out(1.5)',
+        stagger: {
+          amount: 0.8,
+          grid: [2, 4],
+          from: 'center'
+        }
+      }, '-=0.4');
+    }
+
+    // Warranty section timeline
+    var warrantyTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '.wholesale-quality__warranty',
+        start: 'top 70%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+
+    // Animate warranty text
+    if (warrantyText) {
+      warrantyTl.to(warrantyText, {
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: 'power2.out'
+      });
+    }
+
+    // Animate warranty image
+    if (warrantyImage) {
+      warrantyTl.to(warrantyImage, {
+        opacity: 1,
+        x: 0,
+        scale: 1,
+        duration: 0.8,
+        ease: 'power2.out'
+      }, '-=0.6');
+    }
+
+    // Handle resize
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        ScrollTrigger.refresh();
+      }, 250);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWholesaleQuality);
+  } else {
+    initWholesaleQuality();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Wholesale Quality",
+  "settings": [
+    {
+      "type": "text",
+      "id": "crossed_text",
+      "label": "Crossed Out Text",
+      "default": "High Return Rates or Quality Issues"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Peace of Mind"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wholesale Quality"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .wholesale-quality * {
+    font-family: 'Exo', sans-serif !important;
+  }
+</style>

@@ -29,13 +29,13 @@
     {%- comment -%} Desktop: Social icons on left {%- endcomment -%}
     <div class="header__left-cluster">
       <div class="header__social">
-        <a href="#" class="social social--tiktok" aria-label="TikTok" rel="noopener">
+        <a href="https://www.tiktok.com/@zengaz.worldwide" class="social social--tiktok" aria-label="TikTok" rel="noopener" target="_blank">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.5c-2.2-.4-4.1-1.7-5.1-3.6V17c0 3.9-3.2 7-7.1 7S1.7 20.9 1.7 17c0-3.8 3-6.9 6.7-7v3.8c-1.6.1-2.9 1.4-2.9 3.1 0 1.7 1.4 3.1 3.2 3.1s3.2-1.4 3.2-3.1V0h3.8c.4 2.5 2.3 4.5 4.6 5v3.5z"/></svg>
         </a>
-        <a href="#" class="social social--instagram" aria-label="Instagram" rel="noopener">
+        <a href="https://www.instagram.com/zengaz.worldwide/" class="social social--instagram" aria-label="Instagram" rel="noopener" target="_blank">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A5.5 5.5 0 1 1 6.5 13 5.5 5.5 0 0 1 12 7.5zm0 2A3.5 3.5 0 1 0 15.5 13 3.5 3.5 0 0 0 12 9.5zm6.25-3.25a1.25 1.25 0 1 1-1.25 1.25 1.25 1.25 0 0 1 1.25-1.25z"/></svg>
         </a>
-        <a href="#" class="social social--facebook" aria-label="Facebook" rel="noopener">
+        <a href="https://www.facebook.com/zengaz.worldwide/" class="social social--facebook" aria-label="Facebook" rel="noopener" target="_blank">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 22V12h3.5l.5-4H13V6.5C13 5.7 13.2 5 14.5 5H17V1h-3c-3 0-5 2-5 5v2H6v4h3v10h4z"/></svg>
         </a>
       </div>
@@ -129,13 +129,13 @@
           </div>
         </nav>
         <div class="header__mobile-social">
-          <a href="#" class="social social--tiktok" aria-label="TikTok" rel="noopener">
+          <a href="https://www.tiktok.com/@zengaz.worldwide" class="social social--tiktok" aria-label="TikTok" rel="noopener" target="_blank">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.5c-2.2-.4-4.1-1.7-5.1-3.6V17c0 3.9-3.2 7-7.1 7S1.7 20.9 1.7 17c0-3.8 3-6.9 6.7-7v3.8c-1.6.1-2.9 1.4-2.9 3.1 0 1.7 1.4 3.1 3.2 3.1s3.2-1.4 3.2-3.1V0h3.8c.4 2.5 2.3 4.5 4.6 5v3.5z"/></svg>
           </a>
-          <a href="#" class="social social--instagram" aria-label="Instagram" rel="noopener">
+          <a href="https://www.instagram.com/zengaz.worldwide/" class="social social--instagram" aria-label="Instagram" rel="noopener" target="_blank">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A5.5 5.5 0 1 1 6.5 13 5.5 5.5 0 0 1 12 7.5zm0 2A3.5 3.5 0 1 0 15.5 13 3.5 3.5 0 0 0 12 9.5zm6.25-3.25a1.25 1.25 0 1 1-1.25 1.25 1.25 1.25 0 0 1 1.25-1.25z"/></svg>
           </a>
-          <a href="#" class="social social--facebook" aria-label="Facebook" rel="noopener">
+          <a href="https://www.facebook.com/zengaz.worldwide/" class="social social--facebook" aria-label="Facebook" rel="noopener" target="_blank">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 22V12h3.5l.5-4H13V6.5C13 5.7 13.2 5 14.5 5H17V1h-3c-3 0-5 2-5 5v2H6v4h3v10h4z"/></svg>
           </a>
         </div>
@@ -366,10 +366,7 @@
     font-weight: 600;
     text-transform: uppercase;
   }
-  .header__mobile-locale-item {
-    width: 100%;
-    text-align: left;
-  }
+  .header__mobile-locale-item { display: none !important; }
   .header__mobile-locale-item .locale-dropdown {
     width: 100%;
     text-align: left;
@@ -604,6 +601,7 @@
   }
   /* Hide country selector */
   .locale-dropdown--country { display: none !important; }
+  .locale-dropdown--language { display: none !important; }
   .locale-dropdown summary .caret {
     width: 0; height: 0;
     border-left: 5px solid transparent;

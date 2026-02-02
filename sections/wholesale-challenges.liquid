@@ -1,0 +1,412 @@
+<section class="wholesale-challenges full-width" aria-label="Wholesale Challenges">
+  <div class="wholesale-challenges__pin-wrapper">
+    <div class="wholesale-challenges__container">
+      <!-- Title -->
+      <div class="wholesale-challenges__header">
+        <h2 class="wholesale-challenges__title">
+          THAT <span class="highlight">UNDERSTANDS</span> THE CHALLENGES YOU COULD FACE AS A DISTRIBUTOR BRINGING IN <span class="highlight">NEW PRODUCTS</span>
+        </h2>
+      </div>
+
+      <!-- Content area -->
+      <div class="wholesale-challenges__content">
+        <!-- List on the left -->
+        <div class="wholesale-challenges__list-wrapper">
+          <ul class="wholesale-challenges__list">
+            <li class="wholesale-challenges__item" data-challenge="1">
+              <span class="wholesale-challenges__bullet"></span>
+              <span class="wholesale-challenges__item-text">Lack of <span class="highlight">brand recognition</span></span>
+            </li>
+            <li class="wholesale-challenges__item" data-challenge="2">
+              <span class="wholesale-challenges__bullet"></span>
+              <span class="wholesale-challenges__item-text">High return rates or <span class="highlight">quality issues</span></span>
+            </li>
+            <li class="wholesale-challenges__item" data-challenge="3">
+              <span class="wholesale-challenges__bullet"></span>
+              <span class="wholesale-challenges__item-text">Difficulty in expanding product lines <span class="highlight">(no innovation)</span></span>
+            </li>
+            <li class="wholesale-challenges__item" data-challenge="4">
+              <span class="wholesale-challenges__bullet"></span>
+              <span class="wholesale-challenges__item-text">Similar <span class="highlight">competing products</span></span>
+            </li>
+            <li class="wholesale-challenges__item" data-challenge="5">
+              <span class="wholesale-challenges__bullet"></span>
+              <span class="wholesale-challenges__item-text"><span class="highlight">Low profit</span> margins</span>
+            </li>
+            <li class="wholesale-challenges__item" data-challenge="6">
+              <span class="wholesale-challenges__bullet"></span>
+              <span class="wholesale-challenges__item-text"><span class="highlight">Slow moving</span> products</span>
+            </li>
+            <li class="wholesale-challenges__item" data-challenge="7">
+              <span class="wholesale-challenges__bullet"></span>
+              <span class="wholesale-challenges__item-text"><span class="highlight">High MOQ</span> & unreliable supply chain</span>
+            </li>
+            <li class="wholesale-challenges__item" data-challenge="8">
+              <span class="wholesale-challenges__bullet"></span>
+              <span class="wholesale-challenges__item-text">High <span class="highlight">marketing costs</span></span>
+            </li>
+            <li class="wholesale-challenges__item" data-challenge="9">
+              <span class="wholesale-challenges__bullet"></span>
+              <span class="wholesale-challenges__item-text"><span class="highlight">Price wars</span> and competition</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Image on the right -->
+        <div class="wholesale-challenges__image-wrapper">
+          <img
+            class="wholesale-challenges__image"
+            src="{{ 'wholesale-challenges__image.png' | asset_url }}"
+            alt="Wholesale Challenges"
+            width="800"
+            height="800"
+            loading="lazy"
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.wholesale-challenges {
+  width: 100%;
+  height: auto;
+  background: #1a1a3e;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.wholesale-challenges__pin-wrapper {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+  box-sizing: border-box;
+}
+
+.wholesale-challenges__container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+
+.wholesale-challenges__header {
+  text-align: center;
+  margin-bottom: 50px;
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.wholesale-challenges__title {
+  font-size: 35px;
+  font-weight: 800;
+  line-height: 1.3;
+  color: #ffffff;
+  font-family: 'Exo', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.wholesale-challenges__title-line {
+  display: block;
+}
+
+.wholesale-challenges__nowrap {
+  white-space: nowrap;
+}
+
+/* Pink highlight styling */
+.wholesale-challenges .highlight {
+  background: #e91e63;
+  color: #ffffff;
+  padding: 2px 8px;
+  display: inline;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.wholesale-challenges__content {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+  align-items: end;
+}
+
+.wholesale-challenges__list-wrapper {
+  position: relative;
+}
+
+.wholesale-challenges__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.wholesale-challenges__item {
+  padding: 10px 0;
+  opacity: 0;
+  transform: translateX(-30px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wholesale-challenges__bullet {
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.wholesale-challenges__item-text {
+  font-size: 22px;
+  font-weight: 400;
+  color: #ffffff;
+  font-family: 'Exo', sans-serif;
+  line-height: 1.4;
+}
+
+.wholesale-challenges__image-wrapper {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 100%;
+}
+
+.wholesale-challenges__image-placeholder,
+.wholesale-challenges__image {
+  width: 100%;
+  max-width: 350px;
+  aspect-ratio: 1/1;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(40px);
+  object-fit: contain;
+}
+
+.wholesale-challenges__image-placeholder span {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  font-family: 'Exo', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Responsive */
+@media (max-width: 1023px) {
+  .wholesale-challenges__pin-wrapper {
+    padding: 40px 0;
+  }
+
+  .wholesale-challenges__container {
+    padding: 0 24px;
+  }
+
+  .wholesale-challenges__title {
+    font-size: 28px;
+  }
+
+  .wholesale-challenges__header {
+    margin-bottom: 40px;
+  }
+
+  .wholesale-challenges__content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .wholesale-challenges__item-text {
+    font-size: 18px;
+  }
+
+  .wholesale-challenges__item {
+    padding: 8px 0;
+  }
+
+  .wholesale-challenges__image-wrapper {
+    order: -1;
+    justify-content: flex-start;
+  }
+
+  .wholesale-challenges__image-placeholder,
+  .wholesale-challenges__image {
+    max-width: 250px;
+  }
+}
+
+@media (max-width: 767px) {
+  .wholesale-challenges__pin-wrapper {
+    padding: 30px 0;
+    align-items: flex-start;
+    padding-top: 80px;
+  }
+
+  .wholesale-challenges__container {
+    padding: 0 20px;
+  }
+
+  .wholesale-challenges__title {
+    font-size: 18px;
+    line-height: 1.4;
+  }
+
+  .wholesale-challenges__nowrap {
+    white-space: normal;
+  }
+
+  .wholesale-challenges__header {
+    margin-bottom: 30px;
+  }
+
+  .wholesale-challenges__content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .wholesale-challenges__list-wrapper {
+    order: 1;
+  }
+
+  .wholesale-challenges__item {
+    padding: 6px 0;
+  }
+
+  .wholesale-challenges__item-text {
+    font-size: 14px;
+  }
+
+  .wholesale-challenges__bullet {
+    width: 6px;
+    height: 6px;
+  }
+
+  .wholesale-challenges__image-wrapper {
+    order: 2;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-right: 0;
+  }
+
+  .wholesale-challenges__image-placeholder,
+  .wholesale-challenges__image {
+    max-width: 140px;
+  }
+}
+{% endstylesheet %}
+
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+(function() {
+  function initWholesaleChallenges() {
+    // Wait for GSAP to load
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initWholesaleChallenges, 50);
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    var section = document.querySelector('.wholesale-challenges');
+    if (!section) return;
+
+    var pinWrapper = section.querySelector('.wholesale-challenges__pin-wrapper');
+    var header = section.querySelector('.wholesale-challenges__header');
+    var items = section.querySelectorAll('.wholesale-challenges__item');
+    var imageElement = section.querySelector('.wholesale-challenges__image') || section.querySelector('.wholesale-challenges__image-placeholder');
+
+    // Configuration - adjust this value to control scroll spacing between items
+    var scrollPerItem = 500; // pixels of scroll per item (the main tuning knob)
+    var totalScrollDistance = (items.length + 2) * scrollPerItem; // +2 for header and image
+
+    // Create main timeline with scrub
+    var tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: '-5% top',
+        end: '+=' + totalScrollDistance,
+        pin: pinWrapper,
+        scrub: 1,
+        anticipatePin: 1
+      }
+    });
+
+    // Animate header first
+    if (header) {
+      tl.to(header, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: 'power2.out'
+      });
+    }
+
+    // Animate image alongside header
+    if (imageElement) {
+      tl.to(imageElement, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: 'power2.out'
+      }, '<0.3'); // Start slightly after header begins
+    }
+
+    // Animate each list item sequentially
+    items.forEach(function(item, index) {
+      tl.to(item, {
+        opacity: 1,
+        x: 0,
+        duration: 1.2,
+        ease: 'power2.out'
+      }, index === 0 ? '>0.5' : '>0.4'); // First item has more delay after header
+    });
+
+    // Handle resize
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        ScrollTrigger.refresh();
+      }, 250);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWholesaleChallenges);
+  } else {
+    initWholesaleChallenges();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Wholesale Challenges",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Wholesale Challenges"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .wholesale-challenges * {
+    font-family: 'Exo', sans-serif !important;
+  }
+</style>
