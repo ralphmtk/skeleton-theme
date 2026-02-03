@@ -1,348 +1,579 @@
 <section class="home-testimonials full-width" aria-label="Testimonials">
   <div class="home-testimonials__inner">
-    <h2 class="home-testimonials__title">TESTIMONIALS</h2>
+    <div class="home-testimonials__header">
+      <h2 class="home-testimonials__title">
+        {% if section.settings.heading != blank %}
+          {{ section.settings.heading }}
+        {% else %}
+          TESTIMONIALS
+        {% endif %}
+      </h2>
+    </div>
 
-    <div class="home-testimonials__viewport">
+    <div class="home-testimonials__scroll-wrapper">
       <div class="home-testimonials__track">
+        {% assign bg_colors = 'hsla(200,55%,91%,1)|hsla(340,48%,91%,1)|hsla(45,58%,91%,1)|hsla(160,50%,91%,1)|hsla(270,42%,91%,1)|hsla(20,58%,91%,1)|hsla(280,45%,90%,1)|hsla(100,48%,90%,1)' | split: '|' %}
+
         {% for block in section.blocks %}
           {% if block.type == 'testimonial' %}
-            <article class="home-testimonials__item" {{ block.shopify_attributes }}>
-              <div class="home-testimonials__pill">
-                <div class="home-testimonials__stars" aria-hidden="true">
+            {% assign color_index = forloop.index0 | modulo: 8 %}
+            {% assign bg_color = bg_colors[color_index] %}
+
+            <div class="home-testimonials__slide" {{ block.shopify_attributes }} style="--card-bg: {{ bg_color }};">
+              <div class="home-testimonials__card">
+                <div class="home-testimonials__stars" aria-label="Rating: {{ block.settings.stars }} out of 5 stars">
                   {% assign max_stars = 5 %}
                   {% for i in (1..max_stars) %}
-                    <span class="home-testimonials__star{% if i <= block.settings.stars %} is-filled{% endif %}">★</span>
+                    <span class="home-testimonials__star{% if i <= block.settings.stars %} is-filled{% endif %}" aria-hidden="true">★</span>
                   {% endfor %}
                 </div>
-                <p class="home-testimonials__quote">
+
+                <blockquote class="home-testimonials__quote">
                   {% if block.settings.quote != blank %}
-                    "{{ block.settings.quote }}"
+                    {{ block.settings.quote }}
                   {% else %}
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet."
+                    This product exceeded my expectations! The quality and service are outstanding.
                   {% endif %}
-                </p>
+                </blockquote>
+
                 {% if block.settings.name != blank %}
-                  <p class="home-testimonials__name">— {{ block.settings.name }}</p>
+                  <cite class="home-testimonials__author">{{ block.settings.name }}</cite>
                 {% else %}
-                  <p class="home-testimonials__name">— Jane Doe</p>
+                  <cite class="home-testimonials__author">Happy Customer</cite>
                 {% endif %}
               </div>
-            </article>
+            </div>
           {% endif %}
         {% endfor %}
 
+        {%- comment -%} Fallback placeholders if no testimonials {%- endcomment -%}
         {% if section.blocks.size == 0 %}
-          <article class="home-testimonials__item home-testimonials__item--placeholder">
-            <div class="home-testimonials__pill">
-              <div class="home-testimonials__stars" aria-hidden="true">
-                <span class="home-testimonials__star is-filled">★</span>
-                <span class="home-testimonials__star is-filled">★</span>
-                <span class="home-testimonials__star is-filled">★</span>
-                <span class="home-testimonials__star is-filled">★</span>
-                <span class="home-testimonials__star is-filled">★</span>
+          {% for i in (1..5) %}
+            {% assign color_index = forloop.index0 | modulo: 8 %}
+            {% assign bg_color = bg_colors[color_index] %}
+
+            <div class="home-testimonials__slide home-testimonials__slide--placeholder" style="--card-bg: {{ bg_color }};">
+              <div class="home-testimonials__card">
+                <div class="home-testimonials__stars" aria-hidden="true">
+                  <span class="home-testimonials__star is-filled">★</span>
+                  <span class="home-testimonials__star is-filled">★</span>
+                  <span class="home-testimonials__star is-filled">★</span>
+                  <span class="home-testimonials__star is-filled">★</span>
+                  <span class="home-testimonials__star is-filled">★</span>
+                </div>
+                <blockquote class="home-testimonials__quote">
+                  Add testimonial blocks in the theme editor to showcase customer reviews.
+                </blockquote>
+                <cite class="home-testimonials__author">Customer {{ i }}</cite>
               </div>
-              <p class="home-testimonials__quote">
-                "Add testimonial blocks in the theme editor to replace this placeholder content."
-              </p>
-              <p class="home-testimonials__name">— Your Happy Customer</p>
             </div>
-          </article>
+          {% endfor %}
         {% endif %}
       </div>
-
-      <div class="home-testimonials__fade home-testimonials__fade--top" aria-hidden="true"></div>
-      <div class="home-testimonials__fade home-testimonials__fade--bottom" aria-hidden="true"></div>
     </div>
   </div>
+</section>
 
-  {% stylesheet %}
-    .home-testimonials {
-      position: relative;
-      width: 100vw;
-      margin-left: calc(-50vw + 50%);
-      margin-top: 100px;
-      padding: 5rem 0 6rem;
-      background: linear-gradient(180deg, #f0f7ff 0%, #ffffff 50%, #f0f7ff 100%);
-      overflow: hidden;
-    }
+{% stylesheet %}
+  .home-testimonials {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    height: 100vh;
+    height: 100dvh;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: #fff;
+    overflow: clip;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
 
-    .home-testimonials__inner {
-      width: 100%;
-      max-width: 100%;
-      margin: 0 auto;
-      box-sizing: border-box;
-    }
+  .shopify-section:has(.home-testimonials) {
+    overflow: visible;
+  }
 
-    .home-testimonials__title {
-      font-family: 'Gobold', 'Arial Black', sans-serif;
-      font-size: clamp(1.25rem, 2.4vw, 1.8rem);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      text-align: center;
-      margin: 0 0 3rem;
-      color: #111;
-    }
+  .home-testimonials__inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
 
-    .home-testimonials__viewport {
-      position: relative;
-      width: 100%;
-      margin-inline: auto;
-      overflow: visible;
+  .home-testimonials__header {
+    left: 0;
+    right: 0;
+    padding: clamp(1.5rem, 3vh, 2.5rem) clamp(2rem, 5vw, 4rem) clamp(0.75rem, 1.5vh, 1rem);
+    flex-shrink: 0;
+    background: transparent;
+    position: sticky;
+    top: var(--header-height);
+    z-index: 100;
+    pointer-events: none;
+  }
+
+  .home-testimonials__title {
+    font-family: 'Gobold', 'Arial Black', sans-serif;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #111;
+    margin: 0;
+  }
+
+  .home-testimonials__scroll-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    padding-top: 0;
+    min-height: 0;
+    margin-top: 25px;
+  }
+
+  .home-testimonials__track {
+    display: flex;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    padding-left: 50vw;
+    padding-right: 50vw;
+    width: fit-content;
+    min-width: max-content;
+    height: 100%;
+    will-change: transform;
+    flex-shrink: 0;
+    align-items: center;
+  }
+
+  .home-testimonials__slide {
+    flex: 0 0 auto;
+    width: clamp(320px, 35vw, 480px);
+    will-change: transform, filter, opacity;
+    transition: transform 0.1s ease-out;
+  }
+
+  .home-testimonials__slide.is-active {
+    z-index: 10;
+  }
+
+  .home-testimonials__card {
+    position: relative;
+    background: var(--card-bg, hsla(200, 55%, 91%, 1));
+    border-radius: clamp(20px, 3vw, 32px);
+    padding: clamp(2.5rem, 4vw, 3.5rem) clamp(2rem, 3.5vw, 3rem);
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.06),
+      0 8px 24px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+    transform: scale(var(--card-scale, 1));
+    transition:
+      transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      box-shadow 0.4s ease;
+  }
+
+  .home-testimonials__slide.is-active .home-testimonials__card {
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.08),
+      0 12px 40px rgba(0, 0, 0, 0.12);
+  }
+
+  .home-testimonials__slide--placeholder {
+    pointer-events: none;
+  }
+
+  .home-testimonials__stars {
+    display: inline-flex;
+    gap: clamp(4px, 0.6vw, 8px);
+    margin-bottom: clamp(1.25rem, 2vw, 1.75rem);
+    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+  }
+
+  .home-testimonials__star {
+    color: rgba(0, 0, 0, 0.12);
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .home-testimonials__star.is-filled {
+    color: #ffc107;
+  }
+
+  .home-testimonials__slide.is-active .home-testimonials__star.is-filled {
+    animation: starPulse 0.6s ease-out;
+  }
+
+  @keyframes starPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+
+  .home-testimonials__quote {
+    font-family: var(--font-primary--family, system-ui, sans-serif);
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    font-weight: 400;
+    line-height: 1.6;
+    color: #222;
+    margin: 0 0 clamp(1.25rem, 2vw, 1.75rem);
+    max-width: 100%;
+  }
+
+  .home-testimonials__quote::before {
+    content: '"';
+  }
+
+  .home-testimonials__quote::after {
+    content: '"';
+  }
+
+  .home-testimonials__author {
+    font-family: 'Gobold', 'Arial Black', sans-serif;
+    font-size: clamp(0.9rem, 1.1vw, 1rem);
+    font-weight: 700;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #111;
+    margin: 0;
+  }
+
+  .home-testimonials__author::before {
+    content: '— ';
+  }
+
+  /* Pinned state */
+  .home-testimonials.is-pinned {
+    /* Let ScrollTrigger handle positioning */
+  }
+
+  /* Tablet adjustments */
+  @media (max-width: 1024px) {
+    .home-testimonials__slide {
+      width: clamp(300px, 40vw, 420px);
     }
 
     .home-testimonials__track {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 80px;
-      padding: 60px 20px;
+      gap: 2.5rem;
+    }
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    .home-testimonials {
+      height: 100vh;
+      height: 100dvh;
+      min-height: 100vh;
+      min-height: 100dvh;
     }
 
-    .home-testimonials__item {
-      width: min(820px, 90%);
-      will-change: transform, opacity;
-      transform-origin: center center;
-      transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
-                  opacity 0.35s ease-out;
+    .home-testimonials__header {
+      padding: 1rem 1.5rem 0.5rem;
     }
 
-    .home-testimonials__pill {
-      border-radius: 60px;
-      background: linear-gradient(135deg, #5bc0f8 0%, #0099e5 35%, #0077cc 100%);
-      color: #ffffff;
-      padding: 2.5rem clamp(2.5rem, 8vw, 4rem);
-      box-shadow: 
-        0 4px 20px rgba(0, 120, 200, 0.15),
-        0 20px 50px rgba(0, 100, 180, 0.25),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      box-sizing: border-box;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+    .home-testimonials__title {
+      font-size: 1.25rem;
     }
 
-    .home-testimonials__item--placeholder .home-testimonials__pill {
-      background: linear-gradient(135deg, #e8eef5 0%, #d1dbe8 50%, #c4d4e8 100%);
-      color: #2c4a6e;
-      box-shadow: 
-        0 4px 20px rgba(0, 0, 0, 0.08),
-        0 20px 50px rgba(0, 0, 0, 0.12);
+    .home-testimonials__track {
+      padding-left: 40vw;
+      padding-right: 40vw;
+      gap: 2rem;
+    }
+
+    .home-testimonials__slide {
+      width: 300px;
+    }
+
+    .home-testimonials__card {
+      padding: 2rem 1.75rem;
+      border-radius: 20px;
     }
 
     .home-testimonials__stars {
-      display: inline-flex;
-      gap: 6px;
-      margin-bottom: 1.25rem;
-      font-size: 1.35rem;
-    }
-
-    .home-testimonials__star {
-      color: rgba(255, 255, 255, 0.35);
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-      transition: transform 0.2s ease;
-    }
-
-    .home-testimonials__star.is-filled {
-      color: #ffd639;
-      text-shadow: 0 2px 8px rgba(255, 200, 0, 0.4);
+      font-size: 1.2rem;
+      gap: 4px;
+      margin-bottom: 1rem;
     }
 
     .home-testimonials__quote {
-      font-family: 'Gobold', var(--font-primary--family, system-ui, sans-serif);
-      font-size: clamp(1rem, 1.6vw, 1.25rem);
-      font-weight: 500;
-      line-height: 1.5;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      max-width: 38rem;
-      margin: 0 0 1.25rem;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
     }
 
-    .home-testimonials__name {
-      font-family: var(--font-secondary--family, system-ui, sans-serif);
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+    .home-testimonials__author {
       font-size: 0.85rem;
-      opacity: 0.85;
-      margin: 0;
     }
-
-    .home-testimonials__fade {
-      position: absolute;
-      left: 0;
-      right: 0;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .home-testimonials__fade--top {
-      top: 0;
-      height: 120px;
-      background: linear-gradient(to bottom,
-        rgba(240, 247, 255, 1) 0%,
-        rgba(240, 247, 255, 0.6) 50%,
-        rgba(255, 255, 255, 0) 100%
-      );
-    }
-
-    .home-testimonials__fade--bottom {
-      bottom: 0;
-      height: 120px;
-      background: linear-gradient(to top,
-        rgba(240, 247, 255, 1) 0%,
-        rgba(240, 247, 255, 0.6) 50%,
-        rgba(255, 255, 255, 0) 100%
-      );
-    }
-
-    @media (max-width: 768px) {
-      .home-testimonials {
-        padding: 4rem 0 5rem;
-      }
-
-      .home-testimonials__track {
-        gap: 60px;
-        padding: 50px 16px;
-      }
-
-      .home-testimonials__pill {
-        padding: 2rem 1.75rem;
-        border-radius: 32px;
-      }
-
-      .home-testimonials__stars {
-        font-size: 1.1rem;
-        gap: 4px;
-        margin-bottom: 1rem;
-      }
-
-      .home-testimonials__quote {
-        font-size: 0.95rem;
-      }
-
-      .home-testimonials__fade--top,
-      .home-testimonials__fade--bottom {
-        height: 80px;
-      }
-    }
-  {% endstylesheet %}
-
-  <script>
-    (function() {
-      var section = document.currentScript && document.currentScript.closest('section.home-testimonials');
-      if (!section) section = document.querySelector('section.home-testimonials');
-      if (!section) return;
-
-      var items = Array.prototype.slice.call(section.querySelectorAll('.home-testimonials__item'));
-      if (!items.length) return;
-
-      function updateScales() {
-        var viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-        var centerY = viewportHeight / 2;
-        // Tighter range for more dramatic effect
-        var maxDistance = viewportHeight * 0.4;
-
-        items.forEach(function(item) {
-          var rect = item.getBoundingClientRect();
-          var itemCenter = rect.top + rect.height / 2;
-          var distance = Math.abs(centerY - itemCenter);
-          var t = Math.min(distance / maxDistance, 1); // 0 at center, 1 when far
-
-          // Much more dramatic scaling: 1.25 at center -> 0.7 at edges
-          var scale = 0.7 + (0.55 * (1 - t));
-          // Stronger opacity change: 1 at center -> 0.25 at edges
-          var opacity = 0.25 + (0.75 * (1 - t));
-          var zIndex = 10 + Math.round((1 - t) * 10);
-          
-          // Add slight blur for far items
-          var blur = t * 2;
-
-          item.style.transform = 'scale(' + scale.toFixed(3) + ') translateZ(0)';
-          item.style.opacity = opacity.toFixed(3);
-          item.style.zIndex = zIndex;
-          item.style.filter = blur > 0.5 ? 'blur(' + blur.toFixed(1) + 'px)' : 'none';
-        });
-      }
-
-      var ticking = false;
-      function onScroll() {
-        if (!ticking) {
-          window.requestAnimationFrame(function() {
-            updateScales();
-            ticking = false;
-          });
-          ticking = true;
-        }
-      }
-
-      document.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', updateScales);
-
-      // Initial update
-      setTimeout(updateScales, 100);
-    })();
-  </script>
-
-  {% schema %}
-  {
-    "name": "Home testimonials",
-    "settings": [
-      {
-        "type": "text",
-        "id": "heading",
-        "label": "Heading",
-        "default": "TESTIMONIALS"
-      }
-    ],
-    "blocks": [
-      {
-        "type": "testimonial",
-        "name": "Testimonial",
-        "settings": [
-          {
-            "type": "range",
-            "id": "stars",
-            "label": "Star rating",
-            "min": 1,
-            "max": 5,
-            "step": 1,
-            "default": 5
-          },
-          {
-            "type": "textarea",
-            "id": "quote",
-            "label": "Quote",
-            "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor."
-          },
-          {
-            "type": "text",
-            "id": "name",
-            "label": "Name",
-            "default": "John Smith"
-          }
-        ]
-      }
-    ],
-    "presets": [
-      {
-        "name": "Home testimonials",
-        "blocks": [
-          {
-            "type": "testimonial"
-          },
-          {
-            "type": "testimonial"
-          },
-          {
-            "type": "testimonial"
-          }
-        ]
-      }
-    ]
   }
-  {% endschema %}
-</section>
+
+  /* Extra small screens */
+  @media (max-width: 480px) {
+    .home-testimonials__header {
+      padding: 0.75rem 1rem 0.5rem;
+    }
+
+    .home-testimonials__title {
+      font-size: 1.1rem;
+    }
+
+    .home-testimonials__track {
+      padding-left: 20vw;
+      padding-right: 20vw;
+      gap: 1.5rem;
+    }
+
+    .home-testimonials__slide {
+      width: 85vw;
+    }
+
+    .home-testimonials__card {
+      padding: 1.75rem 1.5rem;
+      border-radius: 16px;
+    }
+
+    .home-testimonials__stars {
+      font-size: 1.1rem;
+    }
+
+    .home-testimonials__quote {
+      font-size: 0.9rem;
+    }
+  }
+{% endstylesheet %}
+
+<!-- GSAP & ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+<script>
+(function() {
+  function initTestimonials() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initTestimonials, 50);
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    var section = document.querySelector('section.home-testimonials');
+    if (!section) return;
+
+    var track = section.querySelector('.home-testimonials__track');
+    var slides = Array.prototype.slice.call(section.querySelectorAll('.home-testimonials__slide'));
+
+    if (!track || slides.length === 0) return;
+
+    // Get header height and set CSS variable
+    function updateHeaderHeight() {
+      var header = document.querySelector('header');
+      var headerHeight = header ? header.offsetHeight : 80;
+      document.documentElement.style.setProperty('--header-height', headerHeight + 'px');
+      return headerHeight;
+    }
+
+    var headerHeight = updateHeaderHeight();
+
+    // Calculate scroll distance
+    function getScrollDistance() {
+      var viewportWidth = window.innerWidth;
+      var lastSlide = slides[slides.length - 1];
+
+      if (!lastSlide) return 2000;
+
+      var isMobile = viewportWidth <= 768;
+      var rightPadding = isMobile ? viewportWidth * 0.4 : 300;
+
+      var lastSlideRect = lastSlide.getBoundingClientRect();
+      var trackRect = track.getBoundingClientRect();
+
+      var lastSlideRightInTrack = (lastSlideRect.right - trackRect.left);
+      var targetPosition = viewportWidth - rightPadding;
+      var currentTransform = gsap.getProperty(track, 'x') || 0;
+      var distance = lastSlideRightInTrack + currentTransform - targetPosition;
+
+      return Math.max(distance, 1500);
+    }
+
+    // Update active slide and scaling
+    function updateActiveSlide() {
+      var centerX = window.innerWidth / 2;
+      var closestSlide = null;
+      var closestDistance = Infinity;
+
+      var minScale = 0.92;
+      var maxScale = 1.08;
+      var scaleRange = window.innerWidth * 0.45;
+
+      slides.forEach(function(slide) {
+        var rect = slide.getBoundingClientRect();
+        var slideCenter = rect.left + rect.width / 2;
+        var distance = Math.abs(slideCenter - centerX);
+
+        var normalizedDistance = Math.min(distance / scaleRange, 1);
+        var scale = maxScale - (normalizedDistance * (maxScale - minScale));
+        scale = Math.max(minScale, Math.min(maxScale, scale));
+
+        var opacity = 1 - (normalizedDistance * 0.35);
+        var saturation = 1.05 - (normalizedDistance * 0.15);
+
+        var card = slide.querySelector('.home-testimonials__card');
+
+        if (card) {
+          card.style.setProperty('--card-scale', scale.toFixed(3));
+        }
+
+        slide.style.filter = 'saturate(' + saturation.toFixed(2) + ')';
+        slide.style.opacity = opacity.toFixed(2);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestSlide = slide;
+        }
+
+        slide.classList.remove('is-active');
+      });
+
+      if (closestSlide && closestDistance < closestSlide.offsetWidth * 1.5) {
+        closestSlide.classList.add('is-active');
+      }
+    }
+
+    var scrollTriggerInstance = null;
+    var currentScrollDistance = 0;
+
+    function createScrollTrigger() {
+      if (scrollTriggerInstance) {
+        scrollTriggerInstance.kill();
+        scrollTriggerInstance = null;
+      }
+
+      currentScrollDistance = getScrollDistance();
+
+      scrollTriggerInstance = ScrollTrigger.create({
+        trigger: section,
+        start: 'top top+=' + headerHeight,
+        end: '+=' + currentScrollDistance,
+        pin: true,
+        pinSpacing: true,
+        scrub: 0.8,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: function(self) {
+          gsap.set(track, { x: -currentScrollDistance * self.progress });
+          updateActiveSlide();
+        },
+        onEnter: function() {
+          section.classList.add('is-pinned');
+        },
+        onLeave: function() {
+          section.classList.remove('is-pinned');
+          gsap.set(track, { x: -currentScrollDistance });
+        },
+        onEnterBack: function() {
+          section.classList.add('is-pinned');
+        },
+        onLeaveBack: function() {
+          section.classList.remove('is-pinned');
+          gsap.set(track, { x: 0 });
+        }
+      });
+
+      window.__testimonialsScrollTrigger = scrollTriggerInstance;
+    }
+
+    // Initialize
+    createScrollTrigger();
+    updateActiveSlide();
+
+    // Handle resize
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(function() {
+        updateHeaderHeight();
+        createScrollTrigger();
+        updateActiveSlide();
+        ScrollTrigger.refresh();
+      }, 250);
+    });
+
+    // Refresh after load
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        ScrollTrigger.refresh();
+      }, 300);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTestimonials);
+  } else {
+    initTestimonials();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Home testimonials",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "TESTIMONIALS"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "range",
+          "id": "stars",
+          "label": "Star rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "This product exceeded my expectations! The quality and service are outstanding."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer name",
+          "default": "John Smith"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home testimonials",
+      "blocks": [
+        {
+          "type": "testimonial"
+        },
+        {
+          "type": "testimonial"
+        },
+        {
+          "type": "testimonial"
+        },
+        {
+          "type": "testimonial"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

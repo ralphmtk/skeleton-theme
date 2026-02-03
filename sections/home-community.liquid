@@ -141,14 +141,23 @@
   
   .home-community__title {
     font-family: 'Gobold', 'Arial Black', sans-serif;
-    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
     font-weight: 700;
     letter-spacing: 0.15em;
     color: #111;
     margin: 0;
     text-align: center;
-    padding: 1rem clamp(2rem, 5vw, 4rem);
+    padding: clamp(1.5rem, 3vh, 2.5rem) clamp(2rem, 5vw, 4rem) clamp(0.75rem, 1.5vh, 1rem);
     flex-shrink: 0;
+    position: sticky;
+    top: var(--header-height);
+    z-index: 100;
+    background: linear-gradient(to bottom,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0.95) 70%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    pointer-events: none;
   }
   
   .home-community__viewport {
@@ -199,7 +208,7 @@
     display: flex;
     justify-content: center;
     gap: clamp(0.75rem, 1.5vw, 1.25rem);
-    padding: 0 clamp(2rem, 5vw, 4rem);
+    padding: 0 clamp(0.5rem, 1vw, 1rem);
   }
   
   .home-community__column {
@@ -274,16 +283,19 @@
   /* Mobile adjustments */
   @media (max-width: 768px) {
     .home-community__title {
-      font-size: 1rem;
-      padding: 1.5rem 1.5rem 1rem;
+      font-size: 1.25rem;
+      padding: 1rem 1.5rem 0.5rem;
+      position: relative;
+      top: auto;
+      background: none;
     }
-    
+
     .home-community__column {
       width: clamp(100px, 28vw, 180px);
     }
-    
+
     .home-community__masonry {
-      padding: 0 1rem;
+      padding: 0 0.5rem;
       gap: 0.5rem;
     }
     
@@ -299,8 +311,11 @@
   /* Extra small screens */
   @media (max-width: 480px) {
     .home-community__title {
-      font-size: 0.9rem;
-      padding: 1.25rem 1rem 0.75rem;
+      font-size: 1.1rem;
+      padding: 0.75rem 1rem 0.5rem;
+      position: relative;
+      top: auto;
+      background: none;
     }
     
     .home-community__column {
