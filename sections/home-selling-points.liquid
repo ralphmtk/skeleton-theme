@@ -362,6 +362,35 @@
   opacity: 0;
 }
 
+/* Panel 3 (1000+ Designs) - Independent video positioning */
+.home-selling-points__panel--3 .home-selling-points__video--left {
+  right: 52%;
+  top: 50%;
+  width: 680px;
+  max-height: 680px;
+}
+
+.home-selling-points__panel--3 .home-selling-points__video--right {
+  left: 60%;
+  top: 50%;
+  width: 550px;
+  max-height: 400px;
+}
+
+.home-selling-points__panel--3 .home-selling-points__video--top {
+  left: 50%;
+  bottom: -5%;
+  width: 600px;
+  max-height: 600px;
+}
+
+.home-selling-points__panel--3 .home-selling-points__video--bottom {
+  left: 50%;
+  top: 10%;
+  width: 550px;
+  max-height: 550px;
+}
+
 /* Panel 4 (Partnerships) - Independent video positioning */
 .home-selling-points__panel--4 .home-selling-points__video--left {
   right: 66%;
@@ -621,8 +650,10 @@
       if (videoTop) totalSideVideos++;
       if (videoBottom) totalSideVideos++;
 
-      // Calculate pin duration - increased for better UX (more scroll distance between panels)
-      var pinDuration = window.innerHeight * 3; // Default: 3 viewports of scroll
+      // Calculate pin duration - responsive based on viewport
+      var isMobile = window.innerWidth <= 768;
+      var baseMultiplier = isMobile ? 1 : 1.5; // Reduced scroll distance
+      var pinDuration = window.innerHeight * baseMultiplier;
 
       // For center layout, use side videos for duration
       if (isCenterLayout && totalSideVideos > 0) {
@@ -630,7 +661,8 @@
         if (mainVideo && mainVideo.duration && !isNaN(mainVideo.duration)) {
           var estimatedDuration = mainVideo.duration;
           videoDurations[panelIndex] = estimatedDuration;
-          pinDuration = Math.max(window.innerHeight * 3, estimatedDuration * 150);
+          var videoMultiplier = isMobile ? 60 : 80;
+          pinDuration = Math.max(window.innerHeight * baseMultiplier, estimatedDuration * videoMultiplier);
         }
       } else if (video) {
         // Standard layout with single video
@@ -639,7 +671,8 @@
           estimatedDuration = video.duration;
         }
         videoDurations[panelIndex] = estimatedDuration;
-        pinDuration = Math.max(window.innerHeight * 3, estimatedDuration * 150);
+        var videoMultiplier = isMobile ? 60 : 80;
+        pinDuration = Math.max(window.innerHeight * baseMultiplier, estimatedDuration * videoMultiplier);
       }
 
       // Reset initial states
@@ -829,8 +862,11 @@
       if (video) {
         video.addEventListener('loadedmetadata', function() {
           if (video.duration && !isNaN(video.duration)) {
-            // Set pin duration with increased scroll distance
-            var newPinDuration = Math.max(window.innerHeight * 4, video.duration * 200);
+            // Set pin duration - responsive
+            var isMobile = window.innerWidth <= 768;
+            var baseMultiplier = isMobile ? 1.2 : 2;
+            var videoMultiplier = isMobile ? 70 : 100;
+            var newPinDuration = Math.max(window.innerHeight * baseMultiplier, video.duration * videoMultiplier);
             if (tl.scrollTrigger) {
               tl.scrollTrigger.vars.end = '+=' + newPinDuration;
               ScrollTrigger.refresh();
