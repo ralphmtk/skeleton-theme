@@ -10,21 +10,28 @@
       </h2>
     </div>
 
-    <div class="home-testimonials__scroll-wrapper">
-      <div class="home-testimonials__track">
-        {% assign bg_colors = 'hsla(200,55%,91%,1)|hsla(340,48%,91%,1)|hsla(45,58%,91%,1)|hsla(160,50%,91%,1)|hsla(270,42%,91%,1)|hsla(20,58%,91%,1)|hsla(280,45%,90%,1)|hsla(100,48%,90%,1)' | split: '|' %}
+    <div class="home-testimonials__container">
+      {% assign bg_colors = 'hsla(200,55%,91%,1)|hsla(340,48%,91%,1)|hsla(45,58%,91%,1)|hsla(160,50%,91%,1)|hsla(270,42%,91%,1)|hsla(20,58%,91%,1)|hsla(280,45%,90%,1)|hsla(100,48%,90%,1)' | split: '|' %}
 
-        {% for block in section.blocks %}
-          {% if block.type == 'testimonial' %}
-            {% assign color_index = forloop.index0 | modulo: 8 %}
-            {% assign bg_color = bg_colors[color_index] %}
+      {% for block in section.blocks %}
+        {% if block.type == 'testimonial' %}
+          {% assign color_index = forloop.index0 | modulo: 8 %}
+          {% assign bg_color = bg_colors[color_index] %}
+          {% assign is_even = forloop.index0 | modulo: 2 %}
 
-            <div class="home-testimonials__slide" {{ block.shopify_attributes }} style="--card-bg: {{ bg_color }};">
+          <div class="home-testimonials__item"
+               {{ block.shopify_attributes }}
+               data-index="{{ forloop.index0 }}"
+               style="--card-bg: {{ bg_color }};"
+               data-direction="{% if is_even == 0 %}left{% else %}right{% endif %}">
+            <div class="home-testimonials__card-wrapper">
               <div class="home-testimonials__card">
                 <div class="home-testimonials__stars" aria-label="Rating: {{ block.settings.stars }} out of 5 stars">
                   {% assign max_stars = 5 %}
                   {% for i in (1..max_stars) %}
-                    <span class="home-testimonials__star{% if i <= block.settings.stars %} is-filled{% endif %}" aria-hidden="true">★</span>
+                    <span class="home-testimonials__star{% if i <= block.settings.stars %} is-filled{% endif %}"
+                          aria-hidden="true"
+                          style="--star-index: {{ forloop.index0 }};">★</span>
                   {% endfor %}
                 </div>
 
@@ -43,23 +50,27 @@
                 {% endif %}
               </div>
             </div>
-          {% endif %}
-        {% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
 
-        {%- comment -%} Fallback placeholders if no testimonials {%- endcomment -%}
-        {% if section.blocks.size == 0 %}
-          {% for i in (1..5) %}
-            {% assign color_index = forloop.index0 | modulo: 8 %}
-            {% assign bg_color = bg_colors[color_index] %}
+      {%- comment -%} Fallback placeholders if no testimonials {%- endcomment -%}
+      {% if section.blocks.size == 0 %}
+        {% for i in (1..5) %}
+          {% assign color_index = forloop.index0 | modulo: 8 %}
+          {% assign bg_color = bg_colors[color_index] %}
+          {% assign is_even = forloop.index0 | modulo: 2 %}
 
-            <div class="home-testimonials__slide home-testimonials__slide--placeholder" style="--card-bg: {{ bg_color }};">
+          <div class="home-testimonials__item home-testimonials__item--placeholder"
+               data-index="{{ forloop.index0 }}"
+               style="--card-bg: {{ bg_color }};"
+               data-direction="{% if is_even == 0 %}left{% else %}right{% endif %}">
+            <div class="home-testimonials__card-wrapper">
               <div class="home-testimonials__card">
                 <div class="home-testimonials__stars" aria-hidden="true">
-                  <span class="home-testimonials__star is-filled">★</span>
-                  <span class="home-testimonials__star is-filled">★</span>
-                  <span class="home-testimonials__star is-filled">★</span>
-                  <span class="home-testimonials__star is-filled">★</span>
-                  <span class="home-testimonials__star is-filled">★</span>
+                  {% for j in (1..5) %}
+                    <span class="home-testimonials__star is-filled" style="--star-index: {{ forloop.index0 }};">★</span>
+                  {% endfor %}
                 </div>
                 <blockquote class="home-testimonials__quote">
                   Add testimonial blocks in the theme editor to showcase customer reviews.
@@ -67,9 +78,9 @@
                 <cite class="home-testimonials__author">Customer {{ i }}</cite>
               </div>
             </div>
-          {% endfor %}
-        {% endif %}
-      </div>
+          </div>
+        {% endfor %}
+      {% endif %}
     </div>
   </div>
 </section>
@@ -79,39 +90,20 @@
     position: relative;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    height: 100vh;
-    height: 100dvh;
-    min-height: 100vh;
-    min-height: 100dvh;
-    background: #fff;
-    overflow: clip;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-  }
-
-  .shopify-section:has(.home-testimonials) {
-    overflow: visible;
+    padding: clamp(4rem, 8vh, 6rem) clamp(1.5rem, 4vw, 3rem) clamp(5rem, 10vh, 8rem);
+    background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 30%, #f8f9fa 70%, #ffffff 100%);
+    overflow: hidden;
   }
 
   .home-testimonials__inner {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
     width: 100%;
-    box-sizing: border-box;
+    max-width: 1400px;
+    margin: 0 auto;
   }
 
   .home-testimonials__header {
-    left: 0;
-    right: 0;
-    padding: clamp(1.5rem, 3vh, 2.5rem) clamp(2rem, 5vw, 4rem) clamp(0.75rem, 1.5vh, 1rem);
-    flex-shrink: 0;
-    background: transparent;
-    position: sticky;
-    top: var(--header-height);
-    z-index: 100;
-    pointer-events: none;
+    text-align: center;
+    margin-bottom: clamp(4rem, 8vh, 6rem);
   }
 
   .home-testimonials__title {
@@ -123,102 +115,112 @@
     margin: 0;
   }
 
-  .home-testimonials__scroll-wrapper {
-    position: relative;
+  .home-testimonials__container {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8rem, 15vh, 12rem);
+    padding: clamp(3rem, 6vh, 5rem) 0;
+    perspective: 1500px;
+  }
+
+  .home-testimonials__item {
     width: 100%;
-    overflow: visible;
-    display: flex;
-    align-items: center;
-    padding-top: 0;
-    min-height: 0;
-    margin-top: 25px;
+    max-width: clamp(550px, 65vw, 800px);
+    margin: 0 auto;
+    will-change: transform, opacity;
   }
 
-  .home-testimonials__track {
-    display: flex;
-    gap: clamp(2rem, 4vw, 3.5rem);
-    padding-left: 50vw;
-    padding-right: 50vw;
-    width: fit-content;
-    min-width: max-content;
-    height: 100%;
-    will-change: transform;
-    flex-shrink: 0;
-    align-items: center;
+  /* Alternating alignment */
+  .home-testimonials__item[data-direction="left"] {
+    align-self: flex-start;
+    margin-left: clamp(2rem, 8vw, 8rem);
   }
 
-  .home-testimonials__slide {
-    flex: 0 0 auto;
-    width: clamp(320px, 35vw, 480px);
-    will-change: transform, filter, opacity;
-    transition: transform 0.1s ease-out;
+  .home-testimonials__item[data-direction="right"] {
+    align-self: flex-end;
+    margin-right: clamp(2rem, 8vw, 8rem);
   }
 
-  .home-testimonials__slide.is-active {
-    z-index: 10;
+  /* Card wrapper for 3D transforms */
+  .home-testimonials__card-wrapper {
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .home-testimonials__card {
     position: relative;
     background: var(--card-bg, hsla(200, 55%, 91%, 1));
-    border-radius: clamp(20px, 3vw, 32px);
-    padding: clamp(2.5rem, 4vw, 3.5rem) clamp(2rem, 3.5vw, 3rem);
+    border-radius: clamp(28px, 3.5vw, 40px);
+    padding: clamp(3rem, 5vw, 4.5rem) clamp(3rem, 5vw, 5rem);
     box-shadow:
-      0 2px 8px rgba(0, 0, 0, 0.06),
-      0 8px 24px rgba(0, 0, 0, 0.08);
+      0 4px 16px rgba(0, 0, 0, 0.08),
+      0 12px 32px rgba(0, 0, 0, 0.12);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     box-sizing: border-box;
-    transform: scale(var(--card-scale, 1));
+    transform-style: preserve-3d;
     transition:
-      transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-      box-shadow 0.4s ease;
+      box-shadow 0.6s ease,
+      background 0.6s ease;
   }
 
-  .home-testimonials__slide.is-active .home-testimonials__card {
+  /* Active state - card in viewport center */
+  .home-testimonials__item.is-active .home-testimonials__card {
     box-shadow:
-      0 4px 16px rgba(0, 0, 0, 0.08),
-      0 12px 40px rgba(0, 0, 0, 0.12);
+      0 12px 40px rgba(0, 0, 0, 0.15),
+      0 24px 80px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
   }
 
-  .home-testimonials__slide--placeholder {
+  .home-testimonials__item--placeholder {
     pointer-events: none;
   }
 
   .home-testimonials__stars {
     display: inline-flex;
-    gap: clamp(4px, 0.6vw, 8px);
-    margin-bottom: clamp(1.25rem, 2vw, 1.75rem);
-    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+    gap: clamp(7px, 0.9vw, 12px);
+    margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
+    font-size: clamp(1.5rem, 2.2vw, 1.85rem);
   }
 
   .home-testimonials__star {
     color: rgba(0, 0, 0, 0.12);
-    transition: transform 0.2s ease, color 0.2s ease;
+    transition: transform 0.3s ease, color 0.3s ease;
+    display: inline-block;
   }
 
   .home-testimonials__star.is-filled {
     color: #ffc107;
+    filter: drop-shadow(0 2px 4px rgba(255, 193, 7, 0.3));
   }
 
-  .home-testimonials__slide.is-active .home-testimonials__star.is-filled {
-    animation: starPulse 0.6s ease-out;
+  /* Enhanced star animations when card becomes active */
+  .home-testimonials__item.is-active .home-testimonials__star.is-filled {
+    animation: starPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: calc(var(--star-index) * 0.08s);
   }
 
-  @keyframes starPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.15); }
+  @keyframes starPop {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
 
   .home-testimonials__quote {
     font-family: var(--font-primary--family, system-ui, sans-serif);
-    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    font-size: clamp(1.1rem, 1.6vw, 1.35rem);
     font-weight: 400;
-    line-height: 1.6;
+    line-height: 1.7;
     color: #222;
-    margin: 0 0 clamp(1.25rem, 2vw, 1.75rem);
+    margin: 0 0 clamp(1.75rem, 3vw, 2.5rem);
     max-width: 100%;
   }
 
@@ -232,11 +234,11 @@
 
   .home-testimonials__author {
     font-family: 'Gobold', 'Arial Black', sans-serif;
-    font-size: clamp(0.9rem, 1.1vw, 1rem);
+    font-size: clamp(1rem, 1.3vw, 1.15rem);
     font-weight: 700;
     font-style: normal;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     color: #111;
     margin: 0;
   }
@@ -245,100 +247,110 @@
     content: '— ';
   }
 
-  /* Pinned state */
-  .home-testimonials.is-pinned {
-    /* Let ScrollTrigger handle positioning */
-  }
-
   /* Tablet adjustments */
   @media (max-width: 1024px) {
-    .home-testimonials__slide {
-      width: clamp(300px, 40vw, 420px);
+    .home-testimonials__item {
+      max-width: 80vw;
     }
 
-    .home-testimonials__track {
-      gap: 2.5rem;
+    .home-testimonials__item[data-direction="left"] {
+      margin-left: clamp(1.5rem, 5vw, 5rem);
+    }
+
+    .home-testimonials__item[data-direction="right"] {
+      margin-right: clamp(1.5rem, 5vw, 5rem);
+    }
+
+    .home-testimonials__container {
+      gap: 10rem;
     }
   }
 
   /* Mobile adjustments */
   @media (max-width: 768px) {
     .home-testimonials {
-      height: 100vh;
-      height: 100dvh;
-      min-height: 100vh;
-      min-height: 100dvh;
+      padding: 3.5rem 1.5rem 4.5rem;
     }
 
     .home-testimonials__header {
-      padding: 1rem 1.5rem 0.5rem;
+      margin-bottom: 3.5rem;
     }
 
     .home-testimonials__title {
       font-size: 1.25rem;
     }
 
-    .home-testimonials__track {
-      padding-left: 40vw;
-      padding-right: 40vw;
-      gap: 2rem;
+    .home-testimonials__container {
+      gap: 8rem;
+      padding: 2rem 0;
     }
 
-    .home-testimonials__slide {
-      width: 300px;
+    .home-testimonials__item {
+      max-width: 100%;
+    }
+
+    /* Center all items on mobile */
+    .home-testimonials__item[data-direction="left"],
+    .home-testimonials__item[data-direction="right"] {
+      align-self: center;
+      margin-left: 0;
+      margin-right: 0;
     }
 
     .home-testimonials__card {
-      padding: 2rem 1.75rem;
-      border-radius: 20px;
+      padding: 2.5rem 2.25rem;
+      border-radius: 28px;
     }
 
     .home-testimonials__stars {
-      font-size: 1.2rem;
-      gap: 4px;
-      margin-bottom: 1rem;
+      font-size: 1.4rem;
+      gap: 7px;
+      margin-bottom: 1.5rem;
     }
 
     .home-testimonials__quote {
-      font-size: 0.95rem;
-      margin-bottom: 1rem;
+      font-size: 1.05rem;
+      margin-bottom: 1.5rem;
     }
 
     .home-testimonials__author {
-      font-size: 0.85rem;
+      font-size: 0.95rem;
     }
   }
 
   /* Extra small screens */
   @media (max-width: 480px) {
+    .home-testimonials {
+      padding: 3rem 1rem 4rem;
+    }
+
     .home-testimonials__header {
-      padding: 0.75rem 1rem 0.5rem;
+      margin-bottom: 3rem;
     }
 
     .home-testimonials__title {
       font-size: 1.1rem;
     }
 
-    .home-testimonials__track {
-      padding-left: 20vw;
-      padding-right: 20vw;
-      gap: 1.5rem;
-    }
-
-    .home-testimonials__slide {
-      width: 85vw;
+    .home-testimonials__container {
+      gap: 6rem;
     }
 
     .home-testimonials__card {
-      padding: 1.75rem 1.5rem;
-      border-radius: 16px;
+      padding: 2.25rem 2rem;
+      border-radius: 24px;
     }
 
     .home-testimonials__stars {
-      font-size: 1.1rem;
+      font-size: 1.3rem;
+      gap: 6px;
     }
 
     .home-testimonials__quote {
+      font-size: 1rem;
+    }
+
+    .home-testimonials__author {
       font-size: 0.9rem;
     }
   }
@@ -361,150 +373,156 @@
     var section = document.querySelector('section.home-testimonials');
     if (!section) return;
 
-    var track = section.querySelector('.home-testimonials__track');
-    var slides = Array.prototype.slice.call(section.querySelectorAll('.home-testimonials__slide'));
+    var items = Array.prototype.slice.call(section.querySelectorAll('.home-testimonials__item'));
+    if (items.length === 0) return;
 
-    if (!track || slides.length === 0) return;
+    var isMobile = window.innerWidth <= 768;
 
-    // Get header height and set CSS variable
-    function updateHeaderHeight() {
-      var header = document.querySelector('header');
-      var headerHeight = header ? header.offsetHeight : 80;
-      document.documentElement.style.setProperty('--header-height', headerHeight + 'px');
-      return headerHeight;
-    }
+    // Track animation state for each item
+    var itemStates = items.map(function() { return { animated: false }; });
 
-    var headerHeight = updateHeaderHeight();
+    // Set initial hidden state for all items
+    items.forEach(function(item, index) {
+      var direction = item.getAttribute('data-direction');
+      var startX = direction === 'left' ? -200 : 200;
+      gsap.set(item, { x: startX, opacity: 0 });
+    });
 
-    // Calculate scroll distance
-    function getScrollDistance() {
-      var viewportWidth = window.innerWidth;
-      var lastSlide = slides[slides.length - 1];
+    // Observer for animate IN - triggers when item enters viewport (with margin buffer)
+    var observerInOptions = {
+      root: null,
+      rootMargin: isMobile ? '-10% 0px -10% 0px' : '-15% 0px -15% 0px',
+      threshold: 0.1
+    };
 
-      if (!lastSlide) return 2000;
+    var observerIn = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        var item = entry.target;
+        var index = items.indexOf(item);
+        if (index === -1) return;
 
-      var isMobile = viewportWidth <= 768;
-      var rightPadding = isMobile ? viewportWidth * 0.4 : 300;
-
-      var lastSlideRect = lastSlide.getBoundingClientRect();
-      var trackRect = track.getBoundingClientRect();
-
-      var lastSlideRightInTrack = (lastSlideRect.right - trackRect.left);
-      var targetPosition = viewportWidth - rightPadding;
-      var currentTransform = gsap.getProperty(track, 'x') || 0;
-      var distance = lastSlideRightInTrack + currentTransform - targetPosition;
-
-      return Math.max(distance, 1500);
-    }
-
-    // Update active slide and scaling
-    function updateActiveSlide() {
-      var centerX = window.innerWidth / 2;
-      var closestSlide = null;
-      var closestDistance = Infinity;
-
-      var minScale = 0.92;
-      var maxScale = 1.08;
-      var scaleRange = window.innerWidth * 0.45;
-
-      slides.forEach(function(slide) {
-        var rect = slide.getBoundingClientRect();
-        var slideCenter = rect.left + rect.width / 2;
-        var distance = Math.abs(slideCenter - centerX);
-
-        var normalizedDistance = Math.min(distance / scaleRange, 1);
-        var scale = maxScale - (normalizedDistance * (maxScale - minScale));
-        scale = Math.max(minScale, Math.min(maxScale, scale));
-
-        var opacity = 1 - (normalizedDistance * 0.35);
-        var saturation = 1.05 - (normalizedDistance * 0.15);
-
-        var card = slide.querySelector('.home-testimonials__card');
-
-        if (card) {
-          card.style.setProperty('--card-scale', scale.toFixed(3));
-        }
-
-        slide.style.filter = 'saturate(' + saturation.toFixed(2) + ')';
-        slide.style.opacity = opacity.toFixed(2);
-
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestSlide = slide;
-        }
-
-        slide.classList.remove('is-active');
-      });
-
-      if (closestSlide && closestDistance < closestSlide.offsetWidth * 1.5) {
-        closestSlide.classList.add('is-active');
-      }
-    }
-
-    var scrollTriggerInstance = null;
-    var currentScrollDistance = 0;
-
-    function createScrollTrigger() {
-      if (scrollTriggerInstance) {
-        scrollTriggerInstance.kill();
-        scrollTriggerInstance = null;
-      }
-
-      currentScrollDistance = getScrollDistance();
-
-      scrollTriggerInstance = ScrollTrigger.create({
-        trigger: section,
-        start: 'top top+=' + headerHeight,
-        end: '+=' + currentScrollDistance,
-        pin: true,
-        pinSpacing: true,
-        scrub: 0.8,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        onUpdate: function(self) {
-          gsap.set(track, { x: -currentScrollDistance * self.progress });
-          updateActiveSlide();
-        },
-        onEnter: function() {
-          section.classList.add('is-pinned');
-        },
-        onLeave: function() {
-          section.classList.remove('is-pinned');
-          gsap.set(track, { x: -currentScrollDistance });
-        },
-        onEnterBack: function() {
-          section.classList.add('is-pinned');
-        },
-        onLeaveBack: function() {
-          section.classList.remove('is-pinned');
-          gsap.set(track, { x: 0 });
+        if (entry.isIntersecting && !itemStates[index].animated) {
+          var direction = item.getAttribute('data-direction');
+          console.log('Item', index, 'animating IN');
+          itemStates[index].animated = true;
+          gsap.to(item, {
+            x: 0,
+            opacity: 1,
+            duration: 1,
+            ease: 'power2.out'
+          });
         }
       });
+    }, observerInOptions);
 
-      window.__testimonialsScrollTrigger = scrollTriggerInstance;
-    }
+    // Observer for animate OUT - triggers when item exits at 50% viewport (scrolling back up)
+    var observerOutOptions = {
+      root: null,
+      rootMargin: '0px 0px -50% 0px', // Bottom boundary at 50% of viewport
+      threshold: 0
+    };
 
-    // Initialize
-    createScrollTrigger();
-    updateActiveSlide();
+    var observerOut = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        var item = entry.target;
+        var index = items.indexOf(item);
+        if (index === -1) return;
 
-    // Handle resize
+        var rect = item.getBoundingClientRect();
+        var direction = item.getAttribute('data-direction');
+        var startX = direction === 'left' ? -200 : 200;
+
+        // When not intersecting (item below 50% line) and was animated, animate out
+        if (!entry.isIntersecting && itemStates[index].animated && rect.top > window.innerHeight * 0.4) {
+          console.log('Item', index, 'animating OUT at rect.top:', Math.round(rect.top));
+          itemStates[index].animated = false;
+          gsap.to(item, {
+            x: startX,
+            opacity: 0,
+            duration: 0.6,
+            ease: 'power2.in'
+          });
+        }
+      });
+    }, observerOutOptions);
+
+    // Observe all items with both observers
+    items.forEach(function(item) {
+      observerIn.observe(item);
+      observerOut.observe(item);
+    });
+
+    // Star animation using ScrollTrigger (less affected by pin issues since it's just a class toggle)
+    items.forEach(function(item, index) {
+      ScrollTrigger.create({
+        trigger: item,
+        start: 'top 55%',
+        end: 'bottom 45%',
+        toggleClass: 'is-active',
+        refreshPriority: -1
+      });
+    });
+
+    // Update on resize
     var resizeTimeout;
     window.addEventListener('resize', function() {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(function() {
-        updateHeaderHeight();
-        createScrollTrigger();
-        updateActiveSlide();
+        isMobile = window.innerWidth <= 768;
+        // Update observer margins for new viewport
+        observerIn.disconnect();
+        observerOut.disconnect();
+        observerInOptions.rootMargin = isMobile ? '-10% 0px -10% 0px' : '-15% 0px -15% 0px';
+
+        observerIn = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            var item = entry.target;
+            var index = items.indexOf(item);
+            if (index === -1) return;
+
+            if (entry.isIntersecting && !itemStates[index].animated) {
+              var direction = item.getAttribute('data-direction');
+              console.log('Item', index, 'animating IN (after resize)');
+              itemStates[index].animated = true;
+              gsap.to(item, {
+                x: 0,
+                opacity: 1,
+                duration: 1,
+                ease: 'power2.out'
+              });
+            }
+          });
+        }, observerInOptions);
+
+        observerOut = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            var item = entry.target;
+            var index = items.indexOf(item);
+            if (index === -1) return;
+
+            var rect = item.getBoundingClientRect();
+            var direction = item.getAttribute('data-direction');
+            var startX = direction === 'left' ? -200 : 200;
+
+            if (!entry.isIntersecting && itemStates[index].animated && rect.top > window.innerHeight * 0.4) {
+              console.log('Item', index, 'animating OUT (after resize)');
+              itemStates[index].animated = false;
+              gsap.to(item, {
+                x: startX,
+                opacity: 0,
+                duration: 0.6,
+                ease: 'power2.in'
+              });
+            }
+          });
+        }, observerOutOptions);
+
+        items.forEach(function(item) {
+          observerIn.observe(item);
+          observerOut.observe(item);
+        });
         ScrollTrigger.refresh();
       }, 250);
-    });
-
-    // Refresh after load
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        ScrollTrigger.refresh();
-      }, 300);
     });
   }
 
@@ -560,6 +578,9 @@
     {
       "name": "Home testimonials",
       "blocks": [
+        {
+          "type": "testimonial"
+        },
         {
           "type": "testimonial"
         },
